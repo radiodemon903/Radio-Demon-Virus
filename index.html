@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SYS.OVERRIDE // ALASTOR</title>
-    <!-- Importing terrifying fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>SYS.OVERRIDE // NOOB SAIBOT</title>
+    <!-- Terrifying Horror Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Nosifer&family=Share+Tech+Mono&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-deep: #050000;
-            --alastor-crimson: #8b0000;
-            --alastor-blood: #ff001e;
-            --text-muted: #aa0000;
+            --bg-color: #020000;
+            --blood-red: #ff0015;
+            --dark-red: #660005;
+            --glow-red: rgba(255, 0, 21, 0.8);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: #000;
-            color: var(--alastor-blood);
+            background-color: var(--bg-color);
+            color: var(--blood-red);
             font-family: 'Share Tech Mono', monospace;
             overflow: hidden;
             height: 100vh;
@@ -31,62 +31,27 @@
             cursor: crosshair;
         }
 
-        /* --- HEAVY CAMERA/VHS GLITCH LAYERS --- */
-        #vhs-noise {
+        /* --- ADVANCED TV & CAMERA GLITCH LAYERS --- */
+        #tv-static {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');
-            opacity: 0.15;
-            mix-blend-mode: color-dodge;
+            background: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');
+            opacity: 0.12;
+            mix-blend-mode: overlay;
             pointer-events: none;
-            z-index: 40;
+            z-index: 50;
         }
 
         .scanlines {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%);
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.7) 50%);
             background-size: 100% 4px;
             z-index: 49;
             pointer-events: none;
         }
 
-        /* Screen tearing animation wrapper */
-        #glitch-wrapper {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 10;
-            display: none; 
-            /* Chromatic aberration */
-            text-shadow: 2px 0px 1px rgba(0, 255, 255, 0.5), -2px 0px 1px rgba(255, 0, 0, 0.5);
-            animation: vhs-jitter 0.2s infinite;
-        }
-
-        @keyframes vhs-jitter {
-            0% { transform: translate(0, 0) skew(0deg); }
-            20% { transform: translate(-2px, 1px) skew(-1deg); filter: hue-rotate(5deg); }
-            40% { transform: translate(2px, -1px) skew(1deg); }
-            60% { transform: translate(-1px, 2px) skew(0deg); }
-            80% { transform: translate(1px, -2px) skew(-1deg); filter: hue-rotate(-5deg); }
-            100% { transform: translate(0, 0) skew(0deg); }
-        }
-
-        .severe-glitch {
-            animation: severe-tear 0.1s infinite steps(2) !important;
-            filter: contrast(3) invert(0.2) !important;
-        }
-
-        @keyframes severe-tear {
-            0% { clip-path: inset(20% 0 80% 0); transform: translateX(-10px); }
-            50% { clip-path: inset(60% 0 10% 0); transform: translateX(10px); }
-            100% { clip-path: inset(40% 0 50% 0); transform: translateX(-5px); }
-        }
-
-        /* --- START BUTTON --- */
+        /* --- START GATE --- */
         #start-gate {
             position: fixed;
             inset: 0;
@@ -98,401 +63,488 @@
         }
 
         .btn-core {
-            border: 2px solid var(--alastor-blood);
-            padding: 20px 50px;
+            border: 2px solid var(--blood-red);
+            padding: 22px 55px;
             font-size: 2rem;
-            color: var(--alastor-blood);
-            background: #000;
-            font-family: 'Creepster', cursive;
-            letter-spacing: 5px;
+            color: var(--blood-red);
+            background: #050000;
+            font-family: 'Nosifer', cursive;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 25px var(--glow-red);
             cursor: pointer;
-            transition: 0.1s;
+            transition: all 0.1s ease;
         }
         .btn-core:hover {
-            background: var(--alastor-blood);
+            background: var(--blood-red);
             color: #000;
-            box-shadow: 0 0 40px var(--alastor-blood);
+            box-shadow: 0 0 50px var(--blood-red);
         }
 
-        /* --- ORGANIZED APP CONTAINER --- */
+        /* --- ORGANIZED MAIN CONTAINER (MATCHING VIDEO LAYOUT) --- */
         #app-container {
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
             height: 85vh;
-            max-height: 800px;
+            max-height: 750px;
             position: relative;
-            display: flex;
+            display: none;
             flex-direction: column;
-            background: transparent;
+            background: rgba(5, 0, 0, 0.95);
+            border: 2px solid var(--dark-red);
+            box-shadow: 0 0 40px rgba(255, 0, 21, 0.25), inset 0 0 20px rgba(0,0,0,0.9);
             padding: 20px;
+            z-index: 10;
+            text-shadow: 1px 0px 0px rgba(0, 255, 255, 0.4), -1px 0px 0px rgba(255, 0, 0, 0.6);
+            animation: camera-jitter 0.15s infinite;
         }
 
-        .reticle {
-            position: absolute;
-            width: 25px; height: 25px;
-            border: 3px solid var(--alastor-blood);
-            box-shadow: 0 0 10px rgba(255,0,0,0.8);
+        @keyframes camera-jitter {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-1px, 2px); filter: hue-rotate(5deg); }
+            40% { transform: translate(2px, -1px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(1px, 1px); filter: hue-rotate(-5deg); }
+            100% { transform: translate(0, 0); }
         }
-        .reticle.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
-        .reticle.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
-        .reticle.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
-        .reticle.br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        .severe-glitch-active {
+            animation: severe-tear 0.08s infinite steps(2) !important;
+            filter: contrast(3) invert(0.15) !important;
+        }
+
+        @keyframes severe-tear {
+            0% { clip-path: polygon(0 10%, 100% 10%, 100% 30%, 0 30%); transform: translateX(-12px); }
+            33% { clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%); transform: translateX(12px); }
+            66% { clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%); transform: translateX(-6px); }
+            100% { clip-path: none; transform: translateX(0); }
+        }
 
         .status-header {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 20px;
+            font-size: 0.75rem;
+            color: #88000a;
+            margin-bottom: 15px;
             font-weight: bold;
+            letter-spacing: 1px;
         }
 
         .warning-box {
-            border: 2px solid var(--alastor-blood);
-            background: rgba(30, 0, 0, 0.6);
+            border: 2px solid var(--blood-red);
+            background: repeating-linear-gradient(45deg, #1a0002, #1a0002 10px, #0a0000 10px, #0a0000 20px);
             text-align: center;
-            padding: 15px;
-            margin-bottom: 25px;
-            animation: pulse-warn 1s infinite;
-        }
-
-        @keyframes pulse-warn {
-            0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); }
-            50% { box-shadow: 0 0 30px rgba(255, 0, 0, 0.8); border-color: #ff4444; }
+            padding: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(255, 0, 21, 0.4);
         }
 
         .warning-box h2 {
-            font-family: 'Creepster', cursive;
-            font-size: 2rem;
+            font-family: 'Nosifer', cursive;
+            font-size: 1.1rem;
             color: #fff;
-            text-shadow: 0 0 10px red;
-            margin-bottom: 5px;
+            text-shadow: 0 0 8px var(--blood-red);
+            margin-bottom: 4px;
             letter-spacing: 2px;
         }
 
         .warning-box p {
-            font-size: 0.8rem;
-            color: var(--alastor-blood);
+            font-size: 0.7rem;
+            color: var(--blood-red);
+            letter-spacing: 1px;
         }
 
         .main-title {
             text-align: center;
-            font-size: 3.5rem;
-            font-family: 'Creepster', cursive;
-            letter-spacing: 8px;
-            color: var(--alastor-blood);
-            text-shadow: 0 0 20px red, 0 0 40px darkred;
-            margin-bottom: 25px;
+            font-size: 2.2rem;
+            font-family: 'Nosifer', cursive;
+            letter-spacing: 4px;
+            color: var(--blood-red);
+            text-shadow: 0 0 15px var(--blood-red), 0 0 30px #400000;
+            margin-bottom: 20px;
         }
 
         .progress-info {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             color: #fff;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         #ip-target {
-            color: var(--alastor-blood);
-            text-decoration: underline;
+            color: var(--blood-red);
         }
 
         .progress-bar-bg {
             width: 100%;
-            height: 15px;
-            background: #110000;
-            border: 1px solid var(--alastor-blood);
+            height: 12px;
+            background: #0a0000;
+            border: 1px solid var(--dark-red);
             margin-bottom: 20px;
+            position: relative;
         }
 
         .progress-fill {
             height: 100%;
             width: 0%;
-            background: var(--alastor-blood);
-            box-shadow: 0 0 15px red;
+            background: var(--blood-red);
+            box-shadow: 0 0 12px var(--blood-red);
         }
 
         .terminal-box {
             flex-grow: 1;
             width: 100%;
             overflow: hidden;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid var(--dark-red);
+            padding-top: 5px;
         }
 
         .log-line {
             margin: 2px 0;
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            line-height: 1.2;
         }
 
-        .log-time { color: #880000; }
-        .log-msg { color: var(--alastor-blood); }
-        .log-msg.err { color: #fff; text-shadow: 0 0 5px #fff; }
+        .log-time { color: #700005; min-width: 80px; }
+        .log-msg { color: var(--blood-red); word-break: break-all; }
+        .log-msg.err { color: #fff; text-shadow: 0 0 4px #fff; }
 
-        /* --- ENDING SEQUENCE --- */
+        /* --- TV POWER DOWN EFFECT --- */
         .power-down {
-            animation: tv-collapse 0.3s cubic-bezier(0.1, 0.8, 0.1, 1) forwards !important;
+            animation: tv-collapse 0.35s cubic-bezier(0.1, 0.8, 0.1, 1) forwards !important;
         }
 
         @keyframes tv-collapse {
             0% { transform: scale(1, 1); filter: brightness(2); }
-            50% { transform: scale(1, 0.005); filter: brightness(10); }
+            50% { transform: scale(1, 0.003); filter: brightness(12); background-color: #fff; }
             100% { transform: scale(0, 0); filter: brightness(0); opacity: 0; display: none; }
         }
 
+        /* --- FINAL SKULL INFECTION SCREEN (MATCHING VIDEO ENDING) --- */
         #final-scare {
             position: fixed;
             inset: 0;
-            background: #000;
+            background: #050000;
             z-index: 999;
-            display: none; 
+            display: none;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            border: 8px solid var(--blood-red);
+            box-shadow: inset 0 0 80px #ff0000;
         }
 
-        #jumpscare-img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            animation: frantic-stutter 0.05s infinite;
+        .skull-art {
+            font-family: monospace;
+            font-size: 0.65rem;
+            line-height: 0.95;
+            color: var(--blood-red);
+            text-shadow: 0 0 10px var(--blood-red);
+            white-space: pre;
+            text-align: center;
+            animation: skull-glitch 0.06s infinite;
+            margin-bottom: 25px;
         }
 
-        @keyframes frantic-stutter {
-            0% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg) contrast(1.5); }
-            33% { transform: translate(-10px, 15px) scale(1.05); filter: hue-rotate(90deg) contrast(2) invert(1); clip-path: inset(10% 0 30% 0); }
-            66% { transform: translate(10px, -15px) scale(0.95); filter: hue-rotate(-90deg) contrast(3); clip-path: inset(40% 0 10% 0); }
-            100% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg) contrast(1.5); clip-path: none; }
+        @keyframes skull-glitch {
+            0% { transform: translate(0, 0); filter: contrast(1.5); }
+            33% { transform: translate(-4px, 3px); filter: contrast(2.5) hue-rotate(45deg); }
+            66% { transform: translate(4px, -3px); filter: contrast(2) invert(0.2); }
+            100% { transform: translate(0, 0); filter: contrast(1.5); }
+        }
+
+        .virus-msg {
+            font-family: 'Nosifer', cursive;
+            font-size: 1.5rem;
+            color: #fff;
+            text-shadow: 0 0 15px var(--blood-red), 0 0 30px #ff0000;
+            letter-spacing: 3px;
+            text-align: center;
+            animation: msg-pulse 0.2s infinite alternate;
+        }
+
+        @keyframes msg-pulse {
+            from { transform: scale(1); color: var(--blood-red); }
+            to { transform: scale(1.03); color: #fff; text-shadow: 0 0 25px #ff0000; }
         }
     </style>
 </head>
 <body>
 
-    <div id="vhs-noise"></div>
+    <div id="tv-static"></div>
     <div class="scanlines"></div>
 
+    <!-- Entry Gate -->
     <div id="start-gate">
-        <div class="btn-core" id="init-btn">ENTER BROADCAST</div>
+        <div class="btn-core" id="init-btn">INITIALIZE BROADCAST</div>
     </div>
 
-    <div id="glitch-wrapper">
-        <div id="app-container">
-            <div class="reticle tl"></div>
-            <div class="reticle tr"></div>
-            <div class="reticle bl"></div>
-            <div class="reticle br"></div>
-
-            <div class="status-header">
-                <span>PRTCL: ALASTOR_V2</span>
-                <span id="sys-status">STATUS: OVERWRITING</span>
-            </div>
-
-            <div class="warning-box">
-                <h2>SYSTEM BREACHED</h2>
-                <p>CRITICAL UNAUTHORIZED ACCESS DETECTED</p>
-            </div>
-
-            <div class="main-title">A L A S T O R</div>
-            
-            <div class="progress-info">
-                <span>TRGT_IP: <span id="ip-target">LOCATING...</span></span>
-                <span id="perc-display">0.00%</span>
-            </div>
-            
-            <div class="progress-bar-bg">
-                <div class="progress-fill" id="p-bar"></div>
-            </div>
-
-            <div class="terminal-box" id="term-out"></div>
+    <!-- Main Organized App Interface -->
+    <div id="app-container">
+        <div class="status-header">
+            <span>PRTCL: NOOB_SAIBOT_V2</span>
+            <span id="sys-status">STATUS: ROOT_ENGAGED</span>
         </div>
+
+        <div class="warning-box">
+            <h2>SYSTEM BREACHED</h2>
+            <p>CRITICAL UNAUTHORIZED ACCESS DETECTED</p>
+        </div>
+
+        <div class="main-title">NOOB SAIBOT</div>
+        
+        <div class="progress-info">
+            <span>TRGT_IP: <span id="ip-target">192.168.188.88</span></span>
+            <span id="perc-display">0.00%</span>
+        </div>
+        
+        <div class="progress-bar-bg">
+            <div class="progress-fill" id="p-bar"></div>
+        </div>
+
+        <div class="terminal-box" id="term-out"></div>
     </div>
 
-    <!-- The Final Jumpscare -->
+    <!-- Final Red Matrix Skull Screen matching video ending -->
     <div id="final-scare">
-        <img id="jumpscare-img" src="d769884480dfdee13e47e0526d22f906.jpg" alt="Alastor">
+        <div class="skull-art">
+             .----------------.  
+            | .--------------. | 
+            | |     _--_     | | 
+            | |    / _- _\   | | 
+            | |   |  (o)(o)  | | 
+            | |   |   ,---,  | | 
+            | |    \ (___)  /  | 
+            | |     `------'   | 
+            | '--------------' | 
+             '----------------'  
+        </div>
+        <div class="virus-msg">VIRUS UPLOADED BY: NOOB SAIBOT</div>
     </div>
 
     <script>
-        // Fetch actual IP address to display
+        // Fetch real IP or fallback safely
         fetch('https://api.ipify.org?format=json')
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('ip-target').innerText = data.ip;
-            })
-            .catch(() => {
-                document.getElementById('ip-target').innerText = "192.168." + Math.floor(Math.random() * 255) + "." + Math.floor(Math.random() * 255);
-            });
+            .then(res => res.json())
+            .then(data => { document.getElementById('ip-target').innerText = data.ip; })
+            .catch(() => {});
 
         const startGate = document.getElementById('start-gate');
-        const glitchWrapper = document.getElementById('glitch-wrapper');
-        let audioCtx, droneGain, whistleOsc, whistleGain;
+        const appContainer = document.getElementById('app-container');
+        let audioCtx, ambientGain, whistleOsc, whistleGain;
 
         document.getElementById('init-btn').addEventListener('click', () => {
-            // 1. Force a real device/browser freeze for 800ms
-            const freezeUntil = Date.now() + 800;
-            while (Date.now() < freezeUntil) {
-                // Synchronous loop locks the UI thread, causing an actual freeze.
-            }
+            // Force a genuine thread-lock freeze on entry as requested
+            const freezeUntil = Date.now() + 750;
+            while (Date.now() < freezeUntil) {}
 
-            // 2. Init Audio
+            // Initialize Audio Architecture
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            initAudio();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            startAudioEngine();
 
-            // 3. Show interface and request fullscreen
             startGate.style.display = 'none';
-            glitchWrapper.style.display = 'flex';
+            appContainer.style.display = 'flex';
+
             if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(()=>{});
+                document.documentElement.requestFullscreen().catch(() => {});
             }
 
-            startHackSequence();
+            runHackerSequence();
         });
 
-        function initAudio() {
-            // Low rumbling distortion drone
-            const drone = audioCtx.createOscillator();
-            droneGain = audioCtx.createGain();
-            drone.type = 'sawtooth';
-            drone.frequency.value = 50;
-            droneGain.gain.value = 0.1;
+        // --- AUDIO ENGINE: Moaning, Interruptions, Teeeeeeeeeeet, and Laugh ---
+        function startAudioEngine() {
+            // 1. Haunting ambient moaning / dark drone
+            const osc1 = audioCtx.createOscillator();
+            const osc2 = audioCtx.createOscillator();
+            ambientGain = audioCtx.createGain();
+
+            osc1.type = 'sawtooth';
+            osc1.frequency.value = 55; // Low menacing rumble
             
-            const dist = audioCtx.createWaveShaper();
-            dist.curve = new Float32Array(44100).map((_, i) => {
-                const x = i * 2 / 44100 - 1;
-                return (3 + 50) * x * 20 * (Math.PI / 180) / (Math.PI + 50 * Math.abs(x));
-            });
+            osc2.type = 'sine';
+            osc2.frequency.value = 110;
+
+            // LFO to create a shifting "moaning" pitch modulation
+            const lfo = audioCtx.createOscillator();
+            lfo.frequency.value = 0.2; // slow wave
+            const lfoGain = audioCtx.createGain();
+            lfoGain.gain.value = 15;
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc1.frequency);
+            lfo.start();
+
+            ambientGain.gain.value = 0.08;
             
-            drone.connect(droneGain);
-            droneGain.connect(dist);
-            dist.connect(audioCtx.destination);
-            drone.start();
+            osc1.connect(ambientGain);
+            osc2.connect(ambientGain);
+            ambientGain.connect(audioCtx.destination);
+            
+            osc1.start();
+            osc2.start();
+
+            // Random digital interruptions & glitch noise bursts
+            setInterval(() => {
+                if (Math.random() > 0.6 && audioCtx) {
+                    playGlitchArtifact();
+                }
+            }, 800);
+        }
+
+        function playGlitchArtifact() {
+            if (!audioCtx) return;
+            const now = audioCtx.currentTime;
+            const noiseBuffer = audioCtx.createBuffer(1, audioCtx.sampleRate * 0.1, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < noiseBuffer.length; i++) output[i] = (Math.random() * 2 - 1) * 0.5;
+
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = noiseBuffer;
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+
+            noise.connect(gain);
+            gain.connect(audioCtx.destination);
+            noise.start(now);
         }
 
         function playDemonLaugh() {
             const now = audioCtx.currentTime;
-            
-            // Extreme synthetic laughing stutters
-            for(let i=0; i<15; i++) {
+            // Alastor's fast, stuttering evil laughter synthesized via square waves & bursts
+            for (let i = 0; i < 18; i++) {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'square';
-                osc.frequency.setValueAtTime(250 - (i*10), now + (i*0.12)); 
+                // Descending/laughing pitch pattern
+                osc.frequency.setValueAtTime(320 - (i * 12), now + (i * 0.09));
 
-                gain.gain.setValueAtTime(0, now + (i*0.12));
-                gain.gain.linearRampToValueAtTime(1, now + (i*0.12) + 0.01);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + (i*0.12) + 0.1);
-                
+                gain.gain.setValueAtTime(0, now + (i * 0.09));
+                gain.gain.linearRampToValueAtTime(0.4, now + (i * 0.09) + 0.01);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + (i * 0.09) + 0.08);
+
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
-                osc.start(now + (i*0.12));
-                osc.stop(now + (i*0.12) + 0.11);
+                osc.start(now + (i * 0.09));
+                osc.stop(now + (i * 0.09) + 0.09);
             }
         }
 
-        const logs = [
+        const terminalLogs = [
+            "INJECTING NOOB-SAIBOT PAYLOAD...",
+            "ACCESSING ROOT NODE DIRECTORIES",
+            "PTR_CORRUPTION_ERR",
             "DECRYPTING PRIVATE RSA KEYS...",
-            "CAMERA NODE INTERCEPTED [REC ON]",
-            "INJECTING VOODOO PAYLOAD...",
-            "FIREWALL BYPASS: SUCCESS",
-            "DUMPING SYSTEM MEMORY...",
-            "DOWNLOADING USER.DAT HASHES",
-            "OVERRIDING ROOT AUDIO DRIVER"
+            "OVERRIDING KERNEL PROTOCOL",
+            "ESTABLISHING SECURE TUNNEL [PORT 4444]",
+            "CAMERA NODE INTERCEPTED",
+            "ENCRYPTING LOCAL DISK [RANSOM-MODE]",
+            "DUMPING SYSTEM MEMORY..."
         ];
 
-        function startHackSequence() {
+        function runHackerSequence() {
             let progress = 0;
             const pBar = document.getElementById('p-bar');
             const pText = document.getElementById('perc-display');
             const term = document.getElementById('term-out');
 
-            // Random Severe Glitches
+            // Periodic severe visual tears
             setInterval(() => {
-                if(Math.random() > 0.7) {
-                    glitchWrapper.classList.add('severe-glitch');
-                    setTimeout(() => glitchWrapper.classList.remove('severe-glitch'), 150);
+                if (Math.random() > 0.5) {
+                    appContainer.classList.add('severe-glitch-active');
+                    setTimeout(() => appContainer.classList.remove('severe-glitch-active'), 120);
                 }
-            }, 300);
+            }, 250);
 
-            // Progress Bar
-            function updateProg() {
-                if(progress >= 100) return;
-                progress += Math.random() * 5 + 1;
-                if(progress > 100) progress = 100;
+            // Progress Bar Loop
+            function updateProgress() {
+                if (progress >= 100) return;
+                progress += Math.random() * 4 + 0.8;
+                if (progress > 100) progress = 100;
                 
                 pBar.style.width = progress + '%';
                 pText.innerText = progress.toFixed(2) + '%';
 
-                if(progress >= 100) {
+                if (progress >= 100) {
                     document.getElementById('sys-status').innerText = "FATAL ERROR";
-                    setTimeout(triggerEnding, 1000);
+                    document.getElementById('sys-status').style.color = "#fff";
+                    setTimeout(triggerEndingSequence, 800);
                 } else {
-                    setTimeout(updateProg, Math.random() * 200 + 50);
+                    setTimeout(updateProgress, Math.random() * 180 + 40);
                 }
             }
-            updateProg();
+            updateProgress();
 
-            // Terminal Spool
-            function updateTerm() {
-                if(progress >= 100) return;
+            // Terminal Spool Loop
+            function updateTerminal() {
+                if (progress >= 100) return;
                 const line = document.createElement('div');
                 line.className = 'log-line';
                 
                 const d = new Date();
-                const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+                const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}.${String(d.getMilliseconds()).padStart(3,'0')}`;
                 
-                let msg = logs[Math.floor(Math.random() * logs.length)];
+                let msg = terminalLogs[Math.floor(Math.random() * terminalLogs.length)];
                 let isErr = false;
                 
-                if (Math.random() > 0.4) {
-                    msg = "0x" + Math.floor(Math.random()*0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0') + " : CRITICAL_FAIL";
+                if (Math.random() > 0.45) {
+                    msg = "0x" + Math.floor(Math.random()*0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0') + " : PTR_CORRUPTION_ERR";
                     isErr = true;
                 }
 
                 line.innerHTML = `<span class="log-time">${timeStr}>></span><span class="log-msg ${isErr ? 'err' : ''}">${msg}</span>`;
                 term.appendChild(line);
                 
-                if(term.childElementCount > 10) term.removeChild(term.firstChild);
+                if (term.childElementCount > 10) term.removeChild(term.firstChild);
                 
-                setTimeout(updateTerm, 90);
+                setTimeout(updateTerminal, 70);
             }
-            updateTerm();
+            updateTerminal();
         }
 
-        function triggerEnding() {
-            // Stop drone, start holding whistle
-            droneGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-            
+        function triggerEndingSequence() {
+            // 1. Mute ambient drone, start the high-pitched "Teeeeeeeeeeeeeeeet" emergency tone
+            if (ambientGain) ambientGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
+
             whistleOsc = audioCtx.createOscillator();
             whistleGain = audioCtx.createGain();
             whistleOsc.type = 'sine';
-            whistleOsc.frequency.value = 1100;
-            whistleGain.gain.value = 0.5;
+            whistleOsc.frequency.value = 1200; // The high "Teeeeeeet" tone
+            whistleGain.gain.value = 0.45;
             whistleOsc.connect(whistleGain);
             whistleGain.connect(audioCtx.destination);
             whistleOsc.start();
 
-            // TV screen turn off effect
-            glitchWrapper.classList.add('power-down');
+            // 2. Collapse the organized terminal window (TV power down)
+            appContainer.classList.add('power-down');
 
+            // 3. Cut to absolute black silence after collapse
             setTimeout(() => {
-                // Total blackness
-                glitchWrapper.style.display = 'none';
-                document.getElementById('vhs-noise').style.display = 'none';
+                appContainer.style.display = 'none';
+                document.getElementById('tv-static').style.display = 'none';
                 document.querySelector('.scanlines').style.display = 'none';
-                
-                // Wait in the dark with the whistle...
+
+                // Hold in terror for 1.5 seconds with the ringing tone, then smash to final screen
                 setTimeout(() => {
-                    // Force final jumpscare image and laugh
-                    whistleGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    // Cut off the "Teeeeeeet" tone instantly
+                    if (whistleGain) whistleGain.gain.setValueAtTime(0, audioCtx.currentTime);
+                    if (whistleOsc) whistleOsc.stop();
+
+                    // Display final virus skull screen and trigger Alastor's evil laugh
                     document.getElementById('final-scare').style.display = 'flex';
                     playDemonLaugh();
                 }, 1500);
-            }, 300);
+
+            }, 350);
         }
     </script>
 </body>
