@@ -26,7 +26,6 @@
             user-select: none;
         }
 
-        /* Scanlines Layer */
         .scanlines {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -37,7 +36,6 @@
             pointer-events: none;
         }
 
-        /* Start Overlay */
         #start-overlay {
             position: fixed;
             inset: 0;
@@ -66,7 +64,6 @@
             box-shadow: 0 0 30px var(--alastor-bright);
         }
 
-        /* Container Frame */
         #main-frame {
             width: 90%;
             max-width: 950px;
@@ -108,7 +105,6 @@
             animation: pulse 0.5s infinite alternate;
         }
 
-        /* Progress Bar */
         .progress-wrapper {
             background-color: #050001;
             border: 2px solid var(--alastor-red);
@@ -132,14 +128,13 @@
             margin-bottom: 15px;
         }
 
-        /* Code Terminal */
         .terminal {
             height: 220px;
             background-color: #000;
             border: 1px solid var(--alastor-red);
             padding: 10px;
             overflow: hidden;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: #ff3333;
             display: flex;
             flex-direction: column;
@@ -147,11 +142,12 @@
         }
 
         .log-line {
-            margin: 2px 0;
+            margin: 1px 0;
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* Violent TV Signal Cut Glitch */
         .tv-glitch {
             animation: broadcast-cut 0.08s infinite steps(2);
             filter: contrast(3) invert(0.1) hue-rotate(330deg);
@@ -169,7 +165,6 @@
             to { opacity: 1; }
         }
 
-        /* Forced Automatic TV Screen Cutoff */
         .tv-off-force {
             animation: collapse-screen 0.5s cubic-bezier(0.7, 0, 0.84, 0) forwards !important;
         }
@@ -236,15 +231,13 @@
             ctx.putImageData(imageData, 0, 0);
         }
 
-        const pythonLogs = [
-            "import socket, ssl, struct, ctypes, sys",
+        const baseLogs = [
+            "import socket, ssl, struct, ctypes, sys, os",
             "class RadioPayload(ctypes.Structure): _fields_ = [('freq', ctypes.c_ulong)]",
             "ctx = ssl.create_default_context(); ctx.check_hostname = False",
             "s = ctx.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))",
             "CRITICAL: Allocating target buffer via VirtualAllocEx(0x7FFF0000)...",
             "FORGING VOODOO HANDSHAKE PACKETS (666.0 MHz)...",
-            "0x00000000: 7F 45 4C 46 02 01 01 00  00 00 00 00 00 00 00 00",
-            "0x00000010: 02 00 3E 00 01 00 00 00  78 90 40 00 00 00 00 00",
             "HOOKING AUDIO DRIVERS -> BROADCAST FEED ESTABLISHED",
             "EXTRACTING CREDENTIAL VAULT & SYSTEM KEYS...",
             "sys.settrace(lambda frame, event, arg: OVERRIDE_LOGS())",
@@ -252,12 +245,21 @@
             "SYSTEM LOCK: TRANSMISSION OVERRIDDEN BY ALASTOR"
         ];
 
+        function generateMemoryLine() {
+            const addr = "0x" + Math.floor(Math.random()*0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0');
+            let hex = "";
+            for(let i=0; i<8; i++) {
+                hex += Math.floor(Math.random()*256).toString(16).toUpperCase().padStart(2, '0') + " ";
+            }
+            return `${addr}: ${hex} | DUMPING MEMORY`;
+        }
+
         let progress = 0;
-        let logIndex = 0;
-        let audioCtx, osc, gain;
+        let audioCtx, osc, droneOsc, gain, droneGain, toneInterval;
 
         function initAudio() {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
             osc = audioCtx.createOscillator();
             gain = audioCtx.createGain();
             osc.type = 'sawtooth';
@@ -266,6 +268,25 @@
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
+
+            droneOsc = audioCtx.createOscillator();
+            droneGain = audioCtx.createGain();
+            droneOsc.type = 'sine';
+            droneOsc.frequency.setValueAtTime(130, audioCtx.currentTime);
+            droneGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+
+            droneOsc.connect(droneGain);
+            droneGain.connect(audioCtx.destination);
+            droneOsc.start();
+
+            toneInterval = setInterval(() => {
+                if (!audioCtx) return;
+                const now = audioCtx.currentTime;
+                droneOsc.frequency.exponentialRampToValueAtTime(240, now + 1.2);
+                droneOsc.frequency.exponentialRampToValueAtTime(110, now + 2.5);
+                droneGain.gain.linearRampToValueAtTime(0.18, now + 1.2);
+                droneGain.gain.linearRampToValueAtTime(0.04, now + 2.5);
+            }, 3000);
         }
 
         function audioGlitch() {
@@ -288,7 +309,6 @@
         });
 
         function startSequence() {
-            // Rapid static burst monitor
             setInterval(() => {
                 if (Math.random() > 0.7) {
                     canvas.style.opacity = Math.random() * 0.6;
@@ -297,7 +317,6 @@
                 }
             }, 150);
 
-            // Choppy TV Cut Glitches
             setInterval(() => {
                 if (Math.random() > 0.6) {
                     mainFrame.classList.add('tv-glitch');
@@ -306,11 +325,27 @@
                 }
             }, 300);
 
-            // Stuttering, realistic loading increment (Stalls and leaps)
+            setInterval(() => {
+                if (progress >= 100) return;
+                const line = document.createElement('div');
+                line.className = 'log-line';
+                
+                if (Math.random() > 0.4) {
+                    line.innerText = "> " + baseLogs[Math.floor(Math.random() * baseLogs.length)];
+                } else {
+                    line.innerText = "# " + generateMemoryLine();
+                }
+
+                terminal.appendChild(line);
+
+                if (terminal.childNodes.length > 12) {
+                    terminal.removeChild(terminal.firstChild);
+                }
+            }, 60);
+
             function stepLoading() {
                 if (progress >= 100) return;
 
-                // Random stall vs fast progress jump
                 let increment = Math.random() > 0.8 ? Math.random() * 12 : Math.random() * 1.5;
                 progress += increment;
 
@@ -321,23 +356,13 @@
                     statusText.innerText = "BROADCAST COMPLETED. STAY TUNED...";
                     statusText.style.color = "#ff0000";
                     
-                    // Force shut off screen automatically after 800ms
-                    setTimeout(executeAutomaticShutdown, 800);
+                    setTimeout(executeAutomaticShutdown, 600);
                     return;
                 }
 
                 progressBar.style.width = progress + '%';
                 percentText.innerText = progress.toFixed(2) + '%';
 
-                if (logIndex < pythonLogs.length && Math.random() > 0.3) {
-                    const line = document.createElement('div');
-                    line.className = 'log-line';
-                    line.innerText = "> " + pythonLogs[logIndex];
-                    terminal.appendChild(line);
-                    logIndex++;
-                }
-
-                // Variable tick speed for realistic jitter
                 let nextTick = Math.random() > 0.85 ? 400 : Math.floor(Math.random() * 80 + 40);
                 setTimeout(stepLoading, nextTick);
             }
@@ -345,25 +370,49 @@
             stepLoading();
         }
 
-        // Automatic screen destruction & power kill
+        // Automatic Screen Shutdown + Prolonged Whistling/Test Signal Tone
         function executeAutomaticShutdown() {
             canvas.style.opacity = 1;
             drawStatic();
 
             if (audioCtx) {
-                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-            }
+                // Clear atmospheric loops
+                clearInterval(toneInterval);
+                
+                // Mute existing generators
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                droneGain.gain.setValueAtTime(0, audioCtx.currentTime);
 
-            setTimeout(() => {
-                mainFrame.classList.add('tv-off-force');
-                if (audioCtx) audioCtx.close();
+                // Create prolonged high-pitched broadcast whistle tone
+                const toneOsc = audioCtx.createOscillator();
+                const toneGain = audioCtx.createGain();
 
+                toneOsc.type = 'sine';
+                // Standard test whistle frequency (1000Hz tone)
+                toneOsc.frequency.setValueAtTime(1000, audioCtx.currentTime);
+
+                toneGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                
+                toneOsc.connect(toneGain);
+                toneGain.connect(audioCtx.destination);
+
+                toneOsc.start();
+
+                // Trigger screen crumple collapse while tone sustains
                 setTimeout(() => {
-                    document.body.style.backgroundColor = '#000000';
-                    canvas.style.opacity = 0;
-                }, 500);
-            }, 200);
+                    mainFrame.classList.add('tv-off-force');
+                    
+                    // Fade out tone and close audio system after screen turns off completely
+                    setTimeout(() => {
+                        toneGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
+                        setTimeout(() => {
+                            audioCtx.close();
+                            document.body.style.backgroundColor = '#000000';
+                            canvas.style.opacity = 0;
+                        }, 800);
+                    }, 500);
+                }, 200);
+            }
         }
     </script>
 </body>
