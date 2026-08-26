@@ -6,9 +6,11 @@
     <title>ALASTOR BROADCAST OVERRIDE</title>
     <style>
         :root {
+            --alastor-dark-red: #4a0000;
             --alastor-red: #8b0000;
-            --alastor-glow: #ff001e;
-            --bg-dark: #050002;
+            --alastor-bright: #ff001e;
+            --alastor-gold: #ffc400;
+            --bg-dark: #030001;
         }
 
         * {
@@ -19,7 +21,7 @@
 
         body {
             background-color: var(--bg-dark);
-            color: var(--alastor-glow);
+            color: var(--alastor-bright);
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
             height: 100vh;
@@ -30,18 +32,18 @@
             user-select: none;
         }
 
-        /* Screen Flicker & Scanline Overlay */
+        /* Scanlines & RGB Chroma distortion layer */
         .crt-overlay {
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.4) 50%), 
-                        linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.01), rgba(0,0,255,0.03));
-            background-size: 100% 3px, 6px 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.5) 50%), 
+                        linear-gradient(90deg, rgba(255,0,0,0.06), rgba(0,255,0,0.02), rgba(0,0,255,0.06));
+            background-size: 100% 4px, 6px 100%;
             z-index: 50;
             pointer-events: none;
         }
 
-        /* Start Overlay */
+        /* Start Overlay Screen */
         #start-overlay {
             position: fixed;
             inset: 0;
@@ -61,144 +63,202 @@
             font-weight: bold;
             color: #fff;
             background: radial-gradient(circle, #300005 0%, #000 100%);
-            box-shadow: 0 0 20px var(--alastor-red), inset 0 0 15px var(--alastor-glow);
+            box-shadow: 0 0 25px var(--alastor-red), inset 0 0 20px var(--alastor-bright);
             letter-spacing: 4px;
             text-transform: uppercase;
-            transition: all 0.1s ease-in-out;
+            transition: transform 0.05s ease, box-shadow 0.1s ease;
             position: relative;
         }
 
         .radio-knob-btn:hover {
-            box-shadow: 0 0 40px var(--alastor-glow), inset 0 0 25px var(--alastor-glow);
-            text-shadow: 0 0 10px #fff;
+            box-shadow: 0 0 45px var(--alastor-bright), inset 0 0 30px var(--alastor-bright);
+            color: var(--alastor-gold);
         }
 
         .radio-knob-btn:active {
-            transform: scale(0.92);
-            filter: brightness(1.5);
+            transform: scale(0.92) rotate(-2deg);
+            filter: brightness(1.8);
         }
 
-        /* Container Frame */
+        /* Main Dashboard Screen */
         #main-frame {
-            width: 90%;
-            max-width: 950px;
+            width: 95%;
+            max-width: 1100px;
             border: 3px solid var(--alastor-red);
-            padding: 30px;
-            box-shadow: 0 0 35px var(--alastor-red);
-            background: rgba(12, 1, 4, 0.95);
+            padding: 25px;
+            box-shadow: 0 0 40px rgba(139, 0, 0, 0.8), inset 0 0 20px rgba(74, 0, 0, 0.5);
+            background: rgba(8, 0, 2, 0.96);
             position: relative;
             z-index: 10;
+            display: grid;
+            grid-template-rows: auto auto auto 1fr;
+            gap: 15px;
         }
 
         /* Alastor Horror Typography */
-        .demon-title {
+        .header-section {
             text-align: center;
-            font-size: 2.8rem;
+            border-bottom: 2px dashed var(--alastor-red);
+            padding-bottom: 10px;
+        }
+
+        .demon-title {
+            font-size: 3.2rem;
             font-family: 'Impact', 'Georgia', serif;
-            letter-spacing: 5px;
-            color: #ff1a1a;
-            text-shadow: 3px 3px 0px #300, -2px -2px 10px var(--alastor-glow);
-            margin-bottom: 5px;
+            letter-spacing: 8px;
+            color: #ff0000;
+            text-shadow: 4px 4px 0px #200, -3px -3px 12px var(--alastor-bright);
         }
 
         .demon-subtitle {
-            text-align: center;
-            font-size: 1rem;
-            color: #8a7074;
-            letter-spacing: 8px;
-            margin-bottom: 25px;
+            font-size: 0.95rem;
+            color: #a37279;
+            letter-spacing: 10px;
             text-transform: uppercase;
         }
 
         .status-title {
             text-align: center;
-            font-size: 1.2rem;
-            color: #fff;
-            margin-bottom: 15px;
-            text-shadow: 0 0 8px var(--alastor-glow);
-            animation: pulse-red 0.8s infinite alternate;
+            font-size: 1.3rem;
+            color: #ffffff;
+            font-weight: bold;
+            text-shadow: 0 0 10px var(--alastor-bright);
+            animation: pulse-red 0.6s infinite alternate;
         }
 
-        /* Progress Bar */
+        /* Progress Bar Area */
+        .progress-wrapper {
+            background: #100003;
+            border: 2px solid var(--alastor-red);
+            padding: 10px;
+            box-shadow: inset 0 0 15px #000;
+        }
+
         .progress-container {
             width: 100%;
-            background-color: #100003;
-            border: 2px solid var(--alastor-red);
-            height: 25px;
+            background-color: #000;
+            border: 1px solid var(--alastor-dark-red);
+            height: 28px;
             position: relative;
-            box-shadow: inset 0 0 10px #000;
         }
 
         .progress-bar {
             width: 0%;
             height: 100%;
-            background: linear-gradient(90deg, #500000, var(--alastor-glow));
-            box-shadow: 0 0 15px var(--alastor-glow);
+            background: linear-gradient(90deg, #4a0000, var(--alastor-bright), var(--alastor-gold));
+            box-shadow: 0 0 20px var(--alastor-bright);
         }
 
         .percentage-text {
             text-align: right;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            margin: 8px 0 15px 0;
+            margin-top: 5px;
             color: #fff;
+            text-shadow: 0 0 8px var(--alastor-bright);
         }
 
-        /* Code Terminal */
-        .terminal {
-            height: 240px;
+        /* Divided Dashboard Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            height: 280px;
+        }
+
+        .panel-box {
             background-color: #020001;
             border: 1px solid var(--alastor-red);
-            padding: 12px;
+            padding: 10px;
             overflow: hidden;
             font-size: 0.8rem;
             color: #ff4d4d;
-            box-shadow: inset 0 0 15px #000;
+            box-shadow: inset 0 0 20px #000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-header {
+            background: var(--alastor-dark-red);
+            color: #fff;
+            padding: 3px 8px;
+            font-weight: bold;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .terminal-content {
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
+            overflow: hidden;
         }
 
         .log-line {
             margin: 1px 0;
             white-space: nowrap;
             overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        /* Violent Glitches & TV Effects */
-        .severe-glitch {
-            animation: shift 0.1s infinite;
-            filter: invert(0.2) hue-rotate(320deg) contrast(2);
+        /* Broadcast RGB Cut / Realistic TV Glitch Effect */
+        .tv-cut-glitch {
+            animation: tv-glitch-cut 0.15s infinite alternate;
+            filter: contrast(2.5) saturate(2) hue-rotate(340deg);
         }
 
-        @keyframes shift {
-            0% { transform: translate(4px, -2px) skewX(5deg); }
-            50% { transform: translate(-5px, 3px) skewX(-10deg); }
-            100% { transform: translate(3px, 1px) skewX(2deg); }
+        @keyframes tv-glitch-cut {
+            0% {
+                clip-path: inset(10% 0 80% 0);
+                transform: translate(-12px, 5px) skewX(15deg);
+            }
+            20% {
+                clip-path: inset(70% 0 10% 0);
+                transform: translate(15px, -8px) skewX(-20deg);
+            }
+            40% {
+                clip-path: inset(40% 0 50% 0);
+                transform: translate(-8px, 10px) scaleY(1.2);
+            }
+            60% {
+                clip-path: inset(85% 0 5% 0);
+                transform: translate(10px, -4px) skewX(10deg);
+            }
+            80% {
+                clip-path: inset(0% 0 90% 0);
+                transform: translate(-15px, 2px);
+            }
+            100% {
+                clip-path: inset(0 0 0 0);
+                transform: translate(0, 0);
+            }
         }
 
         @keyframes pulse-red {
-            from { opacity: 0.4; }
+            from { opacity: 0.3; }
             to { opacity: 1; }
         }
 
-        /* Realistic Analog Broadcast Cutoff */
+        /* Analog Signal Collapse / Terror End */
         .signal-lost {
-            animation: tv-shutdown 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            animation: tv-shutdown 0.8s cubic-bezier(0.11, 0, 0.5, 0) forwards;
         }
 
         @keyframes tv-shutdown {
             0% {
                 transform: scale(1, 1);
-                filter: brightness(4) contrast(3);
+                filter: brightness(5) contrast(4);
             }
-            40% {
-                transform: scale(1, 0.002);
-                filter: brightness(8);
+            30% {
+                transform: scale(1.1, 0.003);
+                filter: brightness(10) invert(1);
             }
             70% {
-                transform: scale(0.005, 0.002);
-                filter: brightness(10);
+                transform: scale(0.002, 0.003);
+                filter: brightness(20);
             }
             100% {
                 transform: scale(0, 0);
@@ -223,27 +283,42 @@
     <canvas id="static-canvas"></canvas>
 
     <div id="start-overlay">
-        <div class="radio-knob-btn" id="start-btn">⚙ TUNE IN TO BROADCAST ⚙</div>
+        <div class="radio-knob-btn" id="start-btn">⚙ TUNE IN TO TRANSMISSION ⚙</div>
     </div>
 
     <div id="main-frame">
-        <div class="demon-title">ALASTOR</div>
-        <div class="demon-subtitle">The Radio Demon — Broadcast Override</div>
+        <div class="header-section">
+            <div class="demon-title">ALASTOR</div>
+            <div class="demon-subtitle">The Radio Demon — Broadcast Override Protocol</div>
+        </div>
+
         <div class="status-title">DOWNLOADING RADIO VIRUS...</div>
         
-        <div class="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
+        <div class="progress-wrapper">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="percentage-text" id="percent-text">0.00%</div>
         </div>
-        <div class="percentage-text" id="percent-text">0.00%</div>
 
-        <div class="terminal" id="terminal"></div>
+        <div class="dashboard-grid">
+            <div class="panel-box">
+                <div class="panel-header">System Payload Stream</div>
+                <div class="terminal-content" id="terminal-left"></div>
+            </div>
+            <div class="panel-box">
+                <div class="panel-header">Memory & Target Intelligence</div>
+                <div class="terminal-content" id="terminal-right"></div>
+            </div>
+        </div>
     </div>
 
     <script>
         const overlay = document.getElementById('start-overlay');
         const progressBar = document.getElementById('progress-bar');
         const percentText = document.getElementById('percent-text');
-        const terminal = document.getElementById('terminal');
+        const terminalLeft = document.getElementById('terminal-left');
+        const terminalRight = document.getElementById('terminal-right');
         const mainFrame = document.getElementById('main-frame');
         const canvas = document.getElementById('static-canvas');
         const ctx = canvas.getContext('2d');
@@ -251,69 +326,151 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        // Dynamic static generation
+        // Render RGB static noise slices
         function drawStatic() {
             const imageData = ctx.createImageData(canvas.width, canvas.height);
             const buffer = new Uint32Array(imageData.data.buffer);
             for (let i = 0; i < buffer.length; i++) {
-                if (Math.random() > 0.85) {
-                    buffer[i] = 0xff0000ff; // Red static noise
-                } else if (Math.random() > 0.95) {
-                    buffer[i] = 0xffffffff;
-                }
+                const rand = Math.random();
+                if (rand > 0.88) buffer[i] = 0xff0000ff;       // Dark Red
+                else if (rand > 0.94) buffer[i] = 0xff1a1aff; // Bright Crimson
+                else if (rand > 0.98) buffer[i] = 0xffffffff; // White Burst
             }
             ctx.putImageData(imageData, 0, 0);
         }
 
-        // Realistic Complex Code Snippets
-        const complexLogs = [
-            "import socket, ssl, struct, ctypes, subprocess",
-            "class AlastorPayload(ctypes.Structure): _fields_ = [('freq', ctypes.c_ulong)]",
-            "ctx = ssl.create_default_context(); ctx.check_hostname = False",
-            "s = ctx.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))",
-            "[SYSTEM] Bypassing memory protections: VirtualAllocEx(0x7FFF0000, PAGE_EXECUTE_READWRITE)",
-            "CRITICAL: Injecting radio_signal.dll into process explorer.exe (PID: 1048)",
-            "FORGING VOODOO HANDSHAKE PACKETS...",
-            "0x00000000: 7F 45 4C 46 02 01 01 00  00 00 00 00 00 00 00 00  .ELF............",
-            "0x00000010: 02 00 3E 00 01 00 00 00  78 90 40 00 00 00 00 00  ..>.....x.@.....",
-            "hook_audio_driver(channel='MIC_INPUT', output='BROADCAST_FEED')",
-            "DUMPING LOCAL KEYCHAIN AND CREDENTIAL VAULT...",
+        // Realistic Code Logs (Python System Hook & Payload Memory Slices)
+        const codePayload = [
+            "import socket, ssl, struct, ctypes, sys",
+            "from voodoo_engine import RadioFrequencyOverride",
+            "rf = RadioFrequencyOverride(band='AM', freq=666.0)",
+            "rf.hijack_audio_pipeline(device_id=0x01)",
+            "CRITICAL: Injecting shellcode into VirtualAllocEx(0x7FFF0000)...",
+            "0x00000000: 7F 45 4C 46 02 01 01 00 00 00 00 00 00 00 00 00",
+            "0x00000010: 02 00 3E 00 01 00 00 00 78 90 40 00 00 00 00 00",
             "sys.settrace(lambda frame, event, arg: OVERRIDE_LOGS())",
-            "TARGET IP IDENTIFIED: " + Math.floor(Math.random()*220 + 10) + "." + Math.floor(Math.random()*255) + ".114.9",
-            "EXPLOITING CVE-2026-6660 (VOXTEK PROTOCOL ESCALATION)",
-            "ESTABLISHING PERMANENT RADIO TRANSMISSION FREQUENCY: 66.6 MHz...",
+            "EXPLOITING CVE-2026-6660 (VOXTEK PROTOCOL ESCALATION)...",
+            "HOOKING AUDIO DRIVER -> BROADCAST FEED STABLISHED",
             "SUCCESS: System core hijacked by Alastor."
         ];
 
+        const targetPayload = [
+            "SCANNING NETWORK NEIGHBORHOOD...",
+            "TARGET_IP: " + Math.floor(Math.random()*220 + 10) + "." + Math.floor(Math.random()*255) + ".114.9",
+            "OPEN PORTS: 80, 443, 666, 8080 (VOODOO CHANNEL DETECTED)",
+            "EXTRACTING CREDENTIAL VAULT & KEYCHAIN...",
+            "DUMPING USER PROFILE MEMORY MAP...",
+            "0x7FFF0040: [ENCRYPTED VOX DATA STREAM]",
+            "SIGNAL FREQUENCY LOCKED: 66.6 MHz",
+            "MICROPHONE FEED ACCESSED.",
+            "CAMERA FEED IDENTIFIED.",
+            "BROADCAST LOCK-IN: 100% COMPLETE."
+        ];
+
         let progress = 0;
-        let logIndex = 0;
+        let leftIdx = 0;
+        let rightIdx = 0;
 
-        // Web Audio API Synth for scary radio feedback sound
-        let audioCtx, osc, gain;
+        // Audio Context: Scarier synthesis (Vintage AM Noise + Modulation + Laugh Synthesizer)
+        let audioCtx, osc1, osc2, noiseNode, mainGain;
 
-        function startAudio() {
+        function initScaryAudio() {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            osc = audioCtx.createOscillator();
-            gain = audioCtx.createGain();
             
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(80, audioCtx.currentTime); // Low creepy hum
+            // Carrier low frequencies (Radio hum)
+            osc1 = audioCtx.createOscillator();
+            osc2 = audioCtx.createOscillator();
+            mainGain = audioCtx.createGain();
+
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(55, audioCtx.currentTime); // Low A hum
             
-            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
+            osc2.type = 'square';
+            osc2.frequency.setValueAtTime(110, audioCtx.currentTime);
+
+            // AM Radio Noise buffer
+            const bufferSize = audioCtx.sampleRate * 2;
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+
+            noiseNode = audioCtx.createBufferSource();
+            noiseNode.buffer = noiseBuffer;
+            noiseNode.loop = true;
+
+            const noiseFilter = audioCtx.createBiquadFilter();
+            noiseFilter.type = 'bandpass';
+            noiseFilter.frequency.setValueAtTime(1200, audioCtx.currentTime);
+
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+
+            noiseNode.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+
+            mainGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+
+            osc1.connect(mainGain);
+            osc2.connect(mainGain);
+            mainGain.connect(audioCtx.destination);
+
+            osc1.start();
+            osc2.start();
+            noiseNode.start();
         }
 
         function triggerAudioGlitch() {
             if (!audioCtx) return;
-            osc.frequency.setValueAtTime(Math.random() * 600 + 100, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            const now = audioCtx.currentTime;
+            osc1.frequency.setValueAtTime(Math.random() * 800 + 100, now);
+            osc2.frequency.setValueAtTime(Math.random() * 400 + 50, now);
+            mainGain.gain.setValueAtTime(0.3, now);
+
             setTimeout(() => {
-                osc.frequency.setValueAtTime(80, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            }, 100);
+                osc1.frequency.setValueAtTime(55, audioCtx.currentTime);
+                osc2.frequency.setValueAtTime(110, audioCtx.currentTime);
+                mainGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            }, 120);
+        }
+
+        // Synthesize Alastor's Iconic Radio Demon Laugh at the end
+        function playAlastorLaugh() {
+            if (!audioCtx) return;
+            
+            const laughOsc = audioCtx.createOscillator();
+            const laughGain = audioCtx.createGain();
+            laughOsc.type = 'sawtooth';
+
+            // Filter for classic 1920s vintage radio effect
+            const radioFilter = audioCtx.createBiquadFilter();
+            radioFilter.type = 'bandpass';
+            radioFilter.frequency.setValueAtTime(1800, audioCtx.currentTime);
+            radioFilter.Q.setValueAtTime(3.0, audioCtx.currentTime);
+
+            laughOsc.connect(radioFilter);
+            radioFilter.connect(laughGain);
+            laughGain.connect(audioCtx.destination);
+
+            laughGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+
+            // Laugh pitch steps ("Ha-Ha-Ha-HAHAHA!")
+            const startTime = audioCtx.currentTime;
+            const laughPitches = [240, 280, 240, 320, 360, 420, 300, 480, 520, 600];
+            
+            laughPitches.forEach((freq, index) => {
+                const time = startTime + (index * 0.12);
+                laughOsc.frequency.setValueAtTime(freq, time);
+                laughOsc.frequency.exponentialRampToValueAtTime(freq * 0.7, time + 0.1);
+            });
+
+            laughGain.gain.setValueAtTime(0.5, startTime);
+            laughGain.gain.exponentialRampToValueAtTime(0.001, startTime + (laughPitches.length * 0.12) + 0.2);
+
+            laughOsc.start(startTime);
+            laughOsc.stop(startTime + (laughPitches.length * 0.12) + 0.3);
         }
 
         overlay.addEventListener('click', () => {
@@ -321,71 +478,79 @@
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen().catch(() => {});
             }
-            startAudio();
+            initScaryAudio();
             startPrank();
         });
 
         function startPrank() {
-            // Visual Static Interference Loop
+            // Random static overlays
             setInterval(() => {
-                if (Math.random() > 0.8) {
-                    canvas.style.opacity = Math.random() * 0.4;
+                if (Math.random() > 0.75) {
+                    canvas.style.opacity = Math.random() * 0.5;
                     drawStatic();
-                    setTimeout(() => canvas.style.opacity = 0, 80);
+                    setTimeout(() => canvas.style.opacity = 0, 90);
                 }
-            }, 200);
+            }, 180);
 
-            // Severe Random Glitches
+            // TV camera glitch cuts
             setInterval(() => {
-                if (Math.random() > 0.65) {
-                    mainFrame.classList.add('severe-glitch');
+                if (Math.random() > 0.6) {
+                    mainFrame.classList.add('tv-cut-glitch');
                     triggerAudioGlitch();
-                    setTimeout(() => mainFrame.classList.remove('severe-glitch'), 120);
+                    setTimeout(() => mainFrame.classList.remove('tv-cut-glitch'), 150);
                 }
-            }, 400);
+            }, 350);
 
-            // Progress bar counter loop
+            // Progress bar and split logs loop
             const interval = setInterval(() => {
-                progress += Math.random() * 2.5;
+                progress += Math.random() * 2.2;
 
                 if (progress > 100) progress = 100;
 
                 progressBar.style.width = progress + '%';
                 percentText.innerText = progress.toFixed(2) + '%';
 
-                if (logIndex < complexLogs.length && Math.random() > 0.3) {
+                if (leftIdx < codePayload.length && Math.random() > 0.3) {
                     const line = document.createElement('div');
                     line.className = 'log-line';
-                    line.innerText = ">> " + complexLogs[logIndex];
-                    terminal.appendChild(line);
-                    logIndex++;
+                    line.innerText = "> " + codePayload[leftIdx];
+                    terminalLeft.appendChild(line);
+                    leftIdx++;
+                }
+
+                if (rightIdx < targetPayload.length && Math.random() > 0.4) {
+                    const line = document.createElement('div');
+                    line.className = 'log-line';
+                    line.innerText = "# " + targetPayload[rightIdx];
+                    terminalRight.appendChild(line);
+                    rightIdx++;
                 }
 
                 if (progress >= 100) {
                     clearInterval(interval);
-                    setTimeout(triggerTerrorEnd, 800);
+                    setTimeout(triggerTerrorEnd, 500);
                 }
-            }, 100);
+            }, 90);
         }
 
-        // Final Analog Cutoff Sequence
+        // Final Climax: Laugh -> Burst Glitch -> Complete Broadcast Cutoff
         function triggerTerrorEnd() {
-            // Full screen burst glitch
-            canvas.style.opacity = 0.9;
+            playAlastorLaugh();
+
+            // Screen burst
+            canvas.style.opacity = 1;
             drawStatic();
-            if (audioCtx) {
-                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-            }
 
             setTimeout(() => {
                 mainFrame.classList.add('signal-lost');
-                if (audioCtx) audioCtx.close();
+                if (audioCtx) {
+                    mainGain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+                }
                 setTimeout(() => {
                     document.body.style.backgroundColor = '#000000';
                     canvas.style.opacity = 0;
-                }, 700);
-            }, 300);
+                }, 800);
+            }, 1200);
         }
     </script>
 </body>
