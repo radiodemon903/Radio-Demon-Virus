@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BROADCAST OVERRIDE</title>
+    <title>THE RADIO DEMON</title>
     <style>
         :root {
-            --alastor-red: #660000;
+            --alastor-dark: #1a0000;
+            --alastor-red: #8b0000;
             --alastor-bright: #ff001e;
-            --bg-dark: #030001;
+            --bg-dark: #000000;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,16 +27,37 @@
             user-select: none;
         }
 
+        /* -------------------------------------- */
+        /* CRT & GLITCH EFFECTS                   */
+        /* -------------------------------------- */
         .scanlines {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.7) 50%),
-                        linear-gradient(90deg, rgba(255,0,0,0.05), rgba(0,255,0,0.01), rgba(0,0,255,0.05));
+                        linear-gradient(90deg, rgba(255,0,0,0.03), rgba(0,255,0,0.01), rgba(0,0,255,0.03));
             background-size: 100% 4px, 6px 100%;
             z-index: 50;
             pointer-events: none;
         }
 
+        .heavy-glitch {
+            animation: violent-tear 0.1s infinite steps(2);
+            filter: contrast(2) saturate(2) hue-rotate(-10deg);
+            text-shadow: -2px 0 red, 2px 0 cyan;
+        }
+
+        @keyframes violent-tear {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(-5px, 2px); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(5px, -2px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(-5px, 5px); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(10px, -2px); }
+            80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, -5px); }
+            100% { clip-path: inset(30% 0 40% 0); transform: translate(2px, 2px); }
+        }
+
+        /* -------------------------------------- */
+        /* ALASTOR "ON AIR" START BUTTON          */
+        /* -------------------------------------- */
         #start-overlay {
             position: fixed;
             inset: 0;
@@ -47,133 +69,182 @@
             cursor: pointer;
         }
 
-        .tune-btn {
-            border: 2px solid var(--alastor-red);
-            padding: 20px 40px;
-            font-size: 1.5rem;
-            color: #fff;
-            background: #100003;
-            box-shadow: 0 0 15px var(--alastor-red);
-            letter-spacing: 4px;
+        .on-air-btn {
+            border: 4px solid var(--alastor-red);
+            border-radius: 10px;
+            padding: 30px 60px;
+            font-size: 3rem;
+            color: var(--alastor-bright);
+            background: #0a0000;
+            font-family: 'Impact', sans-serif;
+            letter-spacing: 10px;
             text-transform: uppercase;
-            font-weight: bold;
+            box-shadow: 0 0 20px var(--alastor-red), inset 0 0 15px var(--alastor-red);
+            transition: all 0.2s;
+            position: relative;
+            text-shadow: 0 0 10px var(--alastor-bright), 0 0 20px var(--alastor-bright);
         }
 
-        .tune-btn:hover {
-            background: var(--alastor-red);
-            box-shadow: 0 0 30px var(--alastor-bright);
+        .on-air-btn:hover {
+            background: var(--alastor-dark);
+            box-shadow: 0 0 50px var(--alastor-bright), inset 0 0 30px var(--alastor-bright);
+            transform: scale(1.05);
+            animation: text-shake 0.1s infinite;
         }
 
+        @keyframes text-shake {
+            0% { transform: translate(2px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(0px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(2px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        /* -------------------------------------- */
+        /* ORGANIZED LOADING TERMINAL             */
+        /* -------------------------------------- */
         #main-frame {
-            width: 90%;
-            max-width: 950px;
-            border: 3px solid var(--alastor-red);
-            padding: 30px;
-            box-shadow: 0 0 30px rgba(102, 0, 0, 0.8);
-            background: rgba(8, 0, 2, 0.98);
+            width: 85%;
+            max-width: 800px;
+            border: 2px solid #330000;
+            background: linear-gradient(180deg, #050000 0%, #110000 100%);
             position: relative;
             z-index: 10;
+            display: none; /* Hidden until clicked */
+            flex-direction: column;
+            box-shadow: 0 0 40px rgba(255, 0, 0, 0.2);
         }
 
-        .demon-header {
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--alastor-red);
-            padding-bottom: 10px;
+        .header-bar {
+            background: var(--alastor-red);
+            color: #000;
+            padding: 10px 20px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            letter-spacing: 2px;
+        }
+
+        .content-area {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .demon-title {
-            font-size: 3rem;
+            font-size: 4rem;
             font-family: 'Impact', serif;
-            letter-spacing: 6px;
-            color: #ff0000;
-            text-shadow: 3px 3px 0px #000, 0 0 10px var(--alastor-bright);
+            letter-spacing: 8px;
+            color: var(--alastor-bright);
+            text-shadow: 4px 4px 0px #330000;
+            margin-bottom: 30px;
+            animation: text-shake 3s infinite;
         }
 
-        .demon-subtitle {
-            font-size: 0.9rem;
-            color: #8a7074;
-            letter-spacing: 6px;
-            text-transform: uppercase;
+        .progress-container {
+            width: 100%;
+            margin-bottom: 20px;
         }
 
-        .status-title {
-            text-align: center;
-            font-size: 1.2rem;
-            color: #fff;
-            margin-bottom: 15px;
-            animation: pulse 0.5s infinite alternate;
-        }
-
-        .progress-wrapper {
-            background-color: #050001;
-            border: 2px solid var(--alastor-red);
-            height: 26px;
-            position: relative;
-            margin-bottom: 5px;
-        }
-
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #4a0000, var(--alastor-bright));
-            box-shadow: 0 0 15px var(--alastor-bright);
-        }
-
-        .percentage-text {
-            text-align: right;
-            font-size: 1.2rem;
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
             font-weight: bold;
-            color: #fff;
-            margin-bottom: 15px;
+            color: #aaa;
         }
 
-        .terminal {
-            height: 220px;
-            background-color: #000;
+        .progress-bar-bg {
+            width: 100%;
+            height: 30px;
+            background: #000;
             border: 1px solid var(--alastor-red);
-            padding: 10px;
+            position: relative;
             overflow: hidden;
-            font-size: 0.78rem;
-            color: #ff3333;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: repeating-linear-gradient(
+                45deg,
+                var(--alastor-red),
+                var(--alastor-red) 10px,
+                var(--alastor-bright) 10px,
+                var(--alastor-bright) 20px
+            );
+            box-shadow: 0 0 20px var(--alastor-bright);
+            transition: width 0.1s;
+        }
+
+        .terminal-box {
+            width: 100%;
+            height: 180px;
+            background: #000;
+            border: 1px solid #440000;
+            padding: 15px;
+            overflow: hidden;
+            font-size: 0.85rem;
+            color: #cc0000;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
         }
 
         .log-line {
-            margin: 1px 0;
+            margin: 2px 0;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            opacity: 0.8;
         }
 
-        .tv-glitch {
-            animation: broadcast-cut 0.08s infinite steps(2);
-            filter: contrast(3) invert(0.1) hue-rotate(330deg);
-        }
-
-        @keyframes broadcast-cut {
-            0% { clip-path: inset(40% 0 20% 0); transform: translate(-15px, 8px) skewX(20deg); }
-            30% { clip-path: inset(10% 0 70% 0); transform: translate(12px, -5px) skewX(-15deg); }
-            60% { clip-path: inset(80% 0 5% 0); transform: translate(-8px, 12px); }
-            100% { clip-path: inset(0 0 0 0); transform: translate(0, 0); }
-        }
-
-        @keyframes pulse {
-            from { opacity: 0.2; }
-            to { opacity: 1; }
-        }
-
+        /* -------------------------------------- */
+        /* ENDING SEQUENCE STYLES                 */
+        /* -------------------------------------- */
         .tv-off-force {
             animation: collapse-screen 0.5s cubic-bezier(0.7, 0, 0.84, 0) forwards !important;
         }
 
         @keyframes collapse-screen {
             0% { transform: scale(1, 1); filter: brightness(5); }
-            50% { transform: scale(1, 0.003); filter: brightness(10); }
-            80% { transform: scale(0.002, 0.003); filter: brightness(20); }
-            100% { transform: scale(0, 0); filter: brightness(0); opacity: 0; }
+            50% { transform: scale(1, 0.005); filter: brightness(10); }
+            80% { transform: scale(0.002, 0.005); filter: brightness(20); }
+            100% { transform: scale(0, 0); filter: brightness(0); opacity: 0; display: none; }
+        }
+
+        /* The terrifying final image wrapper */
+        #final-scare {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: #000;
+            z-index: 200;
+            display: none; /* Hidden until the very end */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* The requested image, glitching infinitely */
+        #jumpscare-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            animation: final-glitch 0.05s infinite;
+            mix-blend-mode: screen;
+        }
+
+        @keyframes final-glitch {
+            0% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg) contrast(1.5); clip-path: inset(0 0 0 0); }
+            25% { transform: translate(-10px, 5px) scale(1.02); filter: hue-rotate(90deg) contrast(2); clip-path: inset(10% 0 40% 0); }
+            50% { transform: translate(10px, -5px) scale(0.98); filter: hue-rotate(-90deg) contrast(3) invert(1); clip-path: inset(50% 0 10% 0); }
+            75% { transform: translate(-5px, -10px) scale(1.05); filter: hue-rotate(180deg) contrast(1.2); clip-path: inset(20% 0 60% 0); }
+            100% { transform: translate(5px, 10px) scale(1); filter: hue-rotate(0deg) contrast(1.5); clip-path: inset(0 0 0 0); }
         }
 
         #static-canvas {
@@ -188,33 +259,48 @@
     <div class="scanlines"></div>
     <canvas id="static-canvas"></canvas>
 
+    <!-- Start Button -->
     <div id="start-overlay">
-        <div class="tune-btn">TUNE IN TO BROADCAST</div>
+        <div class="on-air-btn" id="start-btn">ON AIR</div>
     </div>
 
+    <!-- Main Loading Interface -->
     <div id="main-frame">
-        <div class="demon-header">
+        <div class="header-bar">
+            <span>SYS.REQ: OVERRIDE</span>
+            <span id="status-text">WAITING...</span>
+        </div>
+        <div class="content-area">
             <div class="demon-title">ALASTOR</div>
-            <div class="demon-subtitle">THE RADIO DEMON — TRANSMISSION OVERRIDE</div>
-        </div>
+            
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>BROADCAST INFILTRATION</span>
+                    <span id="percent-text">0.00%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
 
-        <div class="status-title" id="status-text">DOWNLOADING RADIO VIRUS...</div>
-        
-        <div class="progress-wrapper">
-            <div class="progress-bar" id="progress-bar"></div>
+            <div class="terminal-box" id="terminal"></div>
         </div>
-        <div class="percentage-text" id="percent-text">0.00%</div>
+    </div>
 
-        <div class="terminal" id="terminal"></div>
+    <!-- Final Ending Jumpscare Container -->
+    <div id="final-scare">
+        <img id="jumpscare-img" src="d769884480dfdee13e47e0526d22f906.jpg" alt="The Radio Demon">
     </div>
 
     <script>
         const overlay = document.getElementById('start-overlay');
-        const progressBar = document.getElementById('progress-bar');
+        const startBtn = document.getElementById('start-btn');
+        const mainFrame = document.getElementById('main-frame');
+        const progressFill = document.getElementById('progress-fill');
         const percentText = document.getElementById('percent-text');
         const terminal = document.getElementById('terminal');
-        const mainFrame = document.getElementById('main-frame');
         const statusText = document.getElementById('status-text');
+        const finalScare = document.getElementById('final-scare');
         const canvas = document.getElementById('static-canvas');
         const ctx = canvas.getContext('2d');
 
@@ -232,26 +318,23 @@
         }
 
         const baseLogs = [
-            "import socket, ssl, struct, ctypes, sys, os",
-            "class RadioPayload(ctypes.Structure): _fields_ = [('freq', ctypes.c_ulong)]",
-            "ctx = ssl.create_default_context(); ctx.check_hostname = False",
-            "s = ctx.wrap_socket(socket.socket(socket.AF_INET, socket.SOCK_STREAM))",
-            "CRITICAL: Allocating target buffer via VirtualAllocEx(0x7FFF0000)...",
-            "FORGING VOODOO HANDSHAKE PACKETS (666.0 MHz)...",
-            "HOOKING AUDIO DRIVERS -> BROADCAST FEED ESTABLISHED",
-            "EXTRACTING CREDENTIAL VAULT & SYSTEM KEYS...",
-            "sys.settrace(lambda frame, event, arg: OVERRIDE_LOGS())",
-            "EXPLOITING CVE-2026-6660 PROTOCOL ESCALATION...",
-            "SYSTEM LOCK: TRANSMISSION OVERRIDDEN BY ALASTOR"
+            "[!] ACCESSING ROOT AUDIO DRIVERS...",
+            "[*] INJECTING 666.0 MHz CARRIER SIGNAL...",
+            "[!] FIREWALL BREACH DETECTED - BYPASSING...",
+            "[*] FORGING VOODOO HANDSHAKE PACKETS...",
+            "[CRITICAL] MEMORY LEAK IN SECTOR 7G...",
+            "[*] DECRYPTING SOUL CONTRACTS...",
+            "[CRITICAL] TRANSMISSION PROTOCOL CORRUPTED",
+            ">>> HE IS HERE <<<"
         ];
 
         function generateMemoryLine() {
             const addr = "0x" + Math.floor(Math.random()*0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0');
             let hex = "";
-            for(let i=0; i<8; i++) {
+            for(let i=0; i<6; i++) {
                 hex += Math.floor(Math.random()*256).toString(16).toUpperCase().padStart(2, '0') + " ";
             }
-            return `${addr}: ${hex} | DUMPING MEMORY`;
+            return `${addr}: ${hex} ...`;
         }
 
         let progress = 0;
@@ -260,21 +343,22 @@
         function initAudio() {
             audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             
+            // Background Static/Hum
             osc = audioCtx.createOscillator();
             gain = audioCtx.createGain();
             osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(60, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(50, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
 
+            // Creepy low drone
             droneOsc = audioCtx.createOscillator();
             droneGain = audioCtx.createGain();
             droneOsc.type = 'sine';
-            droneOsc.frequency.setValueAtTime(130, audioCtx.currentTime);
-            droneGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-
+            droneOsc.frequency.setValueAtTime(110, audioCtx.currentTime);
+            droneGain.gain.setValueAtTime(0.08, audioCtx.currentTime);
             droneOsc.connect(droneGain);
             droneGain.connect(audioCtx.destination);
             droneOsc.start();
@@ -282,25 +366,83 @@
             toneInterval = setInterval(() => {
                 if (!audioCtx) return;
                 const now = audioCtx.currentTime;
-                droneOsc.frequency.exponentialRampToValueAtTime(240, now + 1.2);
-                droneOsc.frequency.exponentialRampToValueAtTime(110, now + 2.5);
-                droneGain.gain.linearRampToValueAtTime(0.18, now + 1.2);
-                droneGain.gain.linearRampToValueAtTime(0.04, now + 2.5);
+                droneOsc.frequency.exponentialRampToValueAtTime(220, now + 1.2);
+                droneOsc.frequency.exponentialRampToValueAtTime(90, now + 2.5);
             }, 3000);
         }
 
         function audioGlitch() {
             if (!audioCtx) return;
-            osc.frequency.setValueAtTime(Math.random() * 900 + 100, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            osc.frequency.setValueAtTime(Math.random() * 1000 + 200, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
             setTimeout(() => {
-                osc.frequency.setValueAtTime(60, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            }, 80);
+                if(!audioCtx) return;
+                osc.frequency.setValueAtTime(50, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            }, 50);
         }
 
-        overlay.addEventListener('click', () => {
+        // Synthesize a creepy, robotic/static demon laugh
+        function playDemonLaugh() {
+            if (!audioCtx) return;
+            let now = audioCtx.currentTime;
+            
+            // Create a burst of white noise for the static crunch
+            const bufferSize = audioCtx.sampleRate * 2; // 2 seconds of noise
+            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                output[i] = Math.random() * 2 - 1;
+            }
+            const whiteNoise = audioCtx.createBufferSource();
+            whiteNoise.buffer = noiseBuffer;
+            const noiseFilter = audioCtx.createBiquadFilter();
+            noiseFilter.type = 'bandpass';
+            noiseFilter.frequency.value = 1000;
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0.5, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 2);
+            whiteNoise.connect(noiseFilter);
+            noiseFilter.connect(noiseGain);
+            noiseGain.connect(audioCtx.destination);
+            whiteNoise.start(now);
+
+            // Staccato laughing tones
+            for(let i=0; i<9; i++) {
+                let laughOsc = audioCtx.createOscillator();
+                let laughGain = audioCtx.createGain();
+                
+                // Descending pitch for the laugh "ha... ha... ha..."
+                laughOsc.type = 'square';
+                laughOsc.frequency.setValueAtTime(250 - (i*15), now + (i*0.18)); 
+
+                // Frequency vibrato to make it sound unhinged
+                let lfo = audioCtx.createOscillator();
+                lfo.frequency.value = 15; // fast shake
+                let lfoGain = audioCtx.createGain();
+                lfoGain.gain.value = 40;
+                lfo.connect(lfoGain);
+                lfoGain.connect(laughOsc.frequency);
+                lfo.start(now + (i*0.18));
+                lfo.stop(now + (i*0.18) + 0.15);
+
+                laughGain.gain.setValueAtTime(0, now + (i*0.18));
+                laughGain.gain.linearRampToValueAtTime(0.8, now + (i*0.18) + 0.02);
+                laughGain.gain.exponentialRampToValueAtTime(0.01, now + (i*0.18) + 0.12);
+                
+                laughOsc.connect(laughGain);
+                laughGain.connect(audioCtx.destination);
+                laughOsc.start(now + (i*0.18));
+                laughOsc.stop(now + (i*0.18) + 0.15);
+            }
+        }
+
+        startBtn.addEventListener('click', () => {
             overlay.style.display = 'none';
+            mainFrame.style.display = 'flex';
+            statusText.innerText = "OVERWRITING...";
+            statusText.style.color = "red";
+            
             if (document.documentElement.requestFullscreen) {
                 document.documentElement.requestFullscreen().catch(() => {});
             }
@@ -309,109 +451,98 @@
         });
 
         function startSequence() {
+            // Visual Glitch loop
             setInterval(() => {
-                if (Math.random() > 0.7) {
-                    canvas.style.opacity = Math.random() * 0.6;
-                    drawStatic();
-                    setTimeout(() => canvas.style.opacity = 0, 60);
-                }
-            }, 150);
-
-            setInterval(() => {
-                if (Math.random() > 0.6) {
-                    mainFrame.classList.add('tv-glitch');
+                if (Math.random() > 0.8) {
+                    mainFrame.classList.add('heavy-glitch');
                     audioGlitch();
-                    setTimeout(() => mainFrame.classList.remove('tv-glitch'), 100);
+                    setTimeout(() => mainFrame.classList.remove('heavy-glitch'), 150);
                 }
-            }, 300);
+            }, 400);
 
+            // Terminal feed
             setInterval(() => {
                 if (progress >= 100) return;
                 const line = document.createElement('div');
                 line.className = 'log-line';
                 
-                if (Math.random() > 0.4) {
+                if (Math.random() > 0.3) {
                     line.innerText = "> " + baseLogs[Math.floor(Math.random() * baseLogs.length)];
                 } else {
                     line.innerText = "# " + generateMemoryLine();
                 }
 
                 terminal.appendChild(line);
-
-                if (terminal.childNodes.length > 12) {
+                if (terminal.childNodes.length > 10) {
                     terminal.removeChild(terminal.firstChild);
                 }
-            }, 60);
+            }, 80);
 
+            // Stuttering Progress
             function stepLoading() {
                 if (progress >= 100) return;
 
-                let increment = Math.random() > 0.8 ? Math.random() * 12 : Math.random() * 1.5;
+                let increment = Math.random() > 0.8 ? Math.random() * 15 : Math.random() * 2;
                 progress += increment;
 
                 if (progress >= 100) {
                     progress = 100;
-                    progressBar.style.width = '100%';
+                    progressFill.style.width = '100%';
                     percentText.innerText = '100.00%';
-                    statusText.innerText = "BROADCAST COMPLETED. STAY TUNED...";
-                    statusText.style.color = "#ff0000";
+                    statusText.innerText = "BROADCAST COMPLETED";
                     
-                    setTimeout(executeAutomaticShutdown, 600);
+                    setTimeout(executeAutomaticShutdown, 1000);
                     return;
                 }
 
-                progressBar.style.width = progress + '%';
+                progressFill.style.width = progress + '%';
                 percentText.innerText = progress.toFixed(2) + '%';
 
-                let nextTick = Math.random() > 0.85 ? 400 : Math.floor(Math.random() * 80 + 40);
+                let nextTick = Math.random() > 0.85 ? 500 : Math.floor(Math.random() * 60 + 30);
                 setTimeout(stepLoading, nextTick);
             }
 
             stepLoading();
         }
 
-        // Automatic Screen Shutdown + Prolonged Whistling/Test Signal Tone
         function executeAutomaticShutdown() {
+            // 1. Extreme static visual
             canvas.style.opacity = 1;
             drawStatic();
 
             if (audioCtx) {
-                // Clear atmospheric loops
                 clearInterval(toneInterval);
-                
-                // Mute existing generators
                 gain.gain.setValueAtTime(0, audioCtx.currentTime);
                 droneGain.gain.setValueAtTime(0, audioCtx.currentTime);
 
-                // Create prolonged high-pitched broadcast whistle tone
+                // 2. The requested holding whistle tone
                 const toneOsc = audioCtx.createOscillator();
                 const toneGain = audioCtx.createGain();
-
                 toneOsc.type = 'sine';
-                // Standard test whistle frequency (1000Hz tone)
-                toneOsc.frequency.setValueAtTime(1000, audioCtx.currentTime);
-
-                toneGain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-                
+                toneOsc.frequency.setValueAtTime(1000, audioCtx.currentTime); // High pitch "teeeeeeeeeet"
+                toneGain.gain.setValueAtTime(0.5, audioCtx.currentTime);
                 toneOsc.connect(toneGain);
                 toneGain.connect(audioCtx.destination);
-
                 toneOsc.start();
 
-                // Trigger screen crumple collapse while tone sustains
+                // 3. Screen Shrinks and Cuts to Black
                 setTimeout(() => {
                     mainFrame.classList.add('tv-off-force');
                     
-                    // Fade out tone and close audio system after screen turns off completely
                     setTimeout(() => {
-                        toneGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
+                        toneGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
+                        document.body.style.backgroundColor = '#000000';
+                        canvas.style.opacity = 0; // Pure black screen
+                        
+                        // 4. Wait 1.5 seconds in the pure dark, then jump scare + laugh
                         setTimeout(() => {
-                            audioCtx.close();
-                            document.body.style.backgroundColor = '#000000';
-                            canvas.style.opacity = 0;
-                        }, 800);
+                            toneOsc.stop(); // kill whistle completely
+                            finalScare.style.display = 'flex'; // Show the requested image
+                            playDemonLaugh(); // Trigger synthetic stutter laugh
+                        }, 1500);
+
                     }, 500);
-                }, 200);
+                }, 800);
             }
         }
     </script>
