@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE RADIO DEMON</title>
+    <title>SYS.OVERRIDE // ALASTOR</title>
     <style>
         :root {
-            --alastor-dark: #0a0000;
-            --alastor-red: #8b0000;
-            --alastor-bright: #ff001e;
-            --alastor-glow: rgba(255, 0, 30, 0.6);
-            --bg-dark: #000000;
-            --terminal-green: #ff3333; /* Adapted to red for Alastor */
-            --terminal-red: #ff001e;
+            --bg-deep: #030000;
+            --alastor-crimson: #8b0000;
+            --alastor-blood: #ff001e;
+            --alastor-glow: rgba(255, 0, 30, 0.7);
+            --text-muted: #880000;
+            --glitch-offset-1: 3px;
+            --glitch-offset-2: -3px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--alastor-bright);
+            background-color: #000;
+            color: var(--alastor-blood);
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
             height: 100vh;
@@ -28,25 +28,30 @@
             justify-content: center;
             align-items: center;
             user-select: none;
+            cursor: crosshair;
         }
 
-        /* -------------------------------------- */
-        /* CRT & GLITCH EFFECTS                   */
-        /* -------------------------------------- */
+        /* --- COMPLEX CANVAS LAYERS --- */
+        #dot-matrix, #static-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+        }
+        #dot-matrix { z-index: 1; opacity: 0.4; }
+        #static-overlay { z-index: 50; mix-blend-mode: overlay; opacity: 0.15; }
+
         .scanlines {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.75) 50%),
-                        linear-gradient(90deg, rgba(255,0,0,0.04), rgba(0,255,0,0.01), rgba(0,0,255,0.04));
-            background-size: 100% 4px, 6px 100%;
-            z-index: 50;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.8) 50%);
+            background-size: 100% 4px;
+            z-index: 49;
             pointer-events: none;
         }
 
-        /* -------------------------------------- */
-        /* ALASTOR "ON AIR" START BUTTON          */
-        /* -------------------------------------- */
-        #start-overlay {
+        /* --- START BUTTON --- */
+        #start-gate {
             position: fixed;
             inset: 0;
             background: #000;
@@ -54,201 +59,172 @@
             justify-content: center;
             align-items: center;
             z-index: 100;
-            cursor: pointer;
         }
 
-        .on-air-btn {
-            border: 2px solid var(--alastor-red);
-            border-radius: 5px;
-            padding: 20px 50px;
-            font-size: 2.5rem;
-            color: var(--alastor-bright);
-            background: #050000;
-            font-family: 'Impact', sans-serif;
-            letter-spacing: 8px;
+        .btn-core {
+            border: 1px solid var(--alastor-blood);
+            padding: 15px 40px;
+            font-size: 1.5rem;
+            color: var(--alastor-blood);
+            background: rgba(10, 0, 0, 0.8);
+            letter-spacing: 10px;
             text-transform: uppercase;
-            box-shadow: 0 0 30px var(--alastor-glow), inset 0 0 20px var(--alastor-glow);
-            transition: all 0.2s ease;
-            text-shadow: 0 0 10px var(--alastor-bright);
+            box-shadow: 0 0 20px var(--alastor-glow);
+            transition: all 0.1s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-core:hover {
+            background: var(--alastor-blood);
+            color: #000;
+            box-shadow: 0 0 40px var(--alastor-blood);
         }
 
-        .on-air-btn:hover {
-            background: var(--alastor-red);
-            color: #fff;
-            box-shadow: 0 0 50px var(--alastor-bright), inset 0 0 30px var(--alastor-bright);
-        }
-
-        /* -------------------------------------- */
-        /* EXACT LAYOUT FROM REFERENCE IMAGE      */
-        /* -------------------------------------- */
-        #main-frame {
+        /* --- ORGANIZED & CONSTRAINED MAIN FRAME --- */
+        #app-container {
             width: 100%;
-            height: 100%;
-            padding: 20px;
-            display: none; /* Hidden until clicked */
-            flex-direction: column;
-            background: radial-gradient(circle at center, #0a0000 0%, #000000 100%);
+            max-width: 480px; /* Tightly constrained for organization */
+            height: 85vh;
+            max-height: 800px;
             position: relative;
             z-index: 10;
+            display: none; /* Hidden initially */
+            flex-direction: column;
+            background: radial-gradient(circle at center, rgba(20, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.95) 100%);
+            border: 1px solid #330000;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.15), inset 0 0 30px rgba(0,0,0,1);
+            padding: 25px;
         }
 
-        /* Target Reticle Corners */
+        /* The exact layout elements requested */
         .reticle {
             position: absolute;
-            width: 30px;
-            height: 30px;
-            border: 2px solid var(--alastor-red);
-            box-shadow: 0 0 10px var(--alastor-glow);
+            width: 20px; height: 20px;
+            border: 2px solid var(--alastor-crimson);
+            box-shadow: 0 0 8px var(--alastor-glow);
         }
-        .reticle.tl { top: 20px; left: 20px; border-right: none; border-bottom: none; }
-        .reticle.tr { top: 20px; right: 20px; border-left: none; border-bottom: none; }
-        .reticle.bl { bottom: 20px; left: 20px; border-right: none; border-top: none; }
-        .reticle.br { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+        .reticle.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .reticle.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .reticle.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .reticle.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
 
-        .inner-content {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            padding-top: 40px;
-        }
-
-        /* Status Header */
         .status-header {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            color: #880000;
+            font-size: 0.7rem;
+            color: var(--text-muted);
             margin-bottom: 20px;
             letter-spacing: 1px;
-            text-shadow: 0 0 5px var(--alastor-red);
+            font-weight: bold;
         }
 
-        /* Warning Box */
         .warning-box {
-            border: 1px solid var(--alastor-red);
-            background: rgba(40, 0, 0, 0.3);
+            border: 1px solid var(--alastor-blood);
+            background: repeating-linear-gradient(45deg, #110000, #110000 5px, #050000 5px, #050000 10px);
             text-align: center;
-            padding: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
-            animation: pulse-border 2s infinite;
-        }
-
-        @keyframes pulse-border {
-            0%, 100% { box-shadow: 0 0 10px rgba(255, 0, 0, 0.2); border-color: #550000; }
-            50% { box-shadow: 0 0 30px rgba(255, 0, 30, 0.6); border-color: var(--alastor-bright); }
+            padding: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+            position: relative;
         }
 
         .warning-box h2 {
-            font-size: 1.5rem;
-            letter-spacing: 4px;
-            color: var(--alastor-bright);
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px var(--alastor-bright);
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            color: var(--alastor-blood);
+            text-shadow: 0 0 8px var(--alastor-blood);
+            margin-bottom: 3px;
         }
 
         .warning-box p {
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             letter-spacing: 2px;
-            color: #aa0000;
+            color: var(--text-muted);
         }
 
-        /* Main Title */
         .main-title {
             text-align: center;
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-family: 'Impact', sans-serif;
-            letter-spacing: 6px;
-            color: var(--alastor-bright);
-            text-shadow: 0 0 15px var(--alastor-bright), 0 0 30px var(--alastor-red);
-            margin-bottom: 30px;
+            letter-spacing: 10px;
+            color: var(--alastor-blood);
+            text-shadow: 2px 0px 0px #000, -2px 0px 0px #330000, 0 0 20px var(--alastor-blood);
+            margin-bottom: 25px;
+            position: relative;
         }
 
-        /* Progress Area */
         .progress-info {
             display: flex;
             justify-content: space-between;
-            font-size: 0.85rem;
-            color: #cc0000;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
+            font-size: 0.75rem;
+            color: var(--alastor-crimson);
+            margin-bottom: 6px;
         }
 
         .progress-bar-bg {
             width: 100%;
-            height: 12px;
-            background: #110000;
-            border: 1px solid #440000;
-            margin-bottom: 25px;
+            height: 10px;
+            background: #0a0000;
+            border: 1px solid #330000;
+            margin-bottom: 20px;
             position: relative;
         }
 
         .progress-fill {
             height: 100%;
             width: 0%;
-            background: var(--alastor-bright);
-            box-shadow: 0 0 15px var(--alastor-bright), 0 0 30px var(--alastor-red);
-            transition: width 0.1s linear; /* Smooth visual filling */
+            background: var(--alastor-blood);
+            box-shadow: 0 0 10px var(--alastor-blood);
+            transition: width 0.05s linear;
         }
 
-        /* Terminal Window */
         .terminal-box {
             flex-grow: 1;
             width: 100%;
-            background: transparent;
+            background: rgba(0,0,0,0.4);
+            border-top: 1px solid #220000;
             overflow: hidden;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            margin-bottom: 40px;
+            padding-top: 10px;
         }
 
         .log-line {
-            margin: 2px 0;
+            margin: 1px 0;
             display: flex;
-            gap: 10px;
-            opacity: 0.9;
+            gap: 8px;
+            line-height: 1.3;
         }
 
-        .log-time {
-            color: #660000;
-            min-width: 90px;
+        .log-time { color: #550000; min-width: 80px; }
+        .log-msg { color: var(--alastor-blood); word-break: break-all; }
+        .log-msg.err { color: #fff; text-shadow: 0 0 4px #fff; }
+
+        /* --- SHARP CUTS & GLITCH CLASSES --- */
+        .sharp-cut-1 { clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%); transform: translateX(5px); filter: hue-rotate(90deg); }
+        .sharp-cut-2 { clip-path: polygon(0 45%, 100% 45%, 100% 60%, 0 60%); transform: translateX(-8px) scale(1.02); }
+        .sharp-cut-3 { clip-path: polygon(0 75%, 100% 75%, 100% 100%, 0 100%); transform: translateY(4px); opacity: 0.8; }
+        .rgb-split { text-shadow: var(--glitch-offset-1) 0 blue, var(--glitch-offset-2) 0 red; }
+
+        /* --- ENDING SEQUENCE --- */
+        .power-down {
+            animation: tv-collapse 0.4s cubic-bezier(0.1, 0.8, 0.1, 1) forwards !important;
         }
 
-        .log-msg {
-            color: var(--terminal-red);
-            word-break: break-all;
-            text-shadow: 0 0 4px var(--alastor-red);
-        }
-
-        .log-msg.highlight {
-            color: #ffffff;
-            text-shadow: 0 0 5px #ffffff;
-        }
-
-        /* -------------------------------------- */
-        /* ENDING SEQUENCE STYLES                 */
-        /* -------------------------------------- */
-        .tv-off-force {
-            animation: collapse-screen 0.5s cubic-bezier(0.7, 0, 0.84, 0) forwards !important;
-        }
-
-        @keyframes collapse-screen {
-            0% { transform: scale(1, 1); filter: brightness(5); }
-            50% { transform: scale(1, 0.005); filter: brightness(10); }
-            80% { transform: scale(0.002, 0.005); filter: brightness(20); }
+        @keyframes tv-collapse {
+            0% { transform: scale(1, 1); filter: brightness(2); }
+            40% { transform: scale(1, 0.002); filter: brightness(10); }
             100% { transform: scale(0, 0); filter: brightness(0); opacity: 0; display: none; }
         }
 
         #final-scare {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
+            inset: 0;
             background: #000;
-            z-index: 200;
+            z-index: 999;
             display: none; 
             justify-content: center;
             align-items: center;
@@ -258,302 +234,384 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            animation: final-glitch 0.06s infinite;
+            animation: frantic-stutter 0.04s infinite;
             mix-blend-mode: screen;
         }
 
-        @keyframes final-glitch {
-            0% { transform: translate(0, 0) scale(1); filter: hue-rotate(0deg) contrast(1.5); clip-path: inset(0 0 0 0); }
-            25% { transform: translate(-8px, 4px) scale(1.02); filter: hue-rotate(90deg) contrast(2); clip-path: inset(10% 0 40% 0); }
-            50% { transform: translate(8px, -4px) scale(0.98); filter: hue-rotate(-90deg) contrast(3) invert(1); clip-path: inset(50% 0 10% 0); }
-            75% { transform: translate(-4px, -8px) scale(1.03); filter: hue-rotate(180deg) contrast(1.2); clip-path: inset(20% 0 60% 0); }
-            100% { transform: translate(4px, 8px) scale(1); filter: hue-rotate(0deg) contrast(1.5); clip-path: inset(0 0 0 0); }
-        }
-
-        #static-canvas {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            opacity: 0; pointer-events: none; z-index: 5;
+        @keyframes frantic-stutter {
+            0% { transform: translate(0, 0) scale(1); filter: contrast(1.2); }
+            33% { transform: translate(-15px, 10px) scale(1.05); filter: contrast(2) invert(1); }
+            66% { transform: translate(15px, -10px) scale(0.95); filter: contrast(1.5) hue-rotate(90deg); }
+            100% { transform: translate(-5px, -5px) scale(1); filter: contrast(1.2); }
         }
     </style>
 </head>
 <body>
 
+    <!-- Complex Visual Layers -->
+    <canvas id="dot-matrix"></canvas>
+    <canvas id="static-overlay"></canvas>
     <div class="scanlines"></div>
-    <canvas id="static-canvas"></canvas>
 
-    <div id="start-overlay">
-        <div class="on-air-btn" id="start-btn">ON AIR</div>
+    <!-- Start Gate -->
+    <div id="start-gate">
+        <div class="btn-core" id="init-btn">INITIALIZE</div>
     </div>
 
-    <!-- Layout matched to Screenshot_2026-08-25-01-35-52-10.jpg -->
-    <div id="main-frame">
+    <!-- Organized Core Interface -->
+    <div id="app-container">
         <div class="reticle tl"></div>
         <div class="reticle tr"></div>
         <div class="reticle bl"></div>
         <div class="reticle br"></div>
 
-        <div class="inner-content">
-            <div class="status-header">
-                <span>PRTCL: RADIO_DEMON_V2</span>
-                <span id="status-text">STATUS: OVERRIDE_ENGAGED</span>
-            </div>
-
-            <div class="warning-box">
-                <h2>SYSTEM BREACHED</h2>
-                <p>CRITICAL UNAUTHORIZED ACCESS DETECTED</p>
-            </div>
-
-            <div class="main-title">A L A S T O R</div>
-            
-            <div class="progress-info">
-                <span>TRGT_IP: 192.168.119.232</span>
-                <span id="percent-text">0.00%</span>
-            </div>
-            
-            <div class="progress-bar-bg">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-
-            <div class="terminal-box" id="terminal"></div>
+        <div class="status-header">
+            <span>PRTCL: RADIO_DEMON_V2</span>
+            <span id="sys-status">STATUS: ROOT_ENGAGED</span>
         </div>
+
+        <div class="warning-box">
+            <h2>SYSTEM BREACHED</h2>
+            <p>CRITICAL UNAUTHORIZED ACCESS DETECTED</p>
+        </div>
+
+        <div class="main-title" id="glitch-title">A L A S T O R</div>
+        
+        <div class="progress-info">
+            <span>TRGT_IP: 192.168.119.232</span>
+            <span id="perc-display">0.00%</span>
+        </div>
+        
+        <div class="progress-bar-bg">
+            <div class="progress-fill" id="p-bar"></div>
+        </div>
+
+        <div class="terminal-box" id="term-out"></div>
     </div>
 
-    <!-- Final Jumpscare Container -->
+    <!-- The Requested Jumpscare -->
     <div id="final-scare">
-        <img id="jumpscare-img" src="d769884480dfdee13e47e0526d22f906.jpg" alt="The Radio Demon">
+        <img id="jumpscare-img" src="d769884480dfdee13e47e0526d22f906.jpg" alt="Alastor">
     </div>
 
     <script>
-        const overlay = document.getElementById('start-overlay');
-        const startBtn = document.getElementById('start-btn');
-        const mainFrame = document.getElementById('main-frame');
-        const progressFill = document.getElementById('progress-fill');
-        const percentText = document.getElementById('percent-text');
-        const terminal = document.getElementById('terminal');
-        const finalScare = document.getElementById('final-scare');
-        const canvas = document.getElementById('static-canvas');
-        const ctx = canvas.getContext('2d');
+        /** 
+         * COMPLEX SYSTEM ARCHITECTURE
+         * Utilizing ES6 Classes for compartmentalized logic.
+         */
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        function drawStatic() {
-            const imageData = ctx.createImageData(canvas.width, canvas.height);
-            const buffer = new Uint32Array(imageData.data.buffer);
-            for (let i = 0; i < buffer.length; i++) {
-                if (Math.random() > 0.8) buffer[i] = 0xff0000ff;
-                else if (Math.random() > 0.95) buffer[i] = 0xffffffff;
-            }
-            ctx.putImageData(imageData, 0, 0);
-        }
-
-        const logMessages = [
-            "ENCRYPTING LOCAL DISK (RANSOM-MODE)",
-            "DECRYPTING PRIVATE RSA KEYS...",
-            "CAMERA NODE INTERCEPTED",
-            "INJECTING VOODOO PAYLOAD...",
-            "FIREWALL BYPASS: SUCCESS",
-            "DUMPING SYSTEM MEMORY...",
-            "DOWNLOADING USER.DAT HASHES",
-            "OVERRIDING AUDIO DRIVER",
-            "BROADCAST SIGNAL LOCKED"
-        ];
-
-        // Generates realistic timestamps HH:MM:SS.MMM
-        function getTimestamp() {
-            const now = new Date();
-            const pad = (num, size) => num.toString().padStart(size, '0');
-            return `${pad(now.getHours(), 2)}:${pad(now.getMinutes(), 2)}:${pad(now.getSeconds(), 2)}.${pad(now.getMilliseconds(), 3)}`;
-        }
-
-        function generateMemoryLine() {
-            const addr = "0x" + Math.floor(Math.random()*0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0');
-            return `${addr} : PTR_CORRUPTION_ERR`;
-        }
-
-        let currentProgress = 0;
-        let targetProgress = 0;
-        let audioCtx, droneOsc, droneGain, toneInterval;
-
-        function initAudio() {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            
-            droneOsc = audioCtx.createOscillator();
-            droneGain = audioCtx.createGain();
-            droneOsc.type = 'sawtooth';
-            droneOsc.frequency.setValueAtTime(60, audioCtx.currentTime);
-            droneGain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            droneOsc.connect(droneGain);
-            droneGain.connect(audioCtx.destination);
-            droneOsc.start();
-
-            toneInterval = setInterval(() => {
-                if (!audioCtx) return;
-                const now = audioCtx.currentTime;
-                droneOsc.frequency.exponentialRampToValueAtTime(120, now + 1.0);
-                droneOsc.frequency.exponentialRampToValueAtTime(50, now + 2.0);
-            }, 2500);
-        }
-
-        function playDemonLaugh() {
-            if (!audioCtx) return;
-            let now = audioCtx.currentTime;
-            
-            const bufferSize = audioCtx.sampleRate * 2; 
-            const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-            const output = noiseBuffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
-            
-            const whiteNoise = audioCtx.createBufferSource();
-            whiteNoise.buffer = noiseBuffer;
-            const noiseFilter = audioCtx.createBiquadFilter();
-            noiseFilter.type = 'bandpass';
-            noiseFilter.frequency.value = 800;
-            const noiseGain = audioCtx.createGain();
-            noiseGain.gain.setValueAtTime(0.6, now);
-            noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 2);
-            whiteNoise.connect(noiseFilter);
-            noiseFilter.connect(noiseGain);
-            noiseGain.connect(audioCtx.destination);
-            whiteNoise.start(now);
-
-            for(let i=0; i<8; i++) {
-                let laughOsc = audioCtx.createOscillator();
-                let laughGain = audioCtx.createGain();
+        // --- 1. VISUAL ENGINE: The Dots & Static ---
+        class VisualEngine {
+            constructor() {
+                this.dotCanvas = document.getElementById('dot-matrix');
+                this.dotCtx = this.dotCanvas.getContext('2d', { alpha: false });
+                this.staticCanvas = document.getElementById('static-overlay');
+                this.staticCtx = this.staticCanvas.getContext('2d');
                 
-                laughOsc.type = 'square';
-                laughOsc.frequency.setValueAtTime(220 - (i*12), now + (i*0.2)); 
-
-                let lfo = audioCtx.createOscillator();
-                lfo.frequency.value = 20; 
-                let lfoGain = audioCtx.createGain();
-                lfoGain.gain.value = 50;
-                lfo.connect(lfoGain);
-                lfoGain.connect(laughOsc.frequency);
-                lfo.start(now + (i*0.2));
-                lfo.stop(now + (i*0.2) + 0.15);
-
-                laughGain.gain.setValueAtTime(0, now + (i*0.2));
-                laughGain.gain.linearRampToValueAtTime(0.9, now + (i*0.2) + 0.02);
-                laughGain.gain.exponentialRampToValueAtTime(0.01, now + (i*0.2) + 0.14);
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
                 
-                laughOsc.connect(laughGain);
-                laughGain.connect(audioCtx.destination);
-                laughOsc.start(now + (i*0.2));
-                laughOsc.stop(now + (i*0.2) + 0.15);
+                this.dots = [];
+                this.initDots();
+                this.renderLoop();
             }
-        }
 
-        startBtn.addEventListener('click', () => {
-            overlay.style.display = 'none';
-            mainFrame.style.display = 'flex';
-            
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(() => {});
+            resize() {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+                this.dotCanvas.width = this.width;
+                this.dotCanvas.height = this.height;
+                this.staticCanvas.width = this.width;
+                this.staticCanvas.height = this.height;
             }
-            initAudio();
-            startSequence();
-        });
 
-        function startSequence() {
-            // Smooth progress interpolation
-            function animateProgress() {
-                if (currentProgress < targetProgress) {
-                    currentProgress += (targetProgress - currentProgress) * 0.1; 
+            initDots() {
+                const spacing = 30;
+                for(let x = 0; x < this.width; x += spacing) {
+                    for(let y = 0; y < this.height; y += spacing) {
+                        this.dots.push({ x, y, baseAlpha: Math.random() * 0.5 });
+                    }
                 }
-                if (currentProgress > 99.9) currentProgress = 100;
+            }
 
-                progressFill.style.width = currentProgress + '%';
-                percentText.innerText = currentProgress.toFixed(2) + '%';
+            renderLoop() {
+                // Background
+                this.dotCtx.fillStyle = '#020000';
+                this.dotCtx.fillRect(0, 0, this.width, this.height);
 
-                if (currentProgress < 100) {
-                    requestAnimationFrame(animateProgress);
+                // Draw pulsing dot matrix
+                const time = Date.now() * 0.002;
+                this.dotCtx.fillStyle = 'rgba(255, 0, 0, 1)';
+                
+                for(let i=0; i<this.dots.length; i++) {
+                    const d = this.dots[i];
+                    // Complex sine wave math for breathing effect
+                    const alpha = d.baseAlpha + Math.sin(time + (d.x * 0.01) + (d.y * 0.02)) * 0.3;
+                    if(alpha > 0.1) {
+                        this.dotCtx.globalAlpha = alpha;
+                        this.dotCtx.fillRect(d.x, d.y, 2, 2);
+                    }
+                }
+
+                // Render high-speed static
+                const imgData = this.staticCtx.createImageData(this.width, this.height);
+                const buf = new Uint32Array(imgData.data.buffer);
+                for (let i = 0; i < buf.length; i+=4) { // optimization step
+                    if (Math.random() > 0.95) buf[i] = 0xff0000aa; // Red static
+                    else if (Math.random() > 0.98) buf[i] = 0xffffffff; // White static
+                }
+                this.staticCtx.putImageData(imgData, 0, 0);
+
+                requestAnimationFrame(() => this.renderLoop());
+            }
+        }
+
+        // --- 2. AUDIO ENGINE: Complex Synthesis & Distortion ---
+        class AudioEngine {
+            constructor() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.masterGain = this.ctx.createGain();
+                this.masterGain.connect(this.ctx.destination);
+                
+                // Distortion curve for extreme crunch
+                this.distortion = this.ctx.createWaveShaper();
+                this.distortion.curve = this.makeDistortionCurve(400);
+                this.distortion.oversample = '4x';
+                
+                this.distortion.connect(this.masterGain);
+            }
+
+            makeDistortionCurve(amount) {
+                const k = typeof amount === 'number' ? amount : 50,
+                    n_samples = 44100,
+                    curve = new Float32Array(n_samples),
+                    deg = Math.PI / 180;
+                for (let i = 0; i < n_samples; ++i) {
+                    const x = i * 2 / n_samples - 1;
+                    curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+                }
+                return curve;
+            }
+
+            startDrone() {
+                this.drone = this.ctx.createOscillator();
+                this.droneGain = this.ctx.createGain();
+                this.drone.type = 'sawtooth';
+                this.drone.frequency.value = 45;
+                this.droneGain.gain.value = 0.03;
+                
+                this.drone.connect(this.droneGain);
+                this.droneGain.connect(this.distortion);
+                this.drone.start();
+
+                // LFO to modulate drone
+                this.lfo = this.ctx.createOscillator();
+                this.lfo.frequency.value = 0.5;
+                const lfoGain = this.ctx.createGain();
+                lfoGain.gain.value = 10;
+                this.lfo.connect(lfoGain);
+                lfoGain.connect(this.drone.frequency);
+                this.lfo.start();
+            }
+
+            triggerLaugh() {
+                const now = this.ctx.currentTime;
+                
+                // Burst of white noise
+                const bufferSize = this.ctx.sampleRate * 2;
+                const noiseBuf = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const output = noiseBuf.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) output[i] = Math.random() * 2 - 1;
+                
+                const noise = this.ctx.createBufferSource();
+                noise.buffer = noiseBuf;
+                const noiseGain = this.ctx.createGain();
+                noiseGain.gain.setValueAtTime(0.8, now);
+                noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
+                
+                noise.connect(this.distortion);
+                noise.connect(noiseGain);
+                noiseGain.connect(this.masterGain);
+                noise.start(now);
+
+                // Stutter synths
+                for(let i=0; i<12; i++) {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'square';
+                    osc.frequency.setValueAtTime(200 - (i*8), now + (i*0.15)); 
+
+                    gain.gain.setValueAtTime(0, now + (i*0.15));
+                    gain.gain.linearRampToValueAtTime(1, now + (i*0.15) + 0.01);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + (i*0.15) + 0.1);
+                    
+                    osc.connect(gain);
+                    gain.connect(this.distortion);
+                    osc.start(now + (i*0.15));
+                    osc.stop(now + (i*0.15) + 0.12);
+                }
+            }
+
+            playWhistle() {
+                this.droneGain.gain.setValueAtTime(0, this.ctx.currentTime);
+                this.whistle = this.ctx.createOscillator();
+                this.whistleGain = this.ctx.createGain();
+                this.whistle.type = 'sine';
+                this.whistle.frequency.value = 1200;
+                this.whistleGain.gain.value = 0.4;
+                this.whistle.connect(this.whistleGain);
+                this.whistleGain.connect(this.masterGain);
+                this.whistle.start();
+            }
+
+            stopWhistle() {
+                if(this.whistleGain) {
+                    this.whistleGain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.1);
+                    setTimeout(() => this.whistle.stop(), 100);
+                }
+            }
+        }
+
+        // --- 3. GLITCH & UI ENGINE ---
+        class AppController {
+            constructor() {
+                this.container = document.getElementById('app-container');
+                this.pBar = document.getElementById('p-bar');
+                this.pText = document.getElementById('perc-display');
+                this.terminal = document.getElementById('term-out');
+                
+                this.progress = 0;
+                this.logs = [
+                    "ENCRYPTING LOCAL DISK (RANSOM-MODE)",
+                    "DECRYPTING PRIVATE RSA KEYS...",
+                    "CAMERA NODE INTERCEPTED",
+                    "INJECTING ALASTOR PAYLOAD...",
+                    "FIREWALL BYPASS: SUCCESS",
+                    "DUMPING SYSTEM MEMORY...",
+                    "DOWNLOADING USER.DAT HASHES",
+                    "CORRUPTING ROOT PROTOCOL..."
+                ];
+            }
+
+            getTimestamp() {
+                const d = new Date();
+                return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}.${String(d.getMilliseconds()).padStart(3,'0')}>>`;
+            }
+
+            genMem() {
+                return "0x" + Math.floor(Math.random()*0xFFFFFFFF).toString(16).toUpperCase().padStart(8, '0') + " : PTR_CORRUPTION_ERR";
+            }
+
+            doSharpGlitch() {
+                const classes = ['sharp-cut-1', 'sharp-cut-2', 'sharp-cut-3', 'rgb-split'];
+                const cls = classes[Math.floor(Math.random() * classes.length)];
+                this.container.classList.add(cls);
+                setTimeout(() => this.container.classList.remove(cls), 50 + Math.random()*100);
+            }
+
+            start(audioEngine) {
+                this.audio = audioEngine;
+                this.container.style.display = 'flex';
+                this.audio.startDrone();
+                
+                // Sharp Glitch Loop
+                this.glitchInt = setInterval(() => {
+                    if(Math.random() > 0.6) this.doSharpGlitch();
+                }, 150);
+
+                // Logic Loops
+                this.runProgress();
+                this.runTerminal();
+            }
+
+            runProgress() {
+                if(this.progress >= 100) return;
+                
+                // Stochastic non-linear progression
+                this.progress += Math.random() * 4 + 0.5;
+                if(this.progress > 100) this.progress = 100;
+                
+                this.pBar.style.width = this.progress + '%';
+                this.pText.innerText = this.progress.toFixed(2) + '%';
+
+                if(this.progress === 100) {
+                    clearInterval(this.glitchInt);
+                    document.getElementById('sys-status').innerText = "STATUS: FATAL_ERROR";
+                    document.getElementById('sys-status').style.color = "#fff";
+                    setTimeout(() => triggerEnding(this.audio, this.container), 1000);
                 } else {
-                    document.getElementById('status-text').innerText = "STATUS: BROADCAST_COMPLETE";
-                    setTimeout(executeAutomaticShutdown, 800);
+                    setTimeout(() => this.runProgress(), Math.random() * 300 + 50);
                 }
             }
-            requestAnimationFrame(animateProgress);
 
-            // Increment target progress stochastically
-            function bumpProgress() {
-                if (targetProgress >= 100) return;
-                targetProgress += Math.random() * 8 + 2; 
-                if (targetProgress > 100) targetProgress = 100;
-                let nextTick = Math.random() > 0.7 ? 600 : 150;
-                setTimeout(bumpProgress, nextTick);
-            }
-            bumpProgress();
-
-            // Terminal log feed
-            setInterval(() => {
-                if (currentProgress >= 100) return;
+            runTerminal() {
+                if(this.progress >= 100) return;
+                
                 const line = document.createElement('div');
                 line.className = 'log-line';
+                line.innerHTML = `<span class="log-time">${this.getTimestamp()}</span>`;
                 
-                const timeSpan = document.createElement('span');
-                timeSpan.className = 'log-time';
-                timeSpan.innerText = getTimestamp() + ">>";
-
-                const msgSpan = document.createElement('span');
-                msgSpan.className = 'log-msg';
-
-                if (Math.random() > 0.4) {
-                    msgSpan.innerText = logMessages[Math.floor(Math.random() * logMessages.length)];
+                const msg = document.createElement('span');
+                if(Math.random() > 0.3) {
+                    msg.className = 'log-msg';
+                    msg.innerText = this.logs[Math.floor(Math.random() * this.logs.length)];
                 } else {
-                    msgSpan.innerText = generateMemoryLine();
-                    msgSpan.classList.add('highlight');
+                    msg.className = 'log-msg err';
+                    msg.innerText = this.genMem();
+                }
+                
+                line.appendChild(msg);
+                this.terminal.appendChild(line);
+                
+                if(this.terminal.childElementCount > 12) {
+                    this.terminal.removeChild(this.terminal.firstChild);
                 }
 
-                line.appendChild(timeSpan);
-                line.appendChild(msgSpan);
-                terminal.appendChild(line);
-
-                if (terminal.childNodes.length > 15) {
-                    terminal.removeChild(terminal.firstChild);
-                }
-            }, 100);
+                setTimeout(() => this.runTerminal(), 80);
+            }
         }
 
-        function executeAutomaticShutdown() {
-            canvas.style.opacity = 0.8;
-            drawStatic();
+        // --- 4. EXECUTION SEQUENCE ---
+        const visuals = new VisualEngine();
+        let audio, app;
 
-            if (audioCtx) {
-                clearInterval(toneInterval);
-                droneGain.gain.setValueAtTime(0, audioCtx.currentTime);
-
-                // Sustained high whistle
-                const toneOsc = audioCtx.createOscillator();
-                const toneGain = audioCtx.createGain();
-                toneOsc.type = 'sine';
-                toneOsc.frequency.setValueAtTime(1000, audioCtx.currentTime);
-                toneGain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-                toneOsc.connect(toneGain);
-                toneGain.connect(audioCtx.destination);
-                toneOsc.start();
-
-                // TV Collapse
-                setTimeout(() => {
-                    mainFrame.classList.add('tv-off-force');
-                    
-                    // Black screen hold
-                    setTimeout(() => {
-                        toneGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.5);
-                        document.body.style.backgroundColor = '#000000';
-                        canvas.style.opacity = 0; 
-                        
-                        // Jumpscare
-                        setTimeout(() => {
-                            toneOsc.stop(); 
-                            finalScare.style.display = 'flex'; 
-                            playDemonLaugh(); 
-                        }, 1800);
-
-                    }, 500);
-                }, 800);
+        document.getElementById('init-btn').addEventListener('click', () => {
+            document.getElementById('start-gate').style.display = 'none';
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(()=>console.log("FS Blocked"));
             }
+            
+            audio = new AudioEngine();
+            app = new AppController();
+            
+            // Allow audio context to resume properly
+            if (audio.ctx.state === 'suspended') audio.ctx.resume();
+            
+            app.start(audio);
+        });
+
+        function triggerEnding(audioEngine, uiContainer) {
+            // 1. Play constant high whistle
+            audioEngine.playWhistle();
+
+            // 2. Collapse the organized window
+            uiContainer.classList.add('power-down');
+            
+            // 3. Cut to absolute black
+            setTimeout(() => {
+                document.getElementById('dot-matrix').style.display = 'none';
+                document.getElementById('static-overlay').style.display = 'none';
+                document.querySelector('.scanlines').style.display = 'none';
+                document.body.style.backgroundColor = '#000';
+                
+                // 4. Wait in silence (except the whistle) then jumpscare
+                setTimeout(() => {
+                    audioEngine.stopWhistle();
+                    document.getElementById('final-scare').style.display = 'flex';
+                    audioEngine.triggerLaugh(); // Stutter laugh triggers alongside image
+                }, 1600); // 1.6s of tension
+
+            }, 400);
         }
     </script>
 </body>
