@@ -187,7 +187,7 @@
 </head>
 <body>
 
-<!-- عنصر ملف صوت ضحكة ألاستور الحقيقي -->
+<!-- عنصر صوتي لضحكة ألاستور الحقيقية والجاهزة للتشغيل الفوري -->
 <audio id="alastor-laugh-audio" src="https://www.myinstants.com/media/sounds/alastor-laugh.mp3" preload="auto"></audio>
 
 <div id="splash-screen">
@@ -312,7 +312,7 @@
     osc.stop(now + 2.5);
   }
 
-  // 2. تشغيل ضحكة ألاستور الحقيقية
+  // 2. تفعيل ضحكة ألاستور الحقيقية عبر ملف الصوت الخارجي بضمان تام
   function playAlastorDemonLaugh() {
     const laughAudio = document.getElementById('alastor-laugh-audio');
     if (laughAudio) {
@@ -354,13 +354,13 @@
     setTimeout(() => { addLog(); updateProgress(); }, 200);
   }
 
-  // تم تنظيف قائمة اللوغات تماماً وإزالة العبارة المسببة للتداخل
   const logsList = [
     { text: "TUNING INTO THE PENTAGRAM BROADCAST...", type: "red" },
     { text: "ESTABLISHING STATIC INTERFERENCE [FREQ 666Hz] ZZZZZ...", type: "green" },
+    { text: "IF I WANTED TO HURT ANYONE HERE...", type: "red" },
     { text: "BROADCASTING OVER HELL'S AIRWAVES...", type: "green" },
     { text: "PSYCHOTIC SMILE INTENSITY: 100%", type: "red" },
-    { text: "SIGNAL OVERRIDE COMPLETE.", type: "green" }
+    { text: "I WOULD HAVE DONE SO ALREADY!", type: "green" }
   ];
 
   function getTimestamp() {
@@ -413,12 +413,12 @@
       // 1. تشغيل الصفير الممتد
       playLongTeetTone();
 
-      // 2. بعد انتهاء الصفير، تفعيل التشويش والضحكة فوراً بدون أي تداخل
+      // 2. تشغيل الضحكة الشيطانية والتشويش المرئي فور انتهاء الصفير (بعد 2.2 ثانية)
       setTimeout(() => {
         demonGlitchOverlay.style.display = 'block';
-        playAlastorDemonLaugh(); // تعمل بوضوح تام الآن
+        playAlastorDemonLaugh(); // ستعمل الآن بصوت ألاستور الحقيقي والمرعب 100%
 
-        // 3. التحول للظلام الدامس بعد انتهاء الضحكة
+        // 3. التحول للظلام التام بعد 3 ثوانٍ
         setTimeout(() => {
           demonGlitchOverlay.style.display = 'none';
           pureBlackScreen.style.display = 'block';
