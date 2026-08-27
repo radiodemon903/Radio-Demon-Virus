@@ -20,9 +20,60 @@
     font-family: 'Share Tech Mono', monospace; height: 100vh; overflow: hidden; user-select: none;
   }
 
+  /* شاشة ترحيب منظمة ومرعبة بأسلوب Alastor */
+  #splash-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, #1a0005 0%, #050001 100%);
+    z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    cursor: pointer; text-align: center; padding: 20px; box-sizing: border-box;
+  }
+  
+  .splash-box {
+    border: 2px solid var(--radio-red); background: rgba(15, 0, 3, 0.9);
+    padding: 35px 25px; max-width: 450px; width: 100%; position: relative;
+    box-shadow: 0 0 40px rgba(255, 0, 51, 0.3), inset 0 0 20px rgba(255, 0, 51, 0.2);
+    animation: boxFlicker 2s infinite;
+  }
+
+  .splash-box::before, .splash-box::after {
+    content: ''; position: absolute; width: 10px; height: 10px; border-color: var(--alastor-green); border-style: solid;
+  }
+  .splash-box::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
+  .splash-box::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
+
+  .splash-freq {
+    font-size: 0.8rem; color: var(--text-dim); letter-spacing: 3px; margin-bottom: 10px;
+  }
+
+  .splash-title {
+    font-size: 1.5rem; color: var(--radio-red); margin-bottom: 15px; font-weight: bold;
+    letter-spacing: 2px; text-shadow: 0 0 10px rgba(255, 0, 51, 0.7);
+  }
+
+  .splash-quote {
+    font-size: 0.85rem; color: #fff; font-style: italic; margin-bottom: 25px; line-height: 1.6;
+    border-left: 2px solid var(--alastor-green); padding-left: 10px; text-align: left;
+  }
+
+  .splash-btn {
+    background: var(--dark-red); color: var(--alastor-green); border: 1px solid var(--alastor-green);
+    padding: 12px 20px; font-family: 'Share Tech Mono', monospace; font-size: 0.95rem; font-weight: bold;
+    letter-spacing: 2px; cursor: pointer; transition: all 0.2s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 64, 0.2); width: 100%;
+  }
+
+  .splash-btn:hover {
+    background: var(--alastor-green); color: #000; box-shadow: 0 0 25px var(--alastor-green);
+  }
+
+  @keyframes boxFlicker {
+    0%, 100% { border-color: var(--radio-red); }
+    50% { border-color: #500; }
+  }
+
   #screen-container {
     width: 100vw; height: 100vh; background-color: var(--bg-color);
     position: relative; overflow: hidden; transform-origin: center center;
+    opacity: 0; transition: opacity 0.5s ease;
   }
 
   .crt-overlay {
@@ -131,6 +182,16 @@
 </head>
 <body>
 
+<!-- شاشة الترحيب المنظمة والاحترافية بأسلوب Alastor -->
+<div id="splash-screen">
+  <div class="splash-box">
+    <div class="splash-freq">[ FREQUENCY: 666.9 MHz // PENTAGRAM ]</div>
+    <div class="splash-title">RADIO BROADCAST HIJACKED</div>
+    <div class="splash-quote">"Smile, my dear! You're never fully dressed without one... and perhaps a bit of static!"</div>
+    <button class="splash-btn" onclick="startExperience()">[ TUNE IN & INITIATE ]</button>
+  </div>
+</div>
+
 <audio id="audio-alastor-quote">
   <source src="alastor-if-i-had-to-hurt-anyone-here.mp3" type="audio/mpeg">
 </audio>
@@ -158,6 +219,7 @@
 
 <script>
   let audioCtx, staticGainNode;
+  let sequenceStarted = false;
 
   function initAudio() {
     if (!audioCtx) {
@@ -184,7 +246,6 @@
     noise.start();
   }
 
-  // صوت تخريبي مروع يجعل السماعة تئن وكأن شيئاً قد خرب تماماً أثناء التحميل
   function playDestroyedSpeakerGlitch() {
     if (!audioCtx) return;
 
@@ -237,19 +298,16 @@
     osc2.stop(now + 0.16);
   }
 
-  // صوت الـ Teeeeeeeet المعتاد لانقطاع البث وقطع الإشارة (Broadcast Cut-off Sine Wave)
   function startBroadcastCutoffTone() {
     if (staticGainNode) staticGainNode.gain.value = 0; 
     
     let osc = audioCtx.createOscillator();
     let gain = audioCtx.createGain();
     
-    // استخدام موجة جيبية (Sine) نقية وثابتة تماماً كإشارة انقطاع البث الكلاسيكية
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(1000, audioCtx.currentTime); // تردد 1000 هرتز القياسي لانقطاع البث
+    osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
 
     gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
-    // تمديد الصوت وثباته لفترة كافية ثم تلاشي هادئ عند قطع الإشارة تماماً
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4.5);
 
     osc.connect(gain).connect(audioCtx.destination);
@@ -263,14 +321,18 @@
   const pctText = document.getElementById('pct-text');
   const audioAlastorQuote = document.getElementById('audio-alastor-quote');
   const screenContainer = document.getElementById('screen-container');
+  const splashScreen = document.getElementById('splash-screen');
 
   let progress = 0;
-  let sequenceStarted = false;
 
-  window.addEventListener('DOMContentLoaded', () => {
+  function startExperience() {
     if (sequenceStarted) return;
     sequenceStarted = true;
-    
+
+    splashScreen.style.opacity = '0';
+    setTimeout(() => { splashScreen.style.display = 'none'; }, 400);
+    screenContainer.style.opacity = '1';
+
     initAudio();
     startBackgroundStatic();
 
@@ -282,11 +344,7 @@
       addLog();
       updateProgress();
     }, 200);
-  });
-
-  window.addEventListener('click', () => {
-    initAudio();
-  }, { once: true });
+  }
 
   const logsList = [
     { text: "TUNING INTO THE PENTAGRAM BROADCAST...", type: "red" },
@@ -358,7 +416,6 @@
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
       
-      // تشغيل صفير انقطاع البث الكلاسيكي الممتد
       startBroadcastCutoffTone();
 
       setTimeout(() => {
