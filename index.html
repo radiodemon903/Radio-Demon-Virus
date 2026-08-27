@@ -11,7 +11,7 @@
     --bg-color: #0d0102;
     --radio-red: #ff0033;
     --dark-red: #4a000d;
-    --gold-accent: #ffcc00;
+    --alastor-green: #00ff40; 
     --text-dim: #8c4a4a;
   }
 
@@ -26,7 +26,6 @@
     user-select: none;
   }
 
-  /* تأثير الشاشة القديمة مع وميض بث الراديو */
   .crt-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -44,7 +43,6 @@
     100% { opacity: 0.85; }
   }
 
-  /* واجهة الراديو */
   .main-ui {
     position: relative;
     width: 96%;
@@ -58,24 +56,21 @@
     z-index: 10;
   }
 
-  .main-ui::before, .main-ui::after {
-    content: '';
-    position: absolute;
-    width: 30px; height: 30px;
-    border: 2px solid var(--radio-red);
-    opacity: 0.8;
+  .main-ui::before, .main-ui::after,
+  .ui-corner-tl, .ui-corner-br {
+    border-color: var(--alastor-green);
   }
+
   .main-ui::before { top: 0; left: 0; border-right: none; border-bottom: none; }
   .main-ui::after { bottom: 0; right: 0; border-left: none; border-top: none; }
-
-  .ui-corner-tl { position: absolute; top: 0; right: 0; width: 30px; height: 30px; border: 2px solid var(--radio-red); border-left: none; border-bottom: none; opacity: 0.8; }
-  .ui-corner-br { position: absolute; bottom: 0; left: 0; width: 30px; height: 30px; border: 2px solid var(--radio-red); border-right: none; border-top: none; opacity: 0.8; }
+  .ui-corner-tl { position: absolute; top: 0; right: 0; width: 30px; height: 30px; border-left: none; border-bottom: none; }
+  .ui-corner-br { position: absolute; bottom: 0; left: 0; width: 30px; height: 30px; border-right: none; border-top: none; }
 
   .hex-bg {
     position: absolute;
     top: 50px; left: 0; width: 100%; height: 80%;
     font-size: 0.55rem;
-    color: rgba(255, 0, 51, 0.04);
+    color: rgba(0, 255, 64, 0.05);
     word-break: break-all;
     overflow: hidden;
     z-index: -1;
@@ -94,28 +89,28 @@
   .header-grid div:nth-child(2) { text-align: right; }
 
   .alert-box {
-    border: 1px solid var(--gold-accent);
-    background: rgba(255, 204, 0, 0.08);
+    border: 1px solid var(--alastor-green);
+    background: rgba(0, 255, 64, 0.08);
     padding: 10px;
     text-align: center;
     margin-bottom: 15px;
   }
   .alert-title {
-    color: var(--gold-accent);
+    color: var(--alastor-green);
     font-size: 1.4rem;
     font-weight: bold;
     letter-spacing: 3px;
-    text-shadow: 0 0 10px var(--gold-accent);
+    text-shadow: 0 0 10px var(--alastor-green);
     animation: alertPulse 0.5s infinite;
   }
   .alert-sub {
-    color: #ff9999;
+    color: #99ffbb;
     font-size: 0.75rem;
     letter-spacing: 2px;
   }
 
   @keyframes alertPulse {
-    0%, 100% { opacity: 1; text-shadow: 0 0 15px var(--gold-accent); }
+    0%, 100% { opacity: 1; text-shadow: 0 0 15px var(--alastor-green); }
     50% { opacity: 0.4; text-shadow: none; }
   }
 
@@ -172,10 +167,9 @@
   .log-row { display: flex; margin-bottom: 3px; }
   .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
-  .log-msg.gold { color: var(--gold-accent); }
+  .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
   .log-msg.red { color: var(--radio-red); }
 
-  /* جليتشات الشاشة الفوضوية */
   .severe-glitch {
     animation: screenTearChaos 0.12s infinite;
   }
@@ -203,173 +197,99 @@
   }
 
   /* ==========================================
-     شاشة النهاية (The Radio Demon Broadcast)
+     شاشة النهاية: شاشة سوداء مع انقطاعات بث وتلف مستمر
      ========================================== */
   #final-screen {
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: #0d0102;
+    background-color: #000;
     z-index: 200;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    padding: 10px;
-    box-sizing: border-box;
-    text-align: center;
+    overflow: hidden;
+    animation: finalScreenFlicker 0.1s infinite;
   }
 
-  .final-container {
-    border: 2px dashed var(--gold-accent);
-    padding: 25px 15px;
-    background: rgba(255, 0, 51, 0.08);
-    box-shadow: 0 0 60px rgba(255, 0, 51, 0.4), inset 0 0 40px rgba(255, 204, 0, 0.1);
-    max-width: 95%;
-    width: 540px;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: containerGlitch 2s infinite;
+  /* تأثير خطوط التلف والوميض العنيف للشاشة السوداء */
+  @keyframes finalScreenFlicker {
+    0% { opacity: 1; background-color: #000; transform: translate(0, 0); }
+    20% { opacity: 0.8; background-color: #050001; transform: translate(-2px, 1px); }
+    40% { opacity: 0.95; background-color: #000; transform: translate(3px, -1px); filter: contrast(300%); }
+    60% { opacity: 0.4; background-color: #1a0003; transform: translate(-1px, -2px); }
+    80% { opacity: 0.9; background-color: #000; transform: translate(2px, 2px); }
+    100% { opacity: 1; background-color: #000; transform: translate(0, 0); }
   }
 
-  @keyframes containerGlitch {
-    0%, 90%, 100% { border-color: var(--gold-accent); transform: translate(0); }
-    92% { border-color: var(--radio-red); transform: translate(-3px, 2px); }
-    94% { border-color: #fff; transform: translate(3px, -2px); }
-    96% { border-color: var(--gold-accent); transform: translate(-1px, -1px); }
-  }
-
-  .ascii-skull-container {
-    position: relative;
-    display: inline-block;
-    margin-bottom: 15px;
-  }
-
-  .ascii-skull {
-    font-family: monospace;
-    font-size: 0.55rem;
-    line-height: 1.05;
-    color: var(--gold-accent);
-    text-shadow: 0 0 12px var(--gold-accent), 0 0 25px rgba(255,204,0,0.5);
-    white-space: pre;
-    animation: realSkullGlitch 0.4s infinite steps(2);
-  }
-
-  @keyframes realSkullGlitch {
-    0% { transform: translate(0, 0) skew(0deg); opacity: 1; filter: drop-shadow(0 0 5px var(--radio-red)); }
-    20% { transform: translate(-4px, 2px) skew(-10deg); opacity: 0.8; filter: drop-shadow(3px 0 var(--gold-accent)); }
-    40% { transform: translate(5px, -3px) skew(12deg); opacity: 0.95; }
-    60% { transform: translate(-2px, -2px) skew(-5deg); opacity: 0.5; filter: invert(20%); }
-    80% { transform: translate(3px, 4px) skew(8deg); opacity: 1; }
-    100% { transform: translate(0, 0) skew(0deg); opacity: 0.9; }
-  }
-
-  .ascii-skull::before, .ascii-skull::after {
-    content: 
-`          ,---.           ,---.
-         /    |           |    \\
-        /     |           |     \\
-       |      |           |      |
-       |  _   |           |   _  |
-       | ( )  |    ___    |  ( ) |
-       |      |  .'   '.  |      |
-        \\     | /       \\ |     /
-         '---'  \\       /  '---'
-                 '-----'         
-        ♫ S M I L E   M Y   F R I E N D ♫`;
+  /* خط تفكك الإشارة المتحرك (Scanline & Glitch Bar) */
+  #final-screen::before {
+    content: "";
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    white-space: pre;
-    background: transparent;
+    background: linear-gradient(
+      rgba(255, 0, 51, 0) 0%,
+      rgba(255, 0, 51, 0.2) 50%,
+      rgba(0, 255, 64, 0.1) 51%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    background-size: 100% 8px;
+    pointer-events: none;
+    animation: scanlineMove 0.3s linear infinite;
   }
 
-  .ascii-skull::before {
-    left: 2px;
-    color: var(--radio-red);
-    text-shadow: 0 0 10px var(--radio-red);
-    animation: glitch-skull-sub1 0.2s infinite linear alternate;
-    clip-path: polygon(0 0, 100% 0, 100% 25%, 0 25%);
+  @keyframes scanlineMove {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 30px; }
   }
 
-  .ascii-skull::after {
-    left: -3px;
-    color: #ffffff;
-    text-shadow: 0 0 8px #fff;
-    animation: glitch-skull-sub2 0.3s infinite linear alternate;
-    clip-path: polygon(0 70%, 100% 70%, 100% 100%, 0 100%);
-  }
-
-  @keyframes glitch-skull-sub1 {
-    0% { clip-path: inset(10% 0 70% 0); transform: translate(-3px, 2px); }
-    50% { clip-path: inset(50% 0 20% 0); transform: translate(4px, -2px); }
-    100% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 1px); }
-  }
-
-  @keyframes glitch-skull-sub2 {
-    0% { clip-path: inset(40% 0 40% 0); transform: translate(3px, -2px); }
-    50% { clip-path: inset(10% 0 80% 0); transform: translate(-4px, 2px); }
-    100% { clip-path: inset(60% 0 20% 0); transform: translate(2px, -1px); }
-  }
-
-  .glitch-name {
-    font-size: 1.2rem;
-    font-weight: 900;
-    color: var(--gold-accent);
-    position: relative;
-    display: inline-block;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 0 15px rgba(255, 204, 0, 0.9), 0 0 30px rgba(255, 0, 51, 0.6);
-    animation: nameFlicker 0.2s infinite;
-  }
-
-  @keyframes nameFlicker {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.85; transform: scale(1.01) skew(-2deg); }
-    75% { opacity: 0.95; transform: scale(0.99) skew(2deg); }
-  }
-
-  .glitch-name::before, .glitch-name::after {
-    content: 'FREQUENCY TAKEN OVER BY: ALASTOR';
+  /* ومضات انقطاع أفقية فجائية كأن البث يتقطع تماماً */
+  #final-screen::after {
+    content: "";
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: transparent;
-  }
-  
-  .glitch-name::before {
-    left: 3px;
-    text-shadow: -3px 0 var(--radio-red);
-    animation: broadcastGlitch1 0.15s infinite linear alternate-reverse;
-    clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-  }
-  
-  .glitch-name::after {
-    left: -3px;
-    text-shadow: -3px 0 #fff, 3px 0 var(--dark-red);
-    animation: broadcastGlitch2 0.25s infinite linear alternate-reverse;
-    clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+    background: rgba(255, 255, 255, 0.03);
+    opacity: 0;
+    pointer-events: none;
+    animation: suddenTear 2s steps(2, end) infinite;
   }
 
-  @keyframes broadcastGlitch1 {
-    0% { clip-path: inset(5% 0 85% 0); transform: translate(-4px, 2px); }
-    33% { clip-path: inset(45% 0 30% 0); transform: translate(5px, -2px); }
-    66% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 3px); }
-    100% { clip-path: inset(20% 0 60% 0); transform: translate(3px, -1px); }
+  @keyframes suddenTear {
+    0%, 90%, 100% { opacity: 0; transform: scaleY(1); }
+    92% { opacity: 0.6; transform: scaleY(0.9) skewX(20deg); filter: invert(1); }
+    94% { opacity: 0.1; transform: scaleY(1.1); }
+    96% { opacity: 0.8; transform: scaleY(0.5) skewX(-30deg); }
   }
 
-  @keyframes broadcastGlitch2 {
-    0% { clip-path: inset(50% 0 30% 0); transform: translate(4px, -2px); }
-    40% { clip-path: inset(15% 0 70% 0); transform: translate(-5px, 2px); }
-    80% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -3px); }
-    100% { clip-path: inset(30% 0 40% 0); transform: translate(-3px, 1px); }
+  #audio-prompt {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: var(--alastor-green);
+    border: 1px solid var(--alastor-green);
+    padding: 8px 15px;
+    font-size: 0.7rem;
+    z-index: 300;
+    letter-spacing: 1px;
+    animation: alertPulse 1s infinite;
+    cursor: pointer;
   }
-
 </style>
 </head>
 <body>
 
 <div class="crt-overlay"></div>
+
+<div id="audio-prompt">[ اضغط في أي مكان لتفعيل بث الراديو والزنين ZZZZZ ]</div>
+
+<audio id="bg-static-audio" loop>
+  <source src="https://www.myinstants.com/media/sounds/radio-static.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="jumpscare-audio">
+  <source src="https://www.myinstants.com/media/sounds/evil-laugh.mp3" type="audio/mpeg">
+</audio>
 
 <div class="main-ui" id="main-ui">
   <div class="ui-corner-tl"></div>
@@ -402,26 +322,8 @@
   <div class="terminal-box" id="terminal"></div>
 </div>
 
-<!-- شاشة النهاية الخاصة بألاستور -->
-<div id="final-screen">
-  <div class="final-container">
-    <div class="ascii-skull-container">
-      <div class="ascii-skull">          ,---.           ,---.
-         /    |           |    \
-        /     |           |     \
-       |      |           |      |
-       |  _   |           |   _  |
-       | ( )  |    ___    |  ( ) |
-       |      |  .'   '.  |      |
-        \     | /       \ |     /
-         '---'  \       /  '---'
-                 '-----'         
-        ♫ S M I L E   M Y   F R I E N D ♫</div>
-    </div>
-
-    <div class="glitch-name">FREQUENCY TAKEN OVER BY: ALASTOR</div>
-  </div>
-</div>
+<!-- شاشة سوداء فارغة مع آثار تقطعات وتلف البث بالكامل -->
+<div id="final-screen"></div>
 
 <script>
   const terminal = document.getElementById('terminal');
@@ -431,6 +333,18 @@
   const hexBg = document.getElementById('hex-bg');
   const targetIp = document.getElementById('target-ip');
   
+  const bgStaticAudio = document.getElementById('bg-static-audio');
+  const jumpscareAudio = document.getElementById('jumpscare-audio');
+  const audioPrompt = document.getElementById('audio-prompt');
+
+  window.addEventListener('click', () => {
+    if (bgStaticAudio.paused) {
+      bgStaticAudio.volume = 0.5;
+      bgStaticAudio.play().catch(e => console.log("Audio play blocked"));
+      if (audioPrompt) audioPrompt.style.display = 'none';
+    }
+  }, { once: true });
+
   let progress = 0;
 
   function updateHexBg() {
@@ -446,15 +360,15 @@
 
   const logsList = [
     { text: "TUNING INTO THE PENTAGRAM BROADCAST...", type: "red" },
-    { text: "ESTABLISHING STATIC INTERFERENCE [FREQ 666Hz]", type: "gold" },
+    { text: "ESTABLISHING STATIC INTERFERENCE [FREQ 666Hz] ZZZZZ...", type: "green" },
     { text: "LAUGHTER DETECTED: HA-HA-HA!", type: "red" },
-    { text: "BROADCASTING OVER HELL'S AIRWAVES...", type: "gold" },
+    { text: "BROADCASTING OVER HELL'S AIRWAVES...", type: "green" },
     { text: "SUMMONING TENTACLES FROM THE SHADOWS...", type: "normal" },
     { text: "PSYCHOTIC SMILE INTENSITY: 100%", type: "red" },
-    { text: "DEALING WITH SOUL CONTRACTS...", type: "gold" },
+    { text: "DEALING WITH SOUL CONTRACTS...", type: "green" },
     { text: "PLAYING 1930s JAZZ RECORD...", type: "normal" },
     { text: "TEARING APART OVERLORD TERRITORIES...", type: "red" },
-    { text: "A SMILE IS NEVER FULLY DRESSED WITHOUT A VICTIM!", type: "gold" }
+    { text: "A SMILE IS NEVER FULLY DRESSED WITHOUT A VICTIM!", type: "green" }
   ];
 
   function getTimestamp() {
@@ -481,7 +395,7 @@
     } else {
       msgSpan.className = 'log-msg';
       msgSpan.style.color = '#ff4444';
-      msgSpan.innerText = `[RADIO_STATIC_BURST] // SIGNAL_FREQUENCY_ERROR_666`;
+      msgSpan.innerText = `[RADIO_STATIC_ZZZZZ] // SIGNAL_BURST_666`;
     }
 
     row.appendChild(timeSpan);
@@ -521,6 +435,10 @@
 
   function triggerDropoutSequence() {
     mainUI.classList.add('screen-dropout');
+    
+    bgStaticAudio.pause();
+    jumpscareAudio.volume = 0.9;
+    jumpscareAudio.play().catch(e => console.log("Final audio blocked"));
     
     setTimeout(() => {
       mainUI.style.display = 'none';
