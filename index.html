@@ -173,35 +173,34 @@
     noise.start();
   }
 
-  // صوت الجليتش الرقمي الحاد والمتناغم مع الصوت الذي أرسلته (Stutter Data Glitch)
-  function playExactGlitchSound() {
+  // مطابقة صوت الجليتش تماماً كالتي أرسلتها (نغمات مربعة حادة ومتسارعة)
+  function playExactMatchGlitch() {
     if (!audioCtx) return;
 
     let osc = audioCtx.createOscillator();
     let gainNode = audioCtx.createGain();
 
-    // موجة مربعة تعطي طابع البيب الإلكتروني الحاد
-    osc.type = 'square';
+    osc.type = 'square'; // تعطى الطابع الإلكتروني الصاخب الحاد
 
-    // قفزات تردد سريعة جداً ومتقطعة لتعطي صوت الجليتش الحقيقي
     let now = audioCtx.currentTime;
-    osc.frequency.setValueAtTime(1200, now);
-    osc.frequency.setValueAtTime(450, now + 0.03);
-    osc.frequency.setValueAtTime(1800, now + 0.06);
-    osc.frequency.setValueAtTime(800, now + 0.09);
-    osc.frequency.setValueAtTime(2400, now + 0.12);
+    // تتابع ترددات سريع ليطابق النغمة التي أرسلتها بالمللي ثانية
+    osc.frequency.setValueAtTime(1500, now);
+    osc.frequency.setValueAtTime(2200, now + 0.02);
+    osc.frequency.setValueAtTime(900, now + 0.04);
+    osc.frequency.setValueAtTime(2800, now + 0.06);
+    osc.frequency.setValueAtTime(1200, now + 0.08);
+    osc.frequency.setValueAtTime(3000, now + 0.10);
 
-    // تحكم حاد وسريع بمستوى الصوت
-    gainNode.gain.setValueAtTime(0.18, now);
-    gainNode.gain.setValueAtTime(0.01, now + 0.04);
-    gainNode.gain.setValueAtTime(0.15, now + 0.07);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+    gainNode.gain.setValueAtTime(0.2, now);
+    gainNode.gain.setValueAtTime(0.02, now + 0.03);
+    gainNode.gain.setValueAtTime(0.2, now + 0.06);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
 
     osc.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
     osc.start(now);
-    osc.stop(now + 0.16);
+    osc.stop(now + 0.14);
   }
 
   function startSmoothBeep() {
@@ -273,7 +272,7 @@
     } else {
       msgSpan.className = 'log-msg';
       msgSpan.style.color = '#ff4444';
-      msgSpan.innerText = `[DATA_STUTTER_ERROR] // CORRUPTED_PACKET`;
+      msgSpan.innerText = `[EXACT_GLITCH_BURST] // 666_ERROR`;
     }
 
     row.appendChild(timeSpan);
@@ -281,10 +280,10 @@
     terminal.appendChild(row);
     terminal.scrollTop = terminal.scrollHeight;
 
-    // تفعيل الجليتش الحاد تماماً مثل الصوت المطلوب
+    // تفعيل صوت الجليتش المطابق تماماً لصوتك مع الحركة البصرية
     if (Math.random() > 0.6) {
       mainUI.classList.add('severe-glitch');
-      playExactGlitchSound(); 
+      playExactMatchGlitch(); 
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
     }
 
@@ -306,9 +305,9 @@
   }
 
   function triggerEndSequence() {
-    // 1. جنون الشاشة الأخير مع تكرار صوت الجليتش الحاد
+    // 1. ذروة الجليتش تماماً مثل الصوت المطلوب
     mainUI.classList.add('severe-glitch');
-    playExactGlitchSound();
+    playExactMatchGlitch();
     
     setTimeout(() => {
       // 2. إغلاق الشاشة الواقعي (CRT Turn-off)
