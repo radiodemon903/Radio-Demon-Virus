@@ -99,7 +99,6 @@
       filter: brightness(0); 
       opacity: 1; 
       background-color: #020000 !important;
-      /* طبقات متعددة من التشويش البصري والنقاط الحمراء المتلاشية والمرعبة كأن الشاشة تحطمت */
       background-image: 
         radial-gradient(circle, rgba(255, 0, 51, 0.9) 3px, transparent 4px),
         radial-gradient(circle, rgba(120, 0, 20, 0.6) 2px, transparent 3px),
@@ -185,7 +184,7 @@
     noise.start();
   }
 
-  // صوت تخريبي مروع يجعل السماعة تئن وكأن شيئاً قد خرب تماماً (Destroyed Speaker Ear-Rape)
+  // صوت تخريبي مروع يجعل السماعة تئن وكأن شيئاً قد خرب تماماً أثناء التحميل
   function playDestroyedSpeakerGlitch() {
     if (!audioCtx) return;
 
@@ -198,7 +197,6 @@
     osc1.type = 'square';
     osc2.type = 'sawtooth';
 
-    // قفزات تردد عشوائية وقاسية جداً تضغط مكبر الصوت لأقصى حد ممكن
     osc1.frequency.setValueAtTime(2200, now);
     osc1.frequency.setValueAtTime(4500, now + 0.01);
     osc1.frequency.setValueAtTime(600, now + 0.025);
@@ -210,8 +208,7 @@
     osc2.frequency.setValueAtTime(3800, now + 0.02);
     osc2.frequency.setValueAtTime(300, now + 0.045);
 
-    // تضخيم مدمر (Extreme Distortion) لإحداث صوت خراب السماعات الفعلي
-    function makeDestortionCurve(amount) {
+    function makeDistortionCurve(amount) {
       let k = amount,
         n_samples = 44100,
         curve = new Float32Array(n_samples),
@@ -222,9 +219,8 @@
       }
       return curve;
     }
-    distortion.curve = makeDestortionCurve(800); // تشويش عالي للغاية ومدمر
+    distortion.curve = makeDistortionCurve(800);
 
-    // رفع مستوى الصوت ليكون صارخاً ومرعباً
     gainNode.gain.setValueAtTime(0.7, now);
     gainNode.gain.setValueAtTime(0.15, now + 0.03);
     gainNode.gain.setValueAtTime(0.6, now + 0.06);
@@ -241,23 +237,24 @@
     osc2.stop(now + 0.16);
   }
 
-  // صوت الصفير الممتد المرعب والثاقب (Teeeeeeeeeet) بدقة عالية وثبات مرعب
-  function startHorrorScreech() {
+  // صوت الـ Teeeeeeeet المعتاد لانقطاع البث وقطع الإشارة (Broadcast Cut-off Sine Wave)
+  function startBroadcastCutoffTone() {
     if (staticGainNode) staticGainNode.gain.value = 0; 
     
     let osc = audioCtx.createOscillator();
     let gain = audioCtx.createGain();
     
-    osc.type = 'sawtooth'; // صوت حاد وغير مريح للأذن
-    osc.frequency.setValueAtTime(2600, audioCtx.currentTime);
-    osc.frequency.linearRampToValueAtTime(2400, audioCtx.currentTime + 3.5); // ثبات مرعب مع ذبذبة طفيفة
+    // استخدام موجة جيبية (Sine) نقية وثابتة تماماً كإشارة انقطاع البث الكلاسيكية
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1000, audioCtx.currentTime); // تردد 1000 هرتز القياسي لانقطاع البث
 
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 4.0);
+    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+    // تمديد الصوت وثباته لفترة كافية ثم تلاشي هادئ عند قطع الإشارة تماماً
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4.5);
 
     osc.connect(gain).connect(audioCtx.destination);
     osc.start();
-    osc.stop(audioCtx.currentTime + 4.0);
+    osc.stop(audioCtx.currentTime + 4.5);
   }
 
   const mainUI = document.getElementById('main-ui');
@@ -270,7 +267,6 @@
   let progress = 0;
   let sequenceStarted = false;
 
-  // بدء التشغيل الفوري والعد التنازلي مع أول ثانية وبدون أزرار
   window.addEventListener('DOMContentLoaded', () => {
     if (sequenceStarted) return;
     sequenceStarted = true;
@@ -331,7 +327,6 @@
     terminal.appendChild(row);
     terminal.scrollTop = terminal.scrollHeight;
 
-    // تكرار الصوت التدميري بشكل متسارع ومزعج طوال فترة التحميل
     if (Math.random() > 0.4) {
       mainUI.classList.add('severe-glitch');
       playDestroyedSpeakerGlitch(); 
@@ -356,19 +351,16 @@
   }
 
   function triggerEndSequence() {
-    // 1. ذروة الخراب والصخب التدميري
     mainUI.classList.add('severe-glitch');
     playDestroyedSpeakerGlitch();
     
     setTimeout(() => {
-      // 2. إغلاق الشاشة لتظهر شبكة النقاط والتشويش الأحمر المرعب
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
       
-      // 3. تشغيل صفير الـ Teeeeeeeet الممتد والثاقب
-      startHorrorScreech();
+      // تشغيل صفير انقطاع البث الكلاسيكي الممتد
+      startBroadcastCutoffTone();
 
-      // 4. تشغيل صوت ألاستور فوق خلفية التشويش المرعب
       setTimeout(() => {
         audioAlastorQuote.volume = 1.0;
         audioAlastorQuote.play().catch(e => console.log("الصوت يتطلب مسار الملف الصحيح"));
