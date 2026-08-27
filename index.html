@@ -8,11 +8,13 @@
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
   :root {
-    --bg-color: #0d0102;
+    --bg-color: #050102;
     --radio-red: #ff0033;
     --dark-red: #4a000d;
-    --alastor-green: #00ff55; /* تم تعديله إلى أخضر نيوني ساطع وحاد */
+    --alastor-green: #00ff55; 
     --text-dim: #8c4a4a;
+    --glitch-cyan: #00f3ff;
+    --glitch-magenta: #ff00ff;
   }
 
   body, html {
@@ -91,19 +93,39 @@
     opacity: 0; transition: opacity 0.5s ease;
   }
 
+  /* تأثيرات التشويش والخطوط المماثلة لصورة "No Signal" */
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.7) 50%);
-    background-size: 100% 3px; z-index: 100; pointer-events: none;
-    box-shadow: inset 0 0 140px rgba(0,0,0,0.95); animation: flicker 0.08s infinite;
+    background: 
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.8) 50%),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 60, 0.03) 2px, rgba(0, 243, 255, 0.03) 4px);
+    background-size: 100% 4px, 100% 100%;
+    z-index: 100; pointer-events: none;
+    box-shadow: inset 0 0 160px rgba(0,0,0,0.98); 
+    animation: digitalNoiseFlicker 0.12s infinite;
   }
 
-  @keyframes flicker {
-    0% { opacity: 0.9; } 50% { opacity: 1; } 100% { opacity: 0.85; }
+  @keyframes digitalNoiseFlicker {
+    0% { opacity: 0.85; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-1px); }
+    100% { opacity: 0.9; transform: translateY(1px); }
+  }
+
+  /* خطوط التمزيق الرقمي والبيكسلات الأفقية (Glitch Artifacts) */
+  .digital-glitch-lines {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+      linear-gradient(90deg, rgba(255,0,51,0.08) 0%, transparent 40%, rgba(0,243,255,0.06) 70%, transparent 100%);
+    opacity: 0.5; z-index: 90; pointer-events: none;
+    animation: artifactScroll 2s linear infinite;
+  }
+  @keyframes artifactScroll {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100vh; }
   }
 
   .main-ui {
-    position: relative; width: 96%; max-width: 600px; height: 96vh;
+    position: relative; width: 96%; max-width: 650px; height: 96vh;
     margin: 2vh auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; z-index: 10;
   }
 
@@ -121,35 +143,48 @@
     color: rgba(0, 255, 85, 0.08); word-break: break-all; overflow: hidden; z-index: -1; line-height: 1;
   }
 
-  .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 20px; }
+  .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 15px; }
   .header-grid div:nth-child(2) { text-align: right; }
 
-  .alert-box { border: 1px solid var(--alastor-green); background: rgba(0, 255, 85, 0.1); padding: 10px; text-align: center; margin-bottom: 15px; box-shadow: 0 0 15px rgba(0,255,85,0.2); }
-  .alert-title { color: var(--alastor-green); font-size: 1.4rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 12px var(--alastor-green); animation: alertPulse 0.5s infinite; }
-  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 18px var(--alastor-green); } 50% { opacity: 0.5; text-shadow: none; } }
+  /* لوحات جانبية مصغرة شبيهة بالصورة */
+  .mini-signal-box {
+    border: 1px solid var(--dark-red); background: rgba(10, 0, 3, 0.8);
+    padding: 8px; font-size: 0.65rem; color: var(--text-dim); margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .mini-signal-box span { color: var(--glitch-cyan); }
 
-  .hacker-brand { text-align: center; font-size: 1.7rem; color: var(--radio-red); text-shadow: 0 0 15px var(--radio-red), 0 0 30px #000; margin: 20px 0; animation: brandGlitch 1.5s infinite; font-weight: bold; letter-spacing: 2px; }
-  @keyframes brandGlitch { 0% { transform: skew(0deg); } 10% { transform: skew(-15deg); filter: blur(1px); } 12% { transform: skew(10deg); filter: none; } 100% { transform: skew(0deg); } }
+  .alert-box { border: 1px solid var(--alastor-green); background: rgba(0, 255, 85, 0.1); padding: 8px; text-align: center; margin-bottom: 12px; box-shadow: 0 0 15px rgba(0,255,85,0.2); }
+  .alert-title { color: var(--alastor-green); font-size: 1.2rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 10px var(--alastor-green); animation: alertPulse 0.5s infinite; }
+  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 15px var(--alastor-green); } 50% { opacity: 0.5; text-shadow: none; } }
 
-  .progress-section { margin-bottom: 20px; }
-  .progress-header { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; color: #ccc; }
-  .progress-track { width: 100%; height: 12px; border: 1px solid var(--text-dim); background: #000; position: relative; }
+  .hacker-brand { text-align: center; font-size: 1.5rem; color: var(--radio-red); text-shadow: 2px 0 var(--glitch-cyan), -2px 0 var(--glitch-magenta), 0 0 15px var(--radio-red); margin: 10px 0; animation: brandGlitch 1.2s infinite; font-weight: bold; letter-spacing: 2px; }
+  @keyframes brandGlitch { 
+    0% { transform: skew(0deg); text-shadow: 2px 0 var(--glitch-cyan), -2px 0 var(--glitch-magenta); } 
+    10% { transform: skew(-15deg); filter: blur(1px); text-shadow: -3px 0 var(--glitch-cyan), 3px 0 var(--glitch-magenta); } 
+    12% { transform: skew(10deg); filter: none; } 
+    100% { transform: skew(0deg); text-shadow: 2px 0 var(--glitch-cyan), -2px 0 var(--glitch-magenta); } 
+  }
+
+  .progress-section { margin-bottom: 15px; }
+  .progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 5px; color: #ccc; }
+  .progress-track { width: 100%; height: 10px; border: 1px solid var(--text-dim); background: #000; position: relative; }
   .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 15px var(--radio-red); transition: width 0.1s; }
 
-  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(40, 0, 10, 0.3); padding: 10px; overflow: hidden; font-size: 0.75rem; line-height: 1.5; }
+  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(40, 0, 10, 0.3); padding: 10px; overflow: hidden; font-size: 0.7rem; line-height: 1.4; }
   .log-row { display: flex; margin-bottom: 3px; }
   .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
-  .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 8px var(--alastor-green); }
-  .log-msg.red { color: var(--radio-red); }
+  .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 6px var(--alastor-green); }
+  .log-msg.red { color: var(--radio-red); text-shadow: 1px 0 var(--glitch-cyan); }
 
-  .severe-glitch { animation: dynamicTearChaos 0.05s infinite; }
+  .severe-glitch { animation: dynamicTearChaos 0.04s infinite; }
   @keyframes dynamicTearChaos { 
     0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg) contrast(300%); } 
-    20% { transform: translate(var(--tx, -20px), var(--ty, 12px)) skew(var(--sk, 30deg)); filter: contrast(600%) invert(25%); } 
-    40% { transform: translate(calc(var(--tx, -20px) * -0.8), calc(var(--ty, 12px) * -1.2)) skew(calc(var(--sk, 30deg) * -1)); filter: blur(4px) saturate(600%); } 
-    60% { transform: translate(calc(var(--tx, -20px) * 0.5), calc(var(--ty, 12px) * 0.5)) skew(calc(var(--sk, 30deg) * 0.8)); filter: contrast(700%); } 
-    80% { transform: translate(calc(var(--tx, -20px) * -0.3), calc(var(--ty, 12px) * -0.5)) skew(calc(var(--sk, 30deg) * -0.5)); filter: hue-rotate(180deg); }
+    20% { transform: translate(var(--tx, -25px), var(--ty, 15px)) skew(var(--sk, 35deg)); filter: contrast(700%) invert(30%) drop-shadow(2px 0 var(--glitch-cyan)); } 
+    40% { transform: translate(calc(var(--tx, -25px) * -1), calc(var(--ty, 15px) * -1.5)) skew(calc(var(--sk, 35deg) * -1)); filter: blur(3px) saturate(800%); } 
+    60% { transform: translate(calc(var(--tx, -25px) * 0.6), calc(var(--ty, 15px) * 0.6)) skew(calc(var(--sk, 35deg) * 0.9)); filter: contrast(800%) drop-shadow(-2px 0 var(--glitch-magenta)); } 
+    80% { transform: translate(calc(var(--tx, -25px) * -0.4), calc(var(--ty, 15px) * -0.6)) skew(calc(var(--sk, 35deg) * -0.6)); filter: hue-rotate(180deg); }
     100% { transform: translate(0, 0) skew(0deg); filter: none; } 
   }
 
@@ -165,19 +200,19 @@
 
   #demon-glitch-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: repeating-linear-gradient(transparent 0, transparent 4px, rgba(255, 0, 51, 0.5) 4px, rgba(255, 0, 51, 0.5) 8px),
-                radial-gradient(circle at center, rgba(150,0,10,0.9) 0%, #000 100%);
+    background: repeating-linear-gradient(transparent 0, transparent 3px, rgba(255, 0, 51, 0.6) 3px, rgba(0, 243, 255, 0.3) 6px),
+                radial-gradient(circle at center, rgba(150,0,10,0.95) 0%, #000 100%);
     background-color: #0a0002; z-index: 99999;
-    animation: demonLaughGlitch 0.06s infinite; pointer-events: none;
+    animation: demonLaughGlitch 0.05s infinite; pointer-events: none;
     display: none;
     mix-blend-mode: screen;
   }
 
   @keyframes demonLaughGlitch {
-    0% { filter: invert(0) drop-shadow(0 0 20px #f03) hue-rotate(0deg); transform: scale(1.03) translate(6px, 4px); }
-    30% { filter: invert(100%) drop-shadow(0 0 40px #f03) hue-rotate(50deg); transform: scale(1.1) translate(-8px, 10px); }
-    60% { filter: invert(0) drop-shadow(0 0 15px #f03) hue-rotate(-30deg); transform: scale(1.02) translate(5px, -6px); }
-    100% { filter: invert(50%) drop-shadow(0 0 50px #f00) contrast(500%); transform: scale(1.06) translate(-4px, 3px); }
+    0% { filter: invert(0) drop-shadow(4px 0 var(--glitch-cyan)) drop-shadow(-4px 0 var(--glitch-magenta)); transform: scale(1.04) translate(8px, 5px) skew(5deg); }
+    30% { filter: invert(100%) contrast(700%) hue-rotate(90deg); transform: scale(1.12) translate(-10px, 12px) skew(-10deg); }
+    60% { filter: invert(0) contrast(500%) drop-shadow(-5px 0 var(--glitch-cyan)); transform: scale(1.02) translate(6px, -8px); }
+    100% { filter: invert(40%) contrast(600%) drop-shadow(5px 0 var(--glitch-magenta)); transform: scale(1.08) translate(-6px, 4px) skew(3deg); }
   }
 
   #pure-black-screen {
@@ -188,7 +223,6 @@
 </head>
 <body>
 
-<!-- عنصر صوتي لضحكة ألاستور الحقيقية والجاهزة للتشغيل الفوري -->
 <audio id="alastor-laugh-audio" src="https://www.myinstants.com/media/sounds/alastor-laugh.mp3" preload="auto"></audio>
 
 <div id="splash-screen">
@@ -215,20 +249,32 @@
 
 <div id="screen-container">
   <div class="crt-overlay"></div>
+  <div class="digital-glitch-lines"></div>
+  
   <div class="main-ui" id="main-ui">
     <div class="ui-corner-tl"></div>
     <div class="ui-corner-br"></div>
     <div class="hex-bg" id="hex-bg"></div>
+    
     <div class="header-grid">
       <div>STATION: 666.9 MHz - HAZBIN</div>
       <div>STATUS: RADIO_WAVE_ACTIVE</div>
     </div>
+
+    <!-- لوحة مصغرة تشبه الصورة تماماً -->
+    <div class="mini-signal-box">
+      <div>⚠ WARNING: SIGNAL INTERRUPTED // ROUTER COMPROMISED</div>
+      <span>[TRACE_ERASED]</span>
+    </div>
+
     <div class="alert-box"><div class="alert-title">HAZBIN FREQUENCY HIJACKED</div></div>
     <div class="hacker-brand">ALASTOR THE RADIO DEMON</div>
+    
     <div class="progress-section">
       <div class="progress-header"><span id="target-ip">SOUL_FREQ: 192.666.##.##</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
       <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
     </div>
+    
     <div class="terminal-box" id="terminal"></div>
   </div>
 </div>
@@ -334,9 +380,9 @@
   let progress = 0;
 
   function randomizeGlitchDirection() {
-    const rx = (Math.random() * 80 - 40) + 'px'; 
-    const ry = (Math.random() * 40 - 20) + 'px'; 
-    const rs = (Math.random() * 60 - 30) + 'deg'; 
+    const rx = (Math.random() * 90 - 45) + 'px'; 
+    const ry = (Math.random() * 50 - 25) + 'px'; 
+    const rs = (Math.random() * 70 - 35) + 'deg'; 
     mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry); mainUI.style.setProperty('--sk', rs);
   }
 
@@ -376,12 +422,12 @@
       const logItem = logsList[Math.floor(Math.random() * logsList.length)];
       msgSpan.className = `log-msg ${logItem.type}`; msgSpan.innerText = `♪ ${logItem.text}`;
     } else {
-      msgSpan.className = 'log-msg'; msgSpan.style.color = '#ff4444'; msgSpan.innerText = `[SPEAKER_DESTROYED] // SYSTEM_CRASH_666`;
+      msgSpan.className = 'log-msg'; msgSpan.style.color = '#ff4444'; msgSpan.innerText = `[SIGNAL_LOST] // ROUTER_COMPROMISED_666`;
     }
     row.appendChild(timeSpan); row.appendChild(msgSpan);
     terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
 
-    if (Math.random() > 0.4) {
+    if (Math.random() > 0.35) {
       randomizeGlitchDirection(); 
       mainUI.classList.add('severe-glitch'); playDestroyedSpeakerGlitch(); 
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
