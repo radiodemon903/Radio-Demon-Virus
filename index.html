@@ -12,7 +12,6 @@
     --radio-red: #ff0011;
     --dark-red: #3a0005;
     --alastor-green: #33ff00;
-    --text-dim: #882222;
   }
 
   body, html {
@@ -26,7 +25,7 @@
     background: radial-gradient(circle, #1a0000 0%, #000000 100%);
     z-index: 9999; display: flex; justify-content: center; align-items: center;
     padding: 15px; box-sizing: border-box;
-    transition: opacity 0.2s ease, visibility 0.2s;
+    transition: opacity 0.3s ease;
   }
 
   .splash-card {
@@ -62,10 +61,9 @@
   #screen-container {
     width: 100vw; height: 100vh; background-color: var(--bg-color);
     position: relative; overflow: hidden; transform-origin: center center;
-    display: none; opacity: 0; transition: opacity 0.1s ease;
+    display: none; opacity: 0; transition: opacity 0.2s ease;
   }
 
-  /* خطوط راديو قوية */
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: 
@@ -81,7 +79,6 @@
     margin: 2vh auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; z-index: 10;
   }
 
-  /* عبارة NO SIGNAL أصبحت ثابتة ولا تهتز إلا مع الجليتش العام */
   .alastor-no-signal {
     position: relative;
     text-align: center;
@@ -106,7 +103,7 @@
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
   .log-msg.red { color: var(--radio-red); text-shadow: 0 0 10px var(--radio-red); font-size: 1rem; }
 
-  /* جليتشات عنيفة تشمل الشاشة بالكامل والعبارة معاً عند حدوثها */
+  /* جليتشات عنيفة للشاشة بالكامل */
   .severe-glitch { animation: alastorRage 0.08s infinite !important; }
   @keyframes alastorRage { 
     0% { transform: translate(0, 0) scale(1); filter: none; } 
@@ -144,4 +141,260 @@
 </head>
 <body>
 
-<audio id="alastor-laugh-
+<audio id="alastor-laugh-audio" src="https://www.myinstants.com/media/sounds/alastor-laugh.mp3" preload="auto"></audio>
+
+<div id="splash-screen">
+  <div class="splash-card">
+    <div class="splash-brand-title">ALASTOR</div>
+    <div style="text-align:center; color: var(--alastor-green); font-size: 2rem; margin-bottom: 20px;">⛧ 📻 ⛧</div>
+    <button class="splash-action-btn" id="start-btn">
+      [ INITIATE BROADCAST OVERRIDE ]
+    </button>
+  </div>
+</div>
+
+<div id="screen-container">
+  <div class="crt-overlay"></div>
+  
+  <div class="main-ui" id="main-ui">
+    <div class="alastor-no-signal">NO SIGNAL</div>
+    <div class="voodoo-symbols" style="text-align: center;">⸸ ⍟ ☠ ⸸</div>
+
+    <div style="margin: 20px 0; border-top: 2px dashed var(--radio-red);"></div>
+    
+    <div class="terminal-box" id="terminal"></div>
+  </div>
+</div>
+
+<div id="demon-glitch-overlay"></div>
+<div id="pure-black-screen"></div>
+
+<script>
+  let audioCtx = null;
+  let staticGainNode = null;
+  let sequenceStarted = false;
+
+  function initAudio() {
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    } catch(e) {
+      console.log("Audio Context Skipped:", e);
+    }
+  }
+
+  function startBackgroundStatic() {
+    if (!audioCtx) return;
+    try {
+      let bufferSize = audioCtx.sampleRate * 2;
+      let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      let data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+      let noise = audioCtx.createBufferSource();
+      noise.buffer = buffer; noise.loop = true;
+      
+      let filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass'; filter.frequency.value = 800;
+      
+      staticGainNode = audioCtx.createGain();
+      staticGainNode.gain.value = 0.15;
+      
+      noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
+      noise.start();
+    } catch(e) {}
+  }
+
+  function playDemonicRadioScreech() {
+    if (!audioCtx) return;
+    try {
+      let now = audioCtx.currentTime;
+      let osc1 = audioCtx.createOscillator();
+      let osc2 = audioCtx.createOscillator();
+      let lfo = audioCtx.createOscillator();
+      let lfoGain = audioCtx.createGain();
+      let distortion = audioCtx.createWaveShaper();
+      let mainGain = audioCtx.createGain();
+
+      osc1.type = 'sawtooth';
+      osc2.type = 'sine';
+      lfo.type = 'square';
+
+      osc1.frequency.setValueAtTime(4000, now);
+      osc1.frequency.exponentialRampToValueAtTime(300, now + 0.2);
+
+      osc2.frequency.setValueAtTime(60, now);
+      osc2.frequency.linearRampToValueAtTime(20, now + 0.2);
+
+      lfo.frequency.value = 25;
+
+      let k = 4000;
+      let curve = new Float32Array(44100);
+      let deg = Math.PI / 180;
+      for (let i = 0; i < 44100; ++i) {
+        let x = (i * 2) / 44100 - 1;
+        curve[i] = ((3 + k) * x * 80 * deg) / (Math.PI + k * Math.abs(x));
+      }
+      distortion.curve = curve;
+
+      lfo.connect(lfoGain.gain);
+      mainGain.gain.setValueAtTime(1.0, now);
+      mainGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+      osc1.connect(distortion);
+      osc2.connect(distortion);
+      distortion.connect(lfoGain);
+      lfoGain.connect(mainGain);
+      mainGain.connect(audioCtx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      lfo.start(now);
+      
+      osc1.stop(now + 0.3);
+      osc2.stop(now + 0.3);
+      lfo.stop(now + 0.3);
+    } catch(e) {}
+  }
+
+  function playLongTeetTone() {
+    if (!audioCtx) return;
+    try {
+      if (staticGainNode) staticGainNode.gain.value = 0;
+      let now = audioCtx.currentTime;
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1400, now);
+
+      gain.gain.setValueAtTime(0.8, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
+
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(now); osc.stop(now + 2.5);
+    } catch(e) {}
+  }
+
+  function playAlastorDemonLaugh() {
+    const laughAudio = document.getElementById('alastor-laugh-audio');
+    if (laughAudio) {
+      laughAudio.currentTime = 0; 
+      laughAudio.volume = 1.0;
+      laughAudio.play().catch(e => console.log("Audio play blocked:", e));
+    }
+  }
+
+  const mainUI = document.getElementById('main-ui');
+  const terminal = document.getElementById('terminal');
+  const screenContainer = document.getElementById('screen-container');
+  const splashScreen = document.getElementById('splash-screen');
+  const demonGlitchOverlay = document.getElementById('demon-glitch-overlay');
+  const pureBlackScreen = document.getElementById('pure-black-screen');
+  const startBtn = document.getElementById('start-btn');
+
+  let logsCount = 0;
+
+  function randomizeGlitchDirection() {
+    const rx = (Math.random() * 200 - 100) + 'px'; 
+    const ry = (Math.random() * 30 - 15) + 'px'; 
+    mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry);
+  }
+
+  function startExperience() {
+    if (sequenceStarted) return;
+    sequenceStarted = true;
+
+    // تفعيل الـ AudioContext فوراً داخل حدث الضغط لتجنب حظر المتصفح
+    initAudio(); 
+
+    // إخفاء شاشة الترحيب وإظهار الشاشة الرئيسية بسلاسة
+    splashScreen.style.opacity = '0';
+    setTimeout(() => { 
+      splashScreen.style.display = 'none'; 
+      screenContainer.style.display = 'block';
+      setTimeout(() => { 
+        screenContainer.style.opacity = '1'; 
+        startBackgroundStatic();
+        playDemonicRadioScreech();
+        addLog();
+      }, 50);
+    }, 300);
+  }
+
+  startBtn.addEventListener('click', startExperience);
+
+  const errorLogs = [
+    "!!! SYSTEM OVERRIDE IN PROGRESS !!!",
+    "SOUL_CONTRACT_DETECTED_ERROR",
+    "FREQUENCY_666_HIJACKED",
+    "⛧ BROADCAST CORRUPTED ⛧",
+    "HE_IS_HERE"
+  ];
+
+  function getTimestamp() {
+    return `ERR_666_${Math.floor(Math.random()*99).toString().padStart(2,'0')}`;
+  }
+
+  function addLog() {
+    if (logsCount >= 25) { 
+      triggerEndSequence();
+      return;
+    }
+    
+    logsCount++;
+    const row = document.createElement('div'); row.className = 'log-row';
+    const timeSpan = document.createElement('span'); timeSpan.className = 'log-time'; timeSpan.innerText = getTimestamp();
+    const msgSpan = document.createElement('span');
+    
+    if (Math.random() > 0.3) {
+      msgSpan.className = `log-msg`; msgSpan.innerText = `>>> DECRYPTING RADIO WAVES...`;
+    } else {
+      msgSpan.className = 'log-msg red'; 
+      msgSpan.innerText = errorLogs[Math.floor(Math.random() * errorLogs.length)];
+    }
+    
+    row.appendChild(timeSpan); row.appendChild(msgSpan);
+    terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
+
+    if (Math.random() > 0.4) {
+      randomizeGlitchDirection(); 
+      mainUI.classList.add('severe-glitch'); 
+      playDemonicRadioScreech(); 
+      setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
+    }
+    
+    let nextTime = Math.random() * (120 - (logsCount * 3)) + 20; 
+    setTimeout(addLog, Math.max(nextTime, 20));
+  }
+
+  function triggerEndSequence() {
+    randomizeGlitchDirection(); 
+    mainUI.classList.add('severe-glitch');
+    playDemonicRadioScreech();
+    
+    setTimeout(() => {
+      mainUI.classList.remove('severe-glitch');
+      screenContainer.classList.add('crt-shut-off');
+
+      playLongTeetTone(); 
+
+      setTimeout(() => {
+        demonGlitchOverlay.style.display = 'block'; 
+        playAlastorDemonLaugh(); 
+
+        setTimeout(() => {
+          demonGlitchOverlay.style.display = 'none';
+          pureBlackScreen.style.display = 'block'; 
+        }, 3000);
+
+      }, 2200);
+
+    }, 450); 
+  }
+</script>
+</body>
+</html>
