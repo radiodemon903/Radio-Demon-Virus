@@ -20,7 +20,6 @@
     font-family: 'Share Tech Mono', monospace; height: 100vh; overflow: hidden; user-select: none;
   }
 
-  /* حاوية الشاشة بأكملها لتطبيق تأثير الانطفاء عليها */
   #screen-container {
     width: 100vw; height: 100vh; background-color: var(--bg-color);
     position: relative; overflow: hidden; transform-origin: center center;
@@ -84,25 +83,48 @@
   .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
   .log-msg.red { color: var(--radio-red); }
 
-  .severe-glitch { animation: screenTearChaos 0.12s infinite; }
-  @keyframes screenTearChaos { 0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg); } 25% { transform: translate(-8px, 4px) skew(5deg); filter: contrast(250%) saturate(200%); } 50% { transform: translate(8px, -4px) skew(-8deg); filter: blur(2px); } 75% { transform: translate(-4px, -6px) skew(3deg); filter: contrast(200%); } 100% { transform: translate(0, 0) skew(0deg); filter: none; } }
+  .severe-glitch { animation: screenTearChaos 0.1s infinite; }
+  @keyframes screenTearChaos { 
+    0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg) contrast(150%); } 
+    20% { transform: translate(-12px, 6px) skew(15deg); filter: contrast(350%) invert(10%); } 
+    40% { transform: translate(10px, -8px) skew(-20deg); filter: blur(3px) saturate(300%); } 
+    60% { transform: translate(-5px, -2px) skew(8deg); filter: contrast(400%); } 
+    80% { transform: translate(6px, 10px) skew(-10deg); filter: hue-rotate(90deg); }
+    100% { transform: translate(0, 0) skew(0deg); filter: none; } 
+  }
 
-  /* تأثير إغلاق الشاشة الواقعي (تلفاز قديم) */
+  /* أنميشن إغلاق الشاشة الواقعي جداً (التلفاز القديم CRT) */
   .crt-shut-off {
-    animation: turn-off 0.55s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    animation: turn-off 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
   @keyframes turn-off {
-    0% { transform: scale(1, 1.3) translate3d(0, 0, 0); filter: brightness(1); }
-    60% { transform: scale(1, 0.001) translate3d(0, 0, 0); filter: brightness(10); }
-    100% { transform: scale(0, 0.001) translate3d(0, 0, 0); filter: brightness(0); opacity: 0; }
+    0% {
+      transform: scale(1, 1);
+      filter: brightness(1) contrast(1);
+    }
+    40% {
+      transform: scale(1.1, 0.01);
+      filter: brightness(15) contrast(300%);
+      background-color: #fff;
+    }
+    70% {
+      transform: scale(0.02, 0.005);
+      filter: brightness(20);
+      background-color: #fff;
+    }
+    100% {
+      transform: scale(0, 0);
+      filter: brightness(0);
+      opacity: 0;
+      background-color: #000;
+    }
   }
 </style>
 </head>
 <body>
 
-<div id="start-screen">[ اضغط للاتصال بتردد الراديو ]</div>
+<div id="start-screen">[ اضغط للاتصال بتردد الراديو الخبيث ]</div>
 
-<!-- ملف صوت ألاستور -->
 <audio id="audio-alastor-quote">
   <source src="alastor-if-i-had-to-hurt-anyone-here.mp3" type="audio/mpeg">
 </audio>
@@ -129,7 +151,6 @@
 </div>
 
 <script>
-  // -- هندسة صوتية جديدة: جليتش رقمي واقعي وتلف الشاشة --
   let audioCtx, staticGainNode;
 
   function initAudio() {
@@ -145,44 +166,57 @@
     noise.buffer = buffer;
     noise.loop = true;
     let filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass'; filter.frequency.value = 1500; // صوت أعمق وأكثر كآبة
+    filter.type = 'bandpass'; filter.frequency.value = 1000; filter.Q.value = 1;
     staticGainNode = audioCtx.createGain();
-    staticGainNode.gain.value = 0.05;
+    staticGainNode.gain.value = 0.04;
     noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
     noise.start();
   }
 
-  function playDigitalGlitchSound() {
+  // صوت جليتش رعب رقمي حقيقي (مركب من مذبذبين بترددات حادة وعشوائية)
+  function playHorrorGlitchSound() {
     if (!audioCtx) return;
-    
-    // استخدام موجة "مربعة" لإعطاء صوت Error/Bug رقمي خشن
-    let osc = audioCtx.createOscillator();
-    osc.type = 'square';
-    
-    // تردد ينخفض بسرعة شديدة ليعطي تأثير "Bzzzt"
-    osc.frequency.setValueAtTime(Math.random() * 800 + 300, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.1);
-    
-    let gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.15);
-    
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.15);
+
+    let osc1 = audioCtx.createOscillator();
+    let osc2 = audioCtx.createOscillator();
+    let gainNode = audioCtx.createGain();
+
+    // اختيار موجات منفرة ومرعبة
+    osc1.type = 'sawtooth';
+    osc2.type = 'square';
+
+    // ترددات منخفضة وحادة تسبب التوتر
+    let baseFreq = Math.random() * 400 + 100;
+    osc1.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
+    osc1.frequency.linearRampToValueAtTime(baseFreq * 0.2, audioCtx.currentTime + 0.2);
+
+    osc2.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.2);
+
+    // التحكم بالصوت (إحساس صدمة رقمية مفاجئة)
+    gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
+
+    osc1.connect(gainNode);
+    osc2.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    osc1.start();
+    osc2.start();
+    osc1.stop(audioCtx.currentTime + 0.22);
+    osc2.stop(audioCtx.currentTime + 0.22);
   }
 
   function startSmoothBeep() {
-    if (staticGainNode) staticGainNode.gain.value = 0; // إطفاء التشويش الخلفي
+    if (staticGainNode) staticGainNode.gain.value = 0; 
     let osc = audioCtx.createOscillator();
     osc.type = 'sine';
-    osc.frequency.value = 800; // تردد التلفاز الفاصل Teeeeet
+    osc.frequency.value = 900; 
     let gain = audioCtx.createGain();
     gain.gain.value = 0.12;
     osc.connect(gain).connect(audioCtx.destination);
     osc.start(); 
   }
-  // -------------------------------------------------------------
 
   const startScreen = document.getElementById('start-screen');
   const mainUI = document.getElementById('main-ui');
@@ -242,7 +276,7 @@
     } else {
       msgSpan.className = 'log-msg';
       msgSpan.style.color = '#ff4444';
-      msgSpan.innerText = `[ERROR_BZZT] // SIGNAL_CORRUPTED_666`;
+      msgSpan.innerText = `[CRITICAL_SYSTEM_ERROR] // SOUL_CORRUPTED_666`;
     }
 
     row.appendChild(timeSpan);
@@ -250,11 +284,11 @@
     terminal.appendChild(row);
     terminal.scrollTop = terminal.scrollHeight;
 
-    // تفعيل الجليتش البصري مع الصوت الرقمي الجديد
-    if (Math.random() > 0.7) {
+    // تفعيل الجليتش المرعب بصرياً وصوتياً
+    if (Math.random() > 0.65) {
       mainUI.classList.add('severe-glitch');
-      playDigitalGlitchSound(); 
-      setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
+      playHorrorGlitchSound(); 
+      setTimeout(() => mainUI.classList.remove('severe-glitch'), 180);
     }
 
     setTimeout(addLog, Math.random() * 150 + 50);
@@ -275,25 +309,25 @@
   }
 
   function triggerEndSequence() {
-    // 1. جنون الشاشة لثانية قبل الانطفاء
+    // 1. جنون رعب ذروة الشاشة
     mainUI.classList.add('severe-glitch');
-    playDigitalGlitchSound();
+    playHorrorGlitchSound();
     
     setTimeout(() => {
-      // 2. تفعيل تأثير انطفاء التلفاز الكلاسيكي على الحاوية بأكملها
+      // 2. تفعيل إغلاق الشاشة الواقعي المرعب (CRT Turn-off)
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
       
       // 3. تشغيل الصفير المستمر 
       startSmoothBeep();
 
-      // 4. تشغيل صوت ألاستور في الظلام بعد ثانية تقريباً من انطفاء الشاشة
+      // 4. تشغيل صوت ألاستور في الظلام دامس
       setTimeout(() => {
         audioAlastorQuote.volume = 1.0;
         audioAlastorQuote.play().catch(e => console.log("الصوت لم يعمل"));
-      }, 800);
+      }, 700);
       
-    }, 400); // الشاشة تجن لمدة 0.4 ثانية ثم تنطفئ
+    }, 450); 
   }
 </script>
 </body>
