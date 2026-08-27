@@ -166,45 +166,42 @@
     noise.buffer = buffer;
     noise.loop = true;
     let filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 1000; filter.Q.value = 1;
+    filter.type = 'bandpass'; filter.frequency.value = 1200; filter.Q.value = 1.5;
     staticGainNode = audioCtx.createGain();
-    staticGainNode.gain.value = 0.04;
+    staticGainNode.gain.value = 0.03;
     noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
     noise.start();
   }
 
-  // صوت جليتش رعب رقمي حقيقي (مركب من مذبذبين بترددات حادة وعشوائية)
-  function playHorrorGlitchSound() {
+  // صوت الجليتش الرقمي الحاد والمتناغم مع الصوت الذي أرسلته (Stutter Data Glitch)
+  function playExactGlitchSound() {
     if (!audioCtx) return;
 
-    let osc1 = audioCtx.createOscillator();
-    let osc2 = audioCtx.createOscillator();
+    let osc = audioCtx.createOscillator();
     let gainNode = audioCtx.createGain();
 
-    // اختيار موجات منفرة ومرعبة
-    osc1.type = 'sawtooth';
-    osc2.type = 'square';
+    // موجة مربعة تعطي طابع البيب الإلكتروني الحاد
+    osc.type = 'square';
 
-    // ترددات منخفضة وحادة تسبب التوتر
-    let baseFreq = Math.random() * 400 + 100;
-    osc1.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
-    osc1.frequency.linearRampToValueAtTime(baseFreq * 0.2, audioCtx.currentTime + 0.2);
+    // قفزات تردد سريعة جداً ومتقطعة لتعطي صوت الجليتش الحقيقي
+    let now = audioCtx.currentTime;
+    osc.frequency.setValueAtTime(1200, now);
+    osc.frequency.setValueAtTime(450, now + 0.03);
+    osc.frequency.setValueAtTime(1800, now + 0.06);
+    osc.frequency.setValueAtTime(800, now + 0.09);
+    osc.frequency.setValueAtTime(2400, now + 0.12);
 
-    osc2.frequency.setValueAtTime(baseFreq * 1.5, audioCtx.currentTime);
-    osc2.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.2);
+    // تحكم حاد وسريع بمستوى الصوت
+    gainNode.gain.setValueAtTime(0.18, now);
+    gainNode.gain.setValueAtTime(0.01, now + 0.04);
+    gainNode.gain.setValueAtTime(0.15, now + 0.07);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
 
-    // التحكم بالصوت (إحساس صدمة رقمية مفاجئة)
-    gainNode.gain.setValueAtTime(0.25, audioCtx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.22);
-
-    osc1.connect(gainNode);
-    osc2.connect(gainNode);
+    osc.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
-    osc1.start();
-    osc2.start();
-    osc1.stop(audioCtx.currentTime + 0.22);
-    osc2.stop(audioCtx.currentTime + 0.22);
+    osc.start(now);
+    osc.stop(now + 0.16);
   }
 
   function startSmoothBeep() {
@@ -276,7 +273,7 @@
     } else {
       msgSpan.className = 'log-msg';
       msgSpan.style.color = '#ff4444';
-      msgSpan.innerText = `[CRITICAL_SYSTEM_ERROR] // SOUL_CORRUPTED_666`;
+      msgSpan.innerText = `[DATA_STUTTER_ERROR] // CORRUPTED_PACKET`;
     }
 
     row.appendChild(timeSpan);
@@ -284,11 +281,11 @@
     terminal.appendChild(row);
     terminal.scrollTop = terminal.scrollHeight;
 
-    // تفعيل الجليتش المرعب بصرياً وصوتياً
-    if (Math.random() > 0.65) {
+    // تفعيل الجليتش الحاد تماماً مثل الصوت المطلوب
+    if (Math.random() > 0.6) {
       mainUI.classList.add('severe-glitch');
-      playHorrorGlitchSound(); 
-      setTimeout(() => mainUI.classList.remove('severe-glitch'), 180);
+      playExactGlitchSound(); 
+      setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
     }
 
     setTimeout(addLog, Math.random() * 150 + 50);
@@ -309,12 +306,12 @@
   }
 
   function triggerEndSequence() {
-    // 1. جنون رعب ذروة الشاشة
+    // 1. جنون الشاشة الأخير مع تكرار صوت الجليتش الحاد
     mainUI.classList.add('severe-glitch');
-    playHorrorGlitchSound();
+    playExactGlitchSound();
     
     setTimeout(() => {
-      // 2. تفعيل إغلاق الشاشة الواقعي المرعب (CRT Turn-off)
+      // 2. إغلاق الشاشة الواقعي (CRT Turn-off)
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
       
