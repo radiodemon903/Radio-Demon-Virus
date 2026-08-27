@@ -26,6 +26,22 @@
     user-select: none;
   }
 
+  /* شاشة البداية الإجبارية لتفعيل الصوت */
+  #start-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: #000;
+    color: var(--alastor-green);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    z-index: 1000;
+    cursor: pointer;
+    text-shadow: 0 0 15px var(--alastor-green);
+    animation: alertPulse 1s infinite;
+  }
+
   .crt-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -51,7 +67,7 @@
     margin: 2vh auto;
     padding: 20px;
     box-sizing: border-box;
-    display: flex;
+    display: none;
     flex-direction: column;
     z-index: 10;
   }
@@ -59,12 +75,15 @@
   .main-ui::before, .main-ui::after,
   .ui-corner-tl, .ui-corner-br {
     border-color: var(--alastor-green);
+    border-style: solid;
+    border-width: 2px;
+    position: absolute;
   }
 
-  .main-ui::before { top: 0; left: 0; border-right: none; border-bottom: none; }
-  .main-ui::after { bottom: 0; right: 0; border-left: none; border-top: none; }
-  .ui-corner-tl { position: absolute; top: 0; right: 0; width: 30px; height: 30px; border-left: none; border-bottom: none; }
-  .ui-corner-br { position: absolute; bottom: 0; left: 0; width: 30px; height: 30px; border-right: none; border-top: none; }
+  .main-ui::before { content:''; top: 0; left: 0; width: 100%; height: 100%; border-right: none; border-bottom: none; pointer-events:none;}
+  .main-ui::after { content:''; bottom: 0; right: 0; width: 100%; height: 100%; border-left: none; border-top: none; pointer-events:none;}
+  .ui-corner-tl { top: 0; right: 0; width: 30px; height: 30px; border-left: none; border-bottom: none; }
+  .ui-corner-br { bottom: 0; left: 0; width: 30px; height: 30px; border-right: none; border-top: none; }
 
   .hex-bg {
     position: absolute;
@@ -103,11 +122,6 @@
     text-shadow: 0 0 10px var(--alastor-green);
     animation: alertPulse 0.5s infinite;
   }
-  .alert-sub {
-    color: #99ffbb;
-    font-size: 0.75rem;
-    letter-spacing: 2px;
-  }
 
   @keyframes alertPulse {
     0%, 100% { opacity: 1; text-shadow: 0 0 15px var(--alastor-green); }
@@ -133,36 +147,13 @@
   }
 
   .progress-section { margin-bottom: 20px; }
-  .progress-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    margin-bottom: 5px;
-    color: #ccc;
-  }
-  .progress-track {
-    width: 100%;
-    height: 12px;
-    border: 1px solid var(--text-dim);
-    background: #000;
-    position: relative;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--radio-red);
-    width: 0%;
-    box-shadow: 0 0 15px var(--radio-red);
-    transition: width 0.1s;
-  }
+  .progress-header { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; color: #ccc; }
+  .progress-track { width: 100%; height: 12px; border: 1px solid var(--text-dim); background: #000; position: relative; }
+  .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 15px var(--radio-red); transition: width 0.1s; }
 
   .terminal-box {
-    flex-grow: 1;
-    border: 1px solid var(--dark-red);
-    background: rgba(40, 0, 10, 0.3);
-    padding: 10px;
-    overflow: hidden;
-    font-size: 0.75rem;
-    line-height: 1.5;
+    flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(40, 0, 10, 0.3);
+    padding: 10px; overflow: hidden; font-size: 0.75rem; line-height: 1.5;
   }
   .log-row { display: flex; margin-bottom: 3px; }
   .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
@@ -182,30 +173,9 @@
     100% { transform: translate(0, 0) skew(0deg); filter: none; }
   }
 
-  .screen-dropout {
-    animation: dropoutAnim 0.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
-  }
-
-  @keyframes dropoutAnim {
-    0% { filter: brightness(1); transform: scale(1); }
-    30% { filter: brightness(5) contrast(300%) invert(40%); transform: scale(1.05) skew(30deg, 5deg); opacity: 0.2; }
-    35% { background-color: #000; opacity: 0; filter: blur(10px); }
-    50% { background-color: var(--radio-red); opacity: 0.9; transform: scale(0.95); }
-    60% { background-color: #000; opacity: 0.1; filter: blur(5px); }
-    80% { background-color: #0d0102; opacity: 0.8; filter: brightness(0.5); }
-    100% { background-color: #0d0102; opacity: 1; transform: scale(1); filter: none; }
-  }
-
-  /* شاشة النهاية: شاشة سوداء مع تقطعات وتلف مستمر */
   #final-screen {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: #000;
-    z-index: 200;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: #000; z-index: 200; overflow: hidden;
     animation: finalScreenFlicker 0.1s infinite;
   }
 
@@ -219,60 +189,43 @@
   }
 
   #final-screen::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(
-      rgba(255, 0, 51, 0) 0%,
-      rgba(255, 0, 51, 0.2) 50%,
-      rgba(0, 255, 64, 0.1) 51%,
-      rgba(0, 0, 0, 0) 100%
-    );
-    background-size: 100% 8px;
-    pointer-events: none;
-    animation: scanlineMove 0.3s linear infinite;
+    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(255,0,51,0) 0%, rgba(255,0,51,0.2) 50%, rgba(0,255,64,0.1) 51%, rgba(0,0,0,0) 100%);
+    background-size: 100% 8px; pointer-events: none; animation: scanlineMove 0.3s linear infinite;
   }
-
-  @keyframes scanlineMove {
-    0% { background-position: 0 0; }
-    100% { background-position: 0 30px; }
-  }
-
-  #final-screen::after {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.03);
-    opacity: 0;
-    pointer-events: none;
-    animation: suddenTear 2s steps(2, end) infinite;
-  }
-
-  @keyframes suddenTear {
-    0%, 90%, 100% { opacity: 0; transform: scaleY(1); }
-    92% { opacity: 0.6; transform: scaleY(0.9) skewX(20deg); filter: invert(1); }
-    94% { opacity: 0.1; transform: scaleY(1.1); }
-    96% { opacity: 0.8; transform: scaleY(0.5) skewX(-30deg); }
-  }
+  @keyframes scanlineMove { 0% { background-position: 0 0; } 100% { background-position: 0 30px; } }
 </style>
 </head>
 <body>
 
+<!-- شاشة النقر الأولى (لإجبار المتصفح على تفعيل الصوت) -->
+<div id="start-screen">[ اضغط للاتصال بتردد الراديو ]</div>
+
 <div class="crt-overlay"></div>
 
-<!-- ملفات الصوت للتقطعات، الزنين (ZZZZZ)، والأنين -->
-<audio id="bg-static-audio" loop>
+<!-- 1. صوت الزنين المستمر في الخلفية -->
+<audio id="audio-bg-static" loop>
   <source src="https://www.myinstants.com/media/sounds/radio-static.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="glitch-burst-audio">
-  <source src="https://www.myinstants.com/media/sounds/evil-laugh.mp3" type="audio/mpeg">
+<!-- 2. صوت الجليتش والتقطعات -->
+<audio id="audio-glitch">
+  <source src="https://www.myinstants.com/media/sounds/tv-static-05.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 3. صوت الصفير Teeeeet -->
+<audio id="audio-beep" loop>
+  <source src="https://www.myinstants.com/media/sounds/censor-beep-1.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 4. الجملة المرعبة لألاستور (الملف الذي رفعته أنت) -->
+<audio id="audio-alastor-quote">
+  <source src="alastor-audio.mp3" type="audio/mpeg">
 </audio>
 
 <div class="main-ui" id="main-ui">
   <div class="ui-corner-tl"></div>
   <div class="ui-corner-br"></div>
-  
   <div class="hex-bg" id="hex-bg"></div>
 
   <div class="header-grid">
@@ -282,7 +235,6 @@
 
   <div class="alert-box">
     <div class="alert-title">HAZBIN FREQUENCY HIJACKED</div>
-    <div class="alert-sub">LIVE FROM HELL'S BROADCAST TOWER</div>
   </div>
 
   <div class="hacker-brand">ALASTOR THE RADIO DEMON</div>
@@ -303,53 +255,43 @@
 <div id="final-screen"></div>
 
 <script>
+  const startScreen = document.getElementById('start-screen');
+  const mainUI = document.getElementById('main-ui');
   const terminal = document.getElementById('terminal');
   const progressBar = document.getElementById('progress-bar');
   const pctText = document.getElementById('pct-text');
-  const mainUI = document.getElementById('main-ui');
-  const hexBg = document.getElementById('hex-bg');
-  const targetIp = document.getElementById('target-ip');
   
-  const bgStaticAudio = document.getElementById('bg-static-audio');
-  const glitchBurstAudio = document.getElementById('glitch-burst-audio');
-
-  // تشغيل أصوات الأنين والتشويش تلقائياً عند أول تفاعل خفي مع الصفحة
-  let audioStarted = false;
-  function triggerAudio() {
-    if (!audioStarted) {
-      bgStaticAudio.volume = 0.6;
-      bgStaticAudio.play().catch(e => console.log("Audio waiting for interaction"));
-      audioStarted = true;
-    }
-  }
-  window.addEventListener('click', triggerAudio, { once: true });
-  window.addEventListener('keydown', triggerAudio, { once: true });
-  window.addEventListener('mousemove', triggerAudio, { once: true });
+  const audioBgStatic = document.getElementById('audio-bg-static');
+  const audioGlitch = document.getElementById('audio-glitch');
+  const audioBeep = document.getElementById('audio-beep');
+  const audioAlastorQuote = document.getElementById('audio-alastor-quote');
 
   let progress = 0;
+  let sequenceStarted = false;
 
-  function updateHexBg() {
-    let hexString = "";
-    for(let i=0; i<400; i++) {
-      hexString += Math.floor(Math.random()*16).toString(16).toUpperCase() + (Math.random() > 0.8 ? " ♪ " : " ");
-    }
-    hexBg.innerText = hexString;
-  }
-  setInterval(updateHexBg, 120);
+  startScreen.addEventListener('click', () => {
+    if (sequenceStarted) return;
+    sequenceStarted = true;
+    
+    startScreen.style.display = 'none';
+    mainUI.style.display = 'flex';
+    
+    audioBgStatic.volume = 0.4;
+    audioBgStatic.play();
 
-  targetIp.innerText = `SOUL_FREQ: 192.666.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;
+    setTimeout(() => {
+      addLog();
+      updateProgress();
+    }, 500);
+  });
 
   const logsList = [
     { text: "TUNING INTO THE PENTAGRAM BROADCAST...", type: "red" },
     { text: "ESTABLISHING STATIC INTERFERENCE [FREQ 666Hz] ZZZZZ...", type: "green" },
-    { text: "LAUGHTER DETECTED: HA-HA-HA!", type: "red" },
+    { text: "IF I WANTED TO HURT ANYONE HERE...", type: "red" },
     { text: "BROADCASTING OVER HELL'S AIRWAVES...", type: "green" },
-    { text: "SUMMONING TENTACLES FROM THE SHADOWS...", type: "normal" },
     { text: "PSYCHOTIC SMILE INTENSITY: 100%", type: "red" },
-    { text: "DEALING WITH SOUL CONTRACTS...", type: "green" },
-    { text: "PLAYING 1930s JAZZ RECORD...", type: "normal" },
-    { text: "TEARING APART OVERLORD TERRITORIES...", type: "red" },
-    { text: "A SMILE IS NEVER FULLY DRESSED WITHOUT A VICTIM!", type: "green" }
+    { text: "I WOULD HAVE DONE SO ALREADY!", type: "green" }
   ];
 
   function getTimestamp() {
@@ -362,16 +304,15 @@
 
     const row = document.createElement('div');
     row.className = 'log-row';
-
+    
     const timeSpan = document.createElement('span');
     timeSpan.className = 'log-time';
     timeSpan.innerText = getTimestamp();
 
     const msgSpan = document.createElement('span');
-    
     if (Math.random() > 0.4) {
       const logItem = logsList[Math.floor(Math.random() * logsList.length)];
-      msgSpan.className = `log-msg ${logItem.type === 'normal' ? '' : logItem.type}`;
+      msgSpan.className = `log-msg ${logItem.type}`;
       msgSpan.innerText = `♪ ${logItem.text}`;
     } else {
       msgSpan.className = 'log-msg';
@@ -382,62 +323,49 @@
     row.appendChild(timeSpan);
     row.appendChild(msgSpan);
     terminal.appendChild(row);
-
-    if (terminal.childNodes.length > 20) {
-      terminal.removeChild(terminal.firstChild);
-    }
     terminal.scrollTop = terminal.scrollHeight;
 
-    if (Math.random() > 0.8) {
+    if (Math.random() > 0.7) {
       mainUI.classList.add('severe-glitch');
-      // تشغيل نغمة تقطع سريعة مع الجليتش البصري
-      if(audioStarted) {
-        let miniGlitch = glitchBurstAudio.cloneNode();
-        miniGlitch.volume = 0.2;
-        miniGlitch.play().catch(e => {});
-      }
-      setTimeout(() => mainUI.classList.remove('severe-glitch'), 250);
+      audioGlitch.currentTime = 0; 
+      audioGlitch.volume = 0.5;
+      audioGlitch.play().catch(e=>{});
+      setTimeout(() => mainUI.classList.remove('severe-glitch'), 200);
     }
 
-    setTimeout(addLog, Math.random() * 120 + 40);
+    setTimeout(addLog, Math.random() * 150 + 50);
   }
 
   function updateProgress() {
     if (progress < 100) {
-      progress += Math.random() * 0.9; 
+      progress += Math.random() * 0.8; 
       if (progress > 100) progress = 100;
       
       progressBar.style.width = `${progress}%`;
       pctText.innerText = `${progress.toFixed(2)}%`;
 
-      if (progress > 80) {
-        mainUI.classList.add('severe-glitch');
-      }
-
-      setTimeout(updateProgress, Math.random() * 90 + 20);
+      setTimeout(updateProgress, Math.random() * 100 + 30);
     } else {
-      triggerDropoutSequence();
+      triggerEndSequence();
     }
   }
 
-  function triggerDropoutSequence() {
-    mainUI.classList.add('screen-dropout');
+  function triggerEndSequence() {
+    mainUI.style.display = 'none';
+    document.getElementById('final-screen').style.display = 'block';
     
-    bgStaticAudio.pause();
-    glitchBurstAudio.volume = 0.9;
-    glitchBurstAudio.play().catch(e => console.log("Final audio blocked"));
+    audioBgStatic.pause();
     
+    // تشغيل صفير التوقف (Teeeeeeet)
+    audioBeep.volume = 0.5;
+    audioBeep.play();
+
+    // تشغيل الجملة المرعبة لألاستور (ملفك الصوتي) بعد 0.5 ثانية
     setTimeout(() => {
-      mainUI.style.display = 'none';
-      document.getElementById('final-screen').style.display = 'flex';
-    }, 750);
+      audioAlastorQuote.volume = 1.0;
+      audioAlastorQuote.play().catch(e => console.log("تأكد من وضع ملف alastor-audio.mp3 في نفس المجلد"));
+    }, 500);
   }
-
-  setTimeout(() => {
-    addLog();
-    updateProgress();
-  }, 800);
-
 </script>
 </body>
 </html>
