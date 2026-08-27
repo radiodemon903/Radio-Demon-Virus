@@ -196,9 +196,7 @@
     100% { background-color: #0d0102; opacity: 1; transform: scale(1); filter: none; }
   }
 
-  /* ==========================================
-     شاشة النهاية: شاشة سوداء مع انقطاعات بث وتلف مستمر
-     ========================================== */
+  /* شاشة النهاية: شاشة سوداء مع تقطعات وتلف مستمر */
   #final-screen {
     display: none;
     position: fixed;
@@ -211,7 +209,6 @@
     animation: finalScreenFlicker 0.1s infinite;
   }
 
-  /* تأثير خطوط التلف والوميض العنيف للشاشة السوداء */
   @keyframes finalScreenFlicker {
     0% { opacity: 1; background-color: #000; transform: translate(0, 0); }
     20% { opacity: 0.8; background-color: #050001; transform: translate(-2px, 1px); }
@@ -221,7 +218,6 @@
     100% { opacity: 1; background-color: #000; transform: translate(0, 0); }
   }
 
-  /* خط تفكك الإشارة المتحرك (Scanline & Glitch Bar) */
   #final-screen::before {
     content: "";
     position: absolute;
@@ -242,7 +238,6 @@
     100% { background-position: 0 30px; }
   }
 
-  /* ومضات انقطاع أفقية فجائية كأن البث يتقطع تماماً */
   #final-screen::after {
     content: "";
     position: absolute;
@@ -259,35 +254,18 @@
     94% { opacity: 0.1; transform: scaleY(1.1); }
     96% { opacity: 0.8; transform: scaleY(0.5) skewX(-30deg); }
   }
-
-  #audio-prompt {
-    position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: var(--alastor-green);
-    border: 1px solid var(--alastor-green);
-    padding: 8px 15px;
-    font-size: 0.7rem;
-    z-index: 300;
-    letter-spacing: 1px;
-    animation: alertPulse 1s infinite;
-    cursor: pointer;
-  }
 </style>
 </head>
 <body>
 
 <div class="crt-overlay"></div>
 
-<div id="audio-prompt">[ اضغط في أي مكان لتفعيل بث الراديو والزنين ZZZZZ ]</div>
-
+<!-- ملفات الصوت للتقطعات، الزنين (ZZZZZ)، والأنين -->
 <audio id="bg-static-audio" loop>
   <source src="https://www.myinstants.com/media/sounds/radio-static.mp3" type="audio/mpeg">
 </audio>
 
-<audio id="jumpscare-audio">
+<audio id="glitch-burst-audio">
   <source src="https://www.myinstants.com/media/sounds/evil-laugh.mp3" type="audio/mpeg">
 </audio>
 
@@ -322,7 +300,6 @@
   <div class="terminal-box" id="terminal"></div>
 </div>
 
-<!-- شاشة سوداء فارغة مع آثار تقطعات وتلف البث بالكامل -->
 <div id="final-screen"></div>
 
 <script>
@@ -334,16 +311,20 @@
   const targetIp = document.getElementById('target-ip');
   
   const bgStaticAudio = document.getElementById('bg-static-audio');
-  const jumpscareAudio = document.getElementById('jumpscare-audio');
-  const audioPrompt = document.getElementById('audio-prompt');
+  const glitchBurstAudio = document.getElementById('glitch-burst-audio');
 
-  window.addEventListener('click', () => {
-    if (bgStaticAudio.paused) {
-      bgStaticAudio.volume = 0.5;
-      bgStaticAudio.play().catch(e => console.log("Audio play blocked"));
-      if (audioPrompt) audioPrompt.style.display = 'none';
+  // تشغيل أصوات الأنين والتشويش تلقائياً عند أول تفاعل خفي مع الصفحة
+  let audioStarted = false;
+  function triggerAudio() {
+    if (!audioStarted) {
+      bgStaticAudio.volume = 0.6;
+      bgStaticAudio.play().catch(e => console.log("Audio waiting for interaction"));
+      audioStarted = true;
     }
-  }, { once: true });
+  }
+  window.addEventListener('click', triggerAudio, { once: true });
+  window.addEventListener('keydown', triggerAudio, { once: true });
+  window.addEventListener('mousemove', triggerAudio, { once: true });
 
   let progress = 0;
 
@@ -409,6 +390,12 @@
 
     if (Math.random() > 0.8) {
       mainUI.classList.add('severe-glitch');
+      // تشغيل نغمة تقطع سريعة مع الجليتش البصري
+      if(audioStarted) {
+        let miniGlitch = glitchBurstAudio.cloneNode();
+        miniGlitch.volume = 0.2;
+        miniGlitch.play().catch(e => {});
+      }
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 250);
     }
 
@@ -437,8 +424,8 @@
     mainUI.classList.add('screen-dropout');
     
     bgStaticAudio.pause();
-    jumpscareAudio.volume = 0.9;
-    jumpscareAudio.play().catch(e => console.log("Final audio blocked"));
+    glitchBurstAudio.volume = 0.9;
+    glitchBurstAudio.play().catch(e => console.log("Final audio blocked"));
     
     setTimeout(() => {
       mainUI.style.display = 'none';
