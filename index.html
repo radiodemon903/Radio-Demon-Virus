@@ -20,7 +20,7 @@
     font-family: 'Share Tech Mono', monospace; height: 100vh; overflow: hidden; user-select: none;
   }
 
-  /* شاشة ترحيب منظمة بدقة وبتفاصيل غنية لـ ALASTOR */
+  /* شاشة الترحيب */
   #splash-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
     background: radial-gradient(circle, #1f0105 0%, #030000 100%);
@@ -35,7 +35,6 @@
     animation: cardFlicker 3s infinite;
   }
 
-  /* زوايا تكنولوجية للمربع */
   .splash-card::before, .splash-card::after {
     content: ''; position: absolute; width: 12px; height: 12px; border-color: var(--alastor-green); border-style: solid;
   }
@@ -143,7 +142,6 @@
   .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
   .log-msg.red { color: var(--radio-red); }
 
-  /* تم تحديث حركة الجليتش لتكون ديناميكية وعشوائية في كل الاتجاهات */
   .severe-glitch { animation: dynamicTearChaos 0.05s infinite; }
   @keyframes dynamicTearChaos { 
     0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg) contrast(300%); } 
@@ -161,65 +159,68 @@
     0% { transform: scale(1, 1); filter: brightness(1) contrast(1); }
     30% { transform: scale(1.15, 0.01); filter: brightness(40) contrast(600%); background-color: #ff0033; }
     60% { transform: scale(0.01, 0.002); filter: brightness(50); background-color: #ff0033; box-shadow: 0 0 100px #ff0033; }
-    100% { 
-      transform: scale(0, 0); 
-      filter: brightness(0); 
-      opacity: 1; 
-      background-color: #020000 !important;
-      background-image: 
-        radial-gradient(circle, rgba(255, 0, 51, 0.9) 3px, transparent 4px),
-        radial-gradient(circle, rgba(120, 0, 20, 0.6) 2px, transparent 3px),
-        linear-gradient(rgba(255, 0, 51, 0.35) 2px, transparent 2px),
-        linear-gradient(90deg, rgba(255, 0, 51, 0.25) 2px, transparent 2px);
-      background-size: 16px 16px, 8px 8px, 24px 24px, 24px 24px;
-      background-position: 0 0, 4px 4px, 2px 2px, 8px 8px;
-      animation: destroyedScreenStatic 0.08s infinite steps(3);
-    }
+    100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #020000 !important; }
   }
 
-  @keyframes destroyedScreenStatic {
-    0% { opacity: 0.9; filter: drop-shadow(0 0 12px #ff0033) contrast(400%) saturate(300%); background-position: 0 0, 4px 4px, 2px 2px, 8px 8px; }
-    50% { opacity: 0.5; filter: drop-shadow(0 0 4px #500) contrast(200%); background-position: 5px 2px, -3px 6px, 1px 4px, -4px 2px; }
-    100% { opacity: 0.8; filter: drop-shadow(0 0 10px #ff0033) contrast(500%); background-position: -2px 5px, 3px -4px, -3px 1px, 5px -2px; }
+  /* تأثيرات الضحكة المرعبة على الشاشة المظلمة */
+  body.laughing-void::before {
+    content: ""; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: repeating-linear-gradient(transparent 0, transparent 2px, rgba(255, 0, 51, 0.15) 2px, rgba(255, 0, 51, 0.15) 4px),
+                radial-gradient(circle at center, rgba(100,0,10,0.5) 0%, #000 100%);
+    background-color: #050001;
+    z-index: 99999; 
+    animation: demonLaughGlitch 0.05s infinite;
+    pointer-events: none;
+    mix-blend-mode: screen;
   }
+
+  @keyframes demonLaughGlitch {
+    0% { filter: invert(0) drop-shadow(0 0 10px #f03) hue-rotate(0deg); transform: scale(1.02) translate(3px, 2px); }
+    30% { filter: invert(80%) drop-shadow(0 0 20px #f03) hue-rotate(20deg); transform: scale(1.05) translate(-4px, 5px); }
+    60% { filter: invert(0) drop-shadow(0 0 5px #f03) hue-rotate(-10deg); transform: scale(1.01) translate(2px, -3px); }
+    100% { filter: invert(30%) drop-shadow(0 0 30px #f00) contrast(300%); transform: scale(1.03) translate(-2px, 1px); }
+  }
+
+  /* إطفاء الشاشة بالكامل في النهاية */
+  body.pure-black { background-color: #000 !important; }
+  body.pure-black * { display: none !important; }
+  body.pure-black::before { display: none !important; }
 </style>
 </head>
 <body>
 
-<!-- شاشة ترحيب منظمة للغاية وتحمل اسم ALASTOR بوضوح وبطابع إذاعي رعب -->
 <div id="splash-screen">
   <div class="splash-card">
     <div class="splash-header-info">
       <span>SYSTEM: SECURE_WAVE</span>
       <span>FREQ: 666.9 MHz</span>
     </div>
-    
     <div class="splash-brand-title">ALASTOR</div>
     <div class="splash-subtitle">// THE RADIO DEMON //</div>
-
     <div class="splash-details-box">
       <div>> TARGET: <span>PENTAGRAM BROADCAST</span></div>
       <div>> STATUS: <span>AWAITING AUDIO HANDSHAKE</span></div>
       <div>> SECURITY: <span>BYPASS REQUIRED</span></div>
     </div>
-
     <div class="splash-quote-box">
       "Smile, my dear! You're never fully dressed without a broadcast..."
     </div>
-
     <button class="splash-action-btn" onclick="startExperience()">
       [ TAP TO CONNECT & ENGAGE ]
     </button>
   </div>
 </div>
 
+<!-- ملفات الصوت -->
 <audio id="audio-alastor-quote">
   <source src="alastor-if-i-had-to-hurt-anyone-here.mp3" type="audio/mpeg">
+</audio>
+<audio id="audio-alastor-laugh">
+  <source src="alastor-laugh.mp3" type="audio/mpeg">
 </audio>
 
 <div id="screen-container">
   <div class="crt-overlay"></div>
-  
   <div class="main-ui" id="main-ui">
     <div class="ui-corner-tl"></div>
     <div class="ui-corner-br"></div>
@@ -269,32 +270,21 @@
 
   function playDestroyedSpeakerGlitch() {
     if (!audioCtx) return;
-
     let now = audioCtx.currentTime;
     let osc1 = audioCtx.createOscillator();
     let osc2 = audioCtx.createOscillator();
     let distortion = audioCtx.createWaveShaper();
     let gainNode = audioCtx.createGain();
 
-    osc1.type = 'square';
-    osc2.type = 'sawtooth';
-
-    osc1.frequency.setValueAtTime(2200, now);
-    osc1.frequency.setValueAtTime(4500, now + 0.01);
-    osc1.frequency.setValueAtTime(600, now + 0.025);
-    osc1.frequency.setValueAtTime(5500, now + 0.04);
-    osc1.frequency.setValueAtTime(1500, now + 0.055);
-    osc1.frequency.setValueAtTime(6000, now + 0.07);
-
-    osc2.frequency.setValueAtTime(1100, now);
-    osc2.frequency.setValueAtTime(3800, now + 0.02);
+    osc1.type = 'square'; osc2.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(2200, now); osc1.frequency.setValueAtTime(4500, now + 0.01);
+    osc1.frequency.setValueAtTime(600, now + 0.025); osc1.frequency.setValueAtTime(5500, now + 0.04);
+    osc1.frequency.setValueAtTime(1500, now + 0.055); osc1.frequency.setValueAtTime(6000, now + 0.07);
+    osc2.frequency.setValueAtTime(1100, now); osc2.frequency.setValueAtTime(3800, now + 0.02);
     osc2.frequency.setValueAtTime(300, now + 0.045);
 
     function makeDistortionCurve(amount) {
-      let k = amount,
-        n_samples = 44100,
-        curve = new Float32Array(n_samples),
-        deg = Math.PI / 180;
+      let k = amount, n_samples = 44100, curve = new Float32Array(n_samples), deg = Math.PI / 180;
       for (let i = 0; i < n_samples; ++i) {
         let x = (i * 2) / n_samples - 1;
         curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
@@ -303,37 +293,21 @@
     }
     distortion.curve = makeDistortionCurve(800);
 
-    gainNode.gain.setValueAtTime(0.7, now);
-    gainNode.gain.setValueAtTime(0.15, now + 0.03);
-    gainNode.gain.setValueAtTime(0.6, now + 0.06);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
-
-    osc1.connect(distortion);
-    osc2.connect(distortion);
-    distortion.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
-
-    osc1.start(now);
-    osc2.start(now);
-    osc1.stop(now + 0.16);
-    osc2.stop(now + 0.16);
+    gainNode.gain.setValueAtTime(0.7, now); gainNode.gain.setValueAtTime(0.15, now + 0.03);
+    gainNode.gain.setValueAtTime(0.6, now + 0.06); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+    osc1.connect(distortion); osc2.connect(distortion); distortion.connect(gainNode); gainNode.connect(audioCtx.destination);
+    osc1.start(now); osc2.start(now); osc1.stop(now + 0.16); osc2.stop(now + 0.16);
   }
 
   function startBroadcastCutoffTone() {
     if (staticGainNode) staticGainNode.gain.value = 0; 
-    
     let osc = audioCtx.createOscillator();
     let gain = audioCtx.createGain();
-    
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
-
+    osc.type = 'sine'; osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
     gain.gain.setValueAtTime(0.65, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4.5);
-
     osc.connect(gain).connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 4.5);
+    osc.start(); osc.stop(audioCtx.currentTime + 4.5);
   }
 
   const mainUI = document.getElementById('main-ui');
@@ -341,42 +315,30 @@
   const progressBar = document.getElementById('progress-bar');
   const pctText = document.getElementById('pct-text');
   const audioAlastorQuote = document.getElementById('audio-alastor-quote');
+  const audioAlastorLaugh = document.getElementById('audio-alastor-laugh');
   const screenContainer = document.getElementById('screen-container');
   const splashScreen = document.getElementById('splash-screen');
 
   let progress = 0;
 
-  // دالة جديدة لتوليد اتجاهات عشوائية للخلل (يمين، يسار، أعلى، أسفل)
   function randomizeGlitchDirection() {
-    const rx = (Math.random() * 80 - 40) + 'px'; // عشوائي بين -40 و +40 بكسل
-    const ry = (Math.random() * 40 - 20) + 'px'; // عشوائي بين -20 و +20 بكسل
-    const rs = (Math.random() * 60 - 30) + 'deg'; // ميلان عشوائي
-
-    mainUI.style.setProperty('--tx', rx);
-    mainUI.style.setProperty('--ty', ry);
-    mainUI.style.setProperty('--sk', rs);
+    const rx = (Math.random() * 80 - 40) + 'px'; 
+    const ry = (Math.random() * 40 - 20) + 'px'; 
+    const rs = (Math.random() * 60 - 30) + 'deg'; 
+    mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry); mainUI.style.setProperty('--sk', rs);
   }
 
   function startExperience() {
     if (sequenceStarted) return;
     sequenceStarted = true;
-
     splashScreen.style.opacity = '0';
     setTimeout(() => { splashScreen.style.display = 'none'; }, 400);
     screenContainer.style.opacity = '1';
-
-    initAudio();
-    startBackgroundStatic();
-
-    playDestroyedSpeakerGlitch();
-    randomizeGlitchDirection(); // تطبيق اتجاه عشوائي
+    initAudio(); startBackgroundStatic();
+    playDestroyedSpeakerGlitch(); randomizeGlitchDirection(); 
     mainUI.classList.add('severe-glitch');
     setTimeout(() => mainUI.classList.remove('severe-glitch'), 200);
-
-    setTimeout(() => {
-      addLog();
-      updateProgress();
-    }, 200);
+    setTimeout(() => { addLog(); updateProgress(); }, 200);
   }
 
   const logsList = [
@@ -395,36 +357,23 @@
 
   function addLog() {
     if (progress >= 100) return;
-
-    const row = document.createElement('div');
-    row.className = 'log-row';
-    const timeSpan = document.createElement('span');
-    timeSpan.className = 'log-time';
-    timeSpan.innerText = getTimestamp();
-
+    const row = document.createElement('div'); row.className = 'log-row';
+    const timeSpan = document.createElement('span'); timeSpan.className = 'log-time'; timeSpan.innerText = getTimestamp();
     const msgSpan = document.createElement('span');
     if (Math.random() > 0.4) {
       const logItem = logsList[Math.floor(Math.random() * logsList.length)];
-      msgSpan.className = `log-msg ${logItem.type}`;
-      msgSpan.innerText = `♪ ${logItem.text}`;
+      msgSpan.className = `log-msg ${logItem.type}`; msgSpan.innerText = `♪ ${logItem.text}`;
     } else {
-      msgSpan.className = 'log-msg';
-      msgSpan.style.color = '#ff4444';
-      msgSpan.innerText = `[SPEAKER_DESTROYED] // SYSTEM_CRASH_666`;
+      msgSpan.className = 'log-msg'; msgSpan.style.color = '#ff4444'; msgSpan.innerText = `[SPEAKER_DESTROYED] // SYSTEM_CRASH_666`;
     }
-
-    row.appendChild(timeSpan);
-    row.appendChild(msgSpan);
-    terminal.appendChild(row);
-    terminal.scrollTop = terminal.scrollHeight;
+    row.appendChild(timeSpan); row.appendChild(msgSpan);
+    terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
 
     if (Math.random() > 0.4) {
-      randomizeGlitchDirection(); // توليد اتجاه جديد قبل الخلل
-      mainUI.classList.add('severe-glitch');
-      playDestroyedSpeakerGlitch(); 
+      randomizeGlitchDirection(); 
+      mainUI.classList.add('severe-glitch'); playDestroyedSpeakerGlitch(); 
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
     }
-
     setTimeout(addLog, Math.random() * 90 + 25);
   }
 
@@ -432,10 +381,7 @@
     if (progress < 100) {
       progress += Math.random() * 1.5; 
       if (progress > 100) progress = 100;
-      
-      progressBar.style.width = `${progress}%`;
-      pctText.innerText = `${progress.toFixed(2)}%`;
-
+      progressBar.style.width = `${progress}%`; pctText.innerText = `${progress.toFixed(2)}%`;
       setTimeout(updateProgress, Math.random() * 60 + 15);
     } else {
       triggerEndSequence();
@@ -443,21 +389,38 @@
   }
 
   function triggerEndSequence() {
-    randomizeGlitchDirection(); // الجليتش النهائي باتجاه عشوائي ومفاجئ
+    randomizeGlitchDirection(); 
     mainUI.classList.add('severe-glitch');
     playDestroyedSpeakerGlitch();
     
     setTimeout(() => {
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
-      
       startBroadcastCutoffTone();
 
       setTimeout(() => {
         audioAlastorQuote.volume = 1.0;
         audioAlastorQuote.play().catch(e => console.log("الصوت يتطلب مسار الملف الصحيح"));
+
+        // تشغيل الضحكة والتأثيرات المرئية فور انتهاء الجملة
+        audioAlastorQuote.onended = () => {
+          document.body.classList.add('laughing-void');
+          audioAlastorLaugh.play().catch(e => console.log("ملف الضحكة غير موجود"));
+
+          let endTriggered = false;
+          const killScreen = () => {
+            if (endTriggered) return;
+            endTriggered = true;
+            document.body.classList.remove('laughing-void');
+            document.body.classList.add('pure-black'); // ظلام دامس
+          };
+
+          // إطفاء الشاشة فور انتهاء صوت الضحكة (أو بعد 4 ثوانٍ كإجراء احتياطي إذا لم يتم تحميل الصوت)
+          audioAlastorLaugh.onended = killScreen;
+          setTimeout(killScreen, 4000); 
+        };
+
       }, 700);
-      
     }, 450); 
   }
 </script>
