@@ -8,13 +8,13 @@
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
   :root {
-    --bg-color: #050102;
+    --bg-color: #030001;
     --radio-red: #ff0033;
-    --dark-red: #4a000d;
+    --dark-red: #3d000a;
     --alastor-green: #00ff55; 
-    --text-dim: #8c4a4a;
+    --text-dim: #7a3a3a;
     --glitch-cyan: #00f3ff;
-    --glitch-magenta: #ff00ff;
+    --glitch-magenta: #ff00ea;
   }
 
   body, html {
@@ -25,16 +25,16 @@
   /* شاشة الترحيب */
   #splash-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-    background: radial-gradient(circle, #1f0105 0%, #030000 100%);
+    background: radial-gradient(circle, #1a0004 0%, #000000 100%);
     z-index: 9999; display: flex; justify-content: center; align-items: center;
     padding: 15px; box-sizing: border-box;
   }
 
   .splash-card {
-    border: 2px solid var(--radio-red); background: rgba(12, 0, 3, 0.95);
+    border: 2px solid var(--radio-red); background: rgba(10, 0, 2, 0.96);
     width: 100%; max-width: 480px; padding: 25px; box-sizing: border-box;
-    position: relative; box-shadow: 0 0 50px rgba(255, 0, 51, 0.35), inset 0 0 25px rgba(255, 0, 51, 0.15);
-    animation: cardFlicker 3s infinite;
+    position: relative; box-shadow: 0 0 60px rgba(255, 0, 51, 0.4), inset 0 0 30px rgba(255, 0, 51, 0.2);
+    animation: cardFlicker 2s infinite;
   }
 
   .splash-card::before, .splash-card::after {
@@ -51,7 +51,7 @@
 
   .splash-brand-title {
     text-align: center; font-size: 1.8rem; color: var(--radio-red); font-weight: bold;
-    letter-spacing: 4px; text-shadow: 0 0 15px var(--radio-red); margin-bottom: 5px;
+    letter-spacing: 4px; text-shadow: 2px 0 var(--glitch-cyan), -2px 0 var(--glitch-magenta), 0 0 15px var(--radio-red); margin-bottom: 5px;
   }
 
   .splash-subtitle {
@@ -60,7 +60,7 @@
   }
 
   .splash-details-box {
-    border: 1px solid var(--dark-red); background: rgba(30, 0, 8, 0.4);
+    border: 1px solid var(--dark-red); background: rgba(20, 0, 5, 0.5);
     padding: 12px; margin-bottom: 20px; font-size: 0.75rem; color: #ccc; line-height: 1.6;
   }
 
@@ -83,8 +83,8 @@
   }
 
   @keyframes cardFlicker {
-    0%, 100% { border-color: var(--radio-red); box-shadow: 0 0 40px rgba(255, 0, 51, 0.3); }
-    50% { border-color: #500; box-shadow: 0 0 15px rgba(100, 0, 10, 0.2); }
+    0%, 100% { border-color: var(--radio-red); box-shadow: 0 0 40px rgba(255, 0, 51, 0.4); }
+    50% { border-color: #200; box-shadow: 0 0 10px rgba(100, 0, 10, 0.1); }
   }
 
   #screen-container {
@@ -93,35 +93,41 @@
     opacity: 0; transition: opacity 0.5s ease;
   }
 
-  /* تأثيرات التشويش والخطوط المماثلة لصورة "No Signal" */
+  /* طبقات التشويش الشبيهة بالصورة (Scanlines & RGB Distortion Blocks) */
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: 
-      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.8) 50%),
-      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 60, 0.03) 2px, rgba(0, 243, 255, 0.03) 4px);
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.85) 50%),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 51, 0.05) 2px, rgba(0, 243, 255, 0.05) 4px);
     background-size: 100% 4px, 100% 100%;
     z-index: 100; pointer-events: none;
-    box-shadow: inset 0 0 160px rgba(0,0,0,0.98); 
-    animation: digitalNoiseFlicker 0.12s infinite;
+    box-shadow: inset 0 0 180px rgba(0,0,0,0.99); 
+    animation: digitalNoiseFlicker 0.06s infinite;
   }
 
   @keyframes digitalNoiseFlicker {
-    0% { opacity: 0.85; transform: translateY(0); }
-    50% { opacity: 1; transform: translateY(-1px); }
-    100% { opacity: 0.9; transform: translateY(1px); }
+    0% { opacity: 0.8; transform: translateY(0) scaleX(1); }
+    33% { opacity: 0.95; transform: translateY(-2px) scaleX(1.002); }
+    66% { opacity: 0.85; transform: translateY(1px) scaleX(0.998); }
+    100% { opacity: 0.9; transform: translateY(0); }
   }
 
-  /* خطوط التمزيق الرقمي والبيكسلات الأفقية (Glitch Artifacts) */
-  .digital-glitch-lines {
+  /* مربعات تشويش البيانات العشوائية (Data Glitch Blocks) مثل الصورة المرفقة */
+  .digital-glitch-blocks {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-image: 
-      linear-gradient(90deg, rgba(255,0,51,0.08) 0%, transparent 40%, rgba(0,243,255,0.06) 70%, transparent 100%);
-    opacity: 0.5; z-index: 90; pointer-events: none;
-    animation: artifactScroll 2s linear infinite;
+      linear-gradient(90deg, rgba(255,0,80,0.12) 0%, transparent 30%, rgba(0,243,255,0.1) 60%, transparent 100%),
+      radial-gradient(ellipse at 50% 30%, transparent 0%, rgba(255,0,51,0.15) 100%);
+    opacity: 0.6; z-index: 90; pointer-events: none;
+    animation: blocksTear 0.15s steps(3) infinite;
   }
-  @keyframes artifactScroll {
-    0% { background-position: 0 0; }
-    100% { background-position: 0 100vh; }
+  @keyframes blocksTear {
+    0% { transform: translate(0, 0); }
+    20% { transform: translate(-5px, 3px); filter: invert(15%); }
+    40% { transform: translate(4px, -4px); filter: contrast(200%); }
+    60% { transform: translate(-3px, -2px); }
+    80% { transform: translate(5px, 4px); }
+    100% { transform: translate(0, 0); }
   }
 
   .main-ui {
@@ -131,7 +137,7 @@
 
   .main-ui::before, .main-ui::after, .ui-corner-tl, .ui-corner-br {
     border-color: var(--alastor-green); border-style: solid; border-width: 2px; position: absolute;
-    box-shadow: 0 0 8px var(--alastor-green);
+    box-shadow: 0 0 10px var(--alastor-green);
   }
   .main-ui::before { content:''; top: 0; left: 0; width: 100%; height: 100%; border-right: none; border-bottom: none; pointer-events:none;}
   .main-ui::after { content:''; bottom: 0; right: 0; width: 100%; height: 100%; border-left: none; border-top: none; pointer-events:none;}
@@ -146,73 +152,74 @@
   .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 15px; }
   .header-grid div:nth-child(2) { text-align: right; }
 
-  /* لوحات جانبية مصغرة شبيهة بالصورة */
   .mini-signal-box {
-    border: 1px solid var(--dark-red); background: rgba(10, 0, 3, 0.8);
+    border: 1px solid var(--radio-red); background: rgba(255, 0, 51, 0.08);
     padding: 8px; font-size: 0.65rem; color: var(--text-dim); margin-bottom: 12px;
     display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 0 10px rgba(255,0,51,0.2);
   }
-  .mini-signal-box span { color: var(--glitch-cyan); }
+  .mini-signal-box span { color: var(--glitch-cyan); font-weight: bold; }
 
-  .alert-box { border: 1px solid var(--alastor-green); background: rgba(0, 255, 85, 0.1); padding: 8px; text-align: center; margin-bottom: 12px; box-shadow: 0 0 15px rgba(0,255,85,0.2); }
-  .alert-title { color: var(--alastor-green); font-size: 1.2rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 10px var(--alastor-green); animation: alertPulse 0.5s infinite; }
-  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 15px var(--alastor-green); } 50% { opacity: 0.5; text-shadow: none; } }
+  .alert-box { border: 1px solid var(--alastor-green); background: rgba(0, 255, 85, 0.12); padding: 8px; text-align: center; margin-bottom: 12px; box-shadow: 0 0 20px rgba(0,255,85,0.3); }
+  .alert-title { color: var(--alastor-green); font-size: 1.2rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 12px var(--alastor-green); animation: alertPulse 0.4s infinite; }
+  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 18px var(--alastor-green); } 50% { opacity: 0.3; text-shadow: none; } }
 
-  .hacker-brand { text-align: center; font-size: 1.5rem; color: var(--radio-red); text-shadow: 2px 0 var(--glitch-cyan), -2px 0 var(--glitch-magenta), 0 0 15px var(--radio-red); margin: 10px 0; animation: brandGlitch 1.2s infinite; font-weight: bold; letter-spacing: 2px; }
+  .hacker-brand { text-align: center; font-size: 1.6rem; color: var(--radio-red); text-shadow: 3px 0 var(--glitch-cyan), -3px 0 var(--glitch-magenta), 0 0 20px var(--radio-red); margin: 10px 0; animation: brandGlitch 0.8s infinite; font-weight: bold; letter-spacing: 2px; }
   @keyframes brandGlitch { 
-    0% { transform: skew(0deg); text-shadow: 2px 0 var(--glitch-cyan), -2px 0 var(--glitch-magenta); } 
-    10% { transform: skew(-15deg); filter: blur(1px); text-shadow: -3px 0 var(--glitch-cyan), 3px 0 var(--glitch-magenta); } 
-    12% { transform: skew(10deg); filter: none; } 
-    100% { transform: skew(0deg); text-shadow: 2px 0 var(--glitch-cyan), -2px 0 var(--glitch-magenta); } 
+    0% { transform: skew(0deg); text-shadow: 3px 0 var(--glitch-cyan), -3px 0 var(--glitch-magenta); } 
+    15% { transform: skew(-25deg) scaleX(1.05); filter: blur(2px) invert(20%); text-shadow: -5px 0 var(--glitch-cyan), 5px 0 var(--glitch-magenta); } 
+    18% { transform: skew(15deg); filter: none; } 
+    100% { transform: skew(0deg); text-shadow: 3px 0 var(--glitch-cyan), -3px 0 var(--glitch-magenta); } 
   }
 
   .progress-section { margin-bottom: 15px; }
   .progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 5px; color: #ccc; }
   .progress-track { width: 100%; height: 10px; border: 1px solid var(--text-dim); background: #000; position: relative; }
-  .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 15px var(--radio-red); transition: width 0.1s; }
+  .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 20px var(--radio-red); transition: width 0.1s; }
 
-  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(40, 0, 10, 0.3); padding: 10px; overflow: hidden; font-size: 0.7rem; line-height: 1.4; }
+  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(30, 0, 8, 0.4); padding: 10px; overflow: hidden; font-size: 0.7rem; line-height: 1.4; }
   .log-row { display: flex; margin-bottom: 3px; }
   .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
-  .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 6px var(--alastor-green); }
-  .log-msg.red { color: var(--radio-red); text-shadow: 1px 0 var(--glitch-cyan); }
+  .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 8px var(--alastor-green); }
+  .log-msg.red { color: var(--radio-red); text-shadow: 2px 0 var(--glitch-cyan); }
 
-  .severe-glitch { animation: dynamicTearChaos 0.04s infinite; }
-  @keyframes dynamicTearChaos { 
-    0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg) contrast(300%); } 
-    20% { transform: translate(var(--tx, -25px), var(--ty, 15px)) skew(var(--sk, 35deg)); filter: contrast(700%) invert(30%) drop-shadow(2px 0 var(--glitch-cyan)); } 
-    40% { transform: translate(calc(var(--tx, -25px) * -1), calc(var(--ty, 15px) * -1.5)) skew(calc(var(--sk, 35deg) * -1)); filter: blur(3px) saturate(800%); } 
-    60% { transform: translate(calc(var(--tx, -25px) * 0.6), calc(var(--ty, 15px) * 0.6)) skew(calc(var(--sk, 35deg) * 0.9)); filter: contrast(800%) drop-shadow(-2px 0 var(--glitch-magenta)); } 
-    80% { transform: translate(calc(var(--tx, -25px) * -0.4), calc(var(--ty, 15px) * -0.6)) skew(calc(var(--sk, 35deg) * -0.6)); filter: hue-rotate(180deg); }
+  /* جليتشات عنيفة جداً ومفاجئة تحاكي تكسر الشاشة الكامل */
+  .severe-glitch { animation: severeChaos 0.03s infinite !important; }
+  @keyframes severeChaos { 
+    0% { transform: translate(0, 0) skew(0deg); filter: none; } 
+    20% { transform: translate(-35px, 20px) skew(45deg); filter: contrast(900%) invert(40%) drop-shadow(5px 0 var(--glitch-cyan)); } 
+    40% { transform: translate(30px, -25px) skew(-30deg); filter: blur(4px) saturate(900%) drop-shadow(-5px 0 var(--glitch-magenta)); } 
+    60% { transform: translate(-15px, -15px) skew(20deg); filter: contrast(1000%) hue-rotate(90deg); } 
+    80% { transform: translate(20px, 15px) skew(-20deg); filter: brightness(3) invert(20%); }
     100% { transform: translate(0, 0) skew(0deg); filter: none; } 
   }
 
   .crt-shut-off {
-    animation: turn-off 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    animation: turn-off 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
   @keyframes turn-off {
     0% { transform: scale(1, 1); filter: brightness(1) contrast(1); }
-    30% { transform: scale(1.15, 0.01); filter: brightness(40) contrast(600%); background-color: #ff0033; }
-    60% { transform: scale(0.01, 0.002); filter: brightness(50); background-color: #ff0033; box-shadow: 0 0 100px #ff0033; }
-    100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #020000 !important; }
+    30% { transform: scale(1.2, 0.005); filter: brightness(50) contrast(800%); background-color: #ff0033; }
+    60% { transform: scale(0.005, 0.001); filter: brightness(80); background-color: #ff0033; box-shadow: 0 0 150px #ff0033; }
+    100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #000000 !important; }
   }
 
   #demon-glitch-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: repeating-linear-gradient(transparent 0, transparent 3px, rgba(255, 0, 51, 0.6) 3px, rgba(0, 243, 255, 0.3) 6px),
-                radial-gradient(circle at center, rgba(150,0,10,0.95) 0%, #000 100%);
-    background-color: #0a0002; z-index: 99999;
-    animation: demonLaughGlitch 0.05s infinite; pointer-events: none;
+    background: repeating-linear-gradient(transparent 0, transparent 2px, rgba(255, 0, 51, 0.7) 2px, rgba(0, 243, 255, 0.4) 5px),
+                radial-gradient(circle at center, rgba(180,0,15,0.95) 0%, #000 100%);
+    background-color: #050001; z-index: 99999;
+    animation: demonLaughGlitch 0.04s infinite; pointer-events: none;
     display: none;
     mix-blend-mode: screen;
   }
 
   @keyframes demonLaughGlitch {
-    0% { filter: invert(0) drop-shadow(4px 0 var(--glitch-cyan)) drop-shadow(-4px 0 var(--glitch-magenta)); transform: scale(1.04) translate(8px, 5px) skew(5deg); }
-    30% { filter: invert(100%) contrast(700%) hue-rotate(90deg); transform: scale(1.12) translate(-10px, 12px) skew(-10deg); }
-    60% { filter: invert(0) contrast(500%) drop-shadow(-5px 0 var(--glitch-cyan)); transform: scale(1.02) translate(6px, -8px); }
-    100% { filter: invert(40%) contrast(600%) drop-shadow(5px 0 var(--glitch-magenta)); transform: scale(1.08) translate(-6px, 4px) skew(3deg); }
+    0% { filter: invert(0) drop-shadow(8px 0 var(--glitch-cyan)) drop-shadow(-8px 0 var(--glitch-magenta)); transform: scale(1.05) translate(10px, 8px) skew(8deg); }
+    30% { filter: invert(100%) contrast(900%) hue-rotate(180deg); transform: scale(1.15) translate(-14px, 16px) skew(-15deg); }
+    60% { filter: invert(0) contrast(700%) drop-shadow(-8px 0 var(--glitch-cyan)); transform: scale(1.03) translate(8px, -10px); }
+    100% { filter: invert(60%) contrast(800%) drop-shadow(8px 0 var(--glitch-magenta)); transform: scale(1.1) translate(-10px, 6px) skew(5deg); }
   }
 
   #pure-black-screen {
@@ -249,7 +256,7 @@
 
 <div id="screen-container">
   <div class="crt-overlay"></div>
-  <div class="digital-glitch-lines"></div>
+  <div class="digital-glitch-blocks"></div>
   
   <div class="main-ui" id="main-ui">
     <div class="ui-corner-tl"></div>
@@ -261,9 +268,8 @@
       <div>STATUS: RADIO_WAVE_ACTIVE</div>
     </div>
 
-    <!-- لوحة مصغرة تشبه الصورة تماماً -->
     <div class="mini-signal-box">
-      <div>⚠ WARNING: SIGNAL INTERRUPTED // ROUTER COMPROMISED</div>
+      <div>⚠ NO SIGNAL // ROUTER COMPROMISED // FEED_01 LOCKED</div>
       <span>[TRACE_ERASED]</span>
     </div>
 
@@ -304,39 +310,58 @@
     noise.buffer = buffer;
     noise.loop = true;
     let filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 2500; filter.Q.value = 3.0;
+    filter.type = 'bandpass'; filter.frequency.value = 2500; filter.Q.value = 4.0;
     staticGainNode = audioCtx.createGain();
-    staticGainNode.gain.value = 0.05;
+    staticGainNode.gain.value = 0.08;
     noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
     noise.start();
   }
 
-  function playDestroyedSpeakerGlitch() {
+  /* توليد صوت زَمَر وتكسر سماعة مرعب جداً (Aggressive Speaker Blowout & Screech) */
+  function playTerrifyingSpeakerGlitch() {
     if (!audioCtx) return;
     let now = audioCtx.currentTime;
+    
+    // مذبذبان لإنشاء صوت حاد وصاخب ومتداخل
     let osc1 = audioCtx.createOscillator();
     let osc2 = audioCtx.createOscillator();
     let distortion = audioCtx.createWaveShaper();
     let gainNode = audioCtx.createGain();
 
-    osc1.type = 'square'; osc2.type = 'sawtooth';
-    osc1.frequency.setValueAtTime(2200, now); osc1.frequency.setValueAtTime(4500, now + 0.01);
-    osc1.frequency.setValueAtTime(600, now + 0.025); osc1.frequency.setValueAtTime(5500, now + 0.04);
-    osc2.frequency.setValueAtTime(1100, now); osc2.frequency.setValueAtTime(3800, now + 0.02);
+    osc1.type = 'sawtooth';
+    osc2.type = 'square';
 
-    function makeDistortionCurve(amount) {
-      let k = amount, n_samples = 44100, curve = new Float32Array(n_samples), deg = Math.PI / 180;
-      for (let i = 0; i < n_samples; ++i) {
-        let x = (i * 2) / n_samples - 1;
-        curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
-      }
-      return curve;
+    // ترددات صاخبة للغاية تحاكي صراخ الأجهزة المحروقة
+    osc1.frequency.setValueAtTime(300, now);
+    osc1.frequency.exponentialRampToValueAtTime(7500, now + 0.05);
+    osc1.frequency.setValueAtTime(1200, now + 0.08);
+    osc1.frequency.exponentialRampToValueAtTime(4500, now + 0.18);
+
+    osc2.frequency.setValueAtTime(2500, now);
+    osc2.frequency.linearRampToValueAtTime(150, now + 0.15);
+
+    // منحنى تشويه عنيف جداً (WaveShaper Distortion) لتدمير الصوت وجعله مرعباً
+    let k = 1500;
+    let curve = new Float32Array(44100);
+    let deg = Math.PI / 180;
+    for (let i = 0; i < 44100; ++i) {
+      let x = (i * 2) / 44100 - 1;
+      curve[i] = ((3 + k) * x * 60 * deg) / (Math.PI + k * Math.abs(x));
     }
-    distortion.curve = makeDistortionCurve(800);
+    distortion.curve = curve;
 
-    gainNode.gain.setValueAtTime(0.5, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-    osc1.connect(distortion); osc2.connect(distortion); distortion.connect(gainNode); gainNode.connect(audioCtx.destination);
-    osc1.start(now); osc2.start(now); osc1.stop(now + 0.15); osc2.stop(now + 0.15);
+    gainNode.gain.setValueAtTime(0.9, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+    osc1.connect(distortion);
+    osc2.connect(distortion);
+    distortion.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 0.22);
+    osc2.stop(now + 0.22);
   }
 
   function playLongTeetTone() {
@@ -348,10 +373,10 @@
     let gain = audioCtx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(1200, now);
+    osc.frequency.setValueAtTime(1400, now);
 
-    gain.gain.setValueAtTime(0.7, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
+    gain.gain.setValueAtTime(0.8, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
 
     osc.connect(gain).connect(audioCtx.destination);
     osc.start(now);
@@ -380,9 +405,9 @@
   let progress = 0;
 
   function randomizeGlitchDirection() {
-    const rx = (Math.random() * 90 - 45) + 'px'; 
-    const ry = (Math.random() * 50 - 25) + 'px'; 
-    const rs = (Math.random() * 70 - 35) + 'deg'; 
+    const rx = (Math.random() * 120 - 60) + 'px'; 
+    const ry = (Math.random() * 70 - 35) + 'px'; 
+    const rs = (Math.random() * 90 - 45) + 'deg'; 
     mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry); mainUI.style.setProperty('--sk', rs);
   }
 
@@ -393,9 +418,9 @@
     setTimeout(() => { splashScreen.style.display = 'none'; }, 400);
     screenContainer.style.opacity = '1';
     initAudio(); startBackgroundStatic();
-    playDestroyedSpeakerGlitch(); randomizeGlitchDirection(); 
+    playTerrifyingSpeakerGlitch(); randomizeGlitchDirection(); 
     mainUI.classList.add('severe-glitch');
-    setTimeout(() => mainUI.classList.remove('severe-glitch'), 200);
+    setTimeout(() => mainUI.classList.remove('severe-glitch'), 250);
     setTimeout(() => { addLog(); updateProgress(); }, 200);
   }
 
@@ -422,17 +447,18 @@
       const logItem = logsList[Math.floor(Math.random() * logsList.length)];
       msgSpan.className = `log-msg ${logItem.type}`; msgSpan.innerText = `♪ ${logItem.text}`;
     } else {
-      msgSpan.className = 'log-msg'; msgSpan.style.color = '#ff4444'; msgSpan.innerText = `[SIGNAL_LOST] // ROUTER_COMPROMISED_666`;
+      msgSpan.className = 'log-msg'; msgSpan.style.color = '#ff3355'; msgSpan.innerText = `[SIGNAL_LOST // ERROR_0x666_CORRUPTED]`;
     }
     row.appendChild(timeSpan); row.appendChild(msgSpan);
     terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
 
-    if (Math.random() > 0.35) {
+    if (Math.random() > 0.3) {
       randomizeGlitchDirection(); 
-      mainUI.classList.add('severe-glitch'); playDestroyedSpeakerGlitch(); 
-      setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
+      mainUI.classList.add('severe-glitch'); 
+      playTerrifyingSpeakerGlitch(); 
+      setTimeout(() => mainUI.classList.remove('severe-glitch'), 180);
     }
-    setTimeout(addLog, Math.random() * 90 + 25);
+    setTimeout(addLog, Math.random() * 80 + 20);
   }
 
   function updateProgress() {
@@ -440,7 +466,7 @@
       progress += Math.random() * 1.5; 
       if (progress > 100) progress = 100;
       progressBar.style.width = `${progress}%`; pctText.innerText = `${progress.toFixed(2)}%`;
-      setTimeout(updateProgress, Math.random() * 60 + 15);
+      setTimeout(updateProgress, Math.random() * 50 + 10);
     } else {
       triggerEndSequence();
     }
@@ -449,7 +475,7 @@
   function triggerEndSequence() {
     randomizeGlitchDirection(); 
     mainUI.classList.add('severe-glitch');
-    playDestroyedSpeakerGlitch();
+    playTerrifyingSpeakerGlitch();
     
     setTimeout(() => {
       mainUI.classList.remove('severe-glitch');
