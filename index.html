@@ -162,29 +162,29 @@
     100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #020000 !important; }
   }
 
-  /* تأثيرات الضحكة المرعبة على الشاشة المظلمة */
-  body.laughing-void::before {
-    content: ""; position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: repeating-linear-gradient(transparent 0, transparent 2px, rgba(255, 0, 51, 0.15) 2px, rgba(255, 0, 51, 0.15) 4px),
-                radial-gradient(circle at center, rgba(100,0,10,0.5) 0%, #000 100%);
-    background-color: #050001;
-    z-index: 99999; 
-    animation: demonLaughGlitch 0.05s infinite;
-    pointer-events: none;
+  /* تأثيرات التشويش المرعب للضحكة */
+  #demon-glitch-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: repeating-linear-gradient(transparent 0, transparent 4px, rgba(255, 0, 51, 0.4) 4px, rgba(255, 0, 51, 0.4) 8px),
+                radial-gradient(circle at center, rgba(150,0,10,0.8) 0%, #000 100%);
+    background-color: #0a0002; z-index: 99999;
+    animation: demonLaughGlitch 0.08s infinite; pointer-events: none;
+    display: none;
     mix-blend-mode: screen;
   }
 
   @keyframes demonLaughGlitch {
-    0% { filter: invert(0) drop-shadow(0 0 10px #f03) hue-rotate(0deg); transform: scale(1.02) translate(3px, 2px); }
-    30% { filter: invert(80%) drop-shadow(0 0 20px #f03) hue-rotate(20deg); transform: scale(1.05) translate(-4px, 5px); }
-    60% { filter: invert(0) drop-shadow(0 0 5px #f03) hue-rotate(-10deg); transform: scale(1.01) translate(2px, -3px); }
-    100% { filter: invert(30%) drop-shadow(0 0 30px #f00) contrast(300%); transform: scale(1.03) translate(-2px, 1px); }
+    0% { filter: invert(0) drop-shadow(0 0 15px #f03) hue-rotate(0deg); transform: scale(1.02) translate(5px, 3px); }
+    30% { filter: invert(100%) drop-shadow(0 0 30px #f03) hue-rotate(40deg); transform: scale(1.08) translate(-6px, 8px); }
+    60% { filter: invert(0) drop-shadow(0 0 10px #f03) hue-rotate(-20deg); transform: scale(1.01) translate(4px, -5px); }
+    100% { filter: invert(40%) drop-shadow(0 0 40px #f00) contrast(400%); transform: scale(1.05) translate(-3px, 2px); }
   }
 
-  /* إطفاء الشاشة بالكامل في النهاية */
-  body.pure-black { background-color: #000 !important; }
-  body.pure-black * { display: none !important; }
-  body.pure-black::before { display: none !important; }
+  /* الشاشة السوداء بالكامل في النهاية */
+  #pure-black-screen {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: #000; z-index: 999999; display: none; pointer-events: auto;
+  }
 </style>
 </head>
 <body>
@@ -211,14 +211,6 @@
   </div>
 </div>
 
-<!-- ملفات الصوت -->
-<audio id="audio-alastor-quote">
-  <source src="alastor-if-i-had-to-hurt-anyone-here.mp3" type="audio/mpeg">
-</audio>
-<audio id="audio-alastor-laugh">
-  <source src="alastor-laugh.mp3" type="audio/mpeg">
-</audio>
-
 <div id="screen-container">
   <div class="crt-overlay"></div>
   <div class="main-ui" id="main-ui">
@@ -239,6 +231,10 @@
   </div>
 </div>
 
+<!-- عناصر النهاية -->
+<div id="demon-glitch-overlay"></div>
+<div id="pure-black-screen"></div>
+
 <script>
   let audioCtx, staticGainNode;
   let sequenceStarted = false;
@@ -252,6 +248,7 @@
     }
   }
 
+  // تشغيل تشويش راديو خلفي خفيف
   function startBackgroundStatic() {
     let bufferSize = audioCtx.sampleRate * 2;
     let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
@@ -263,11 +260,12 @@
     let filter = audioCtx.createBiquadFilter();
     filter.type = 'bandpass'; filter.frequency.value = 2500; filter.Q.value = 3.0;
     staticGainNode = audioCtx.createGain();
-    staticGainNode.gain.value = 0.06;
+    staticGainNode.gain.value = 0.05;
     noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
     noise.start();
   }
 
+  // صوت أعطال السماعات الإلكترونية أثناء العمل
   function playDestroyedSpeakerGlitch() {
     if (!audioCtx) return;
     let now = audioCtx.currentTime;
@@ -279,9 +277,7 @@
     osc1.type = 'square'; osc2.type = 'sawtooth';
     osc1.frequency.setValueAtTime(2200, now); osc1.frequency.setValueAtTime(4500, now + 0.01);
     osc1.frequency.setValueAtTime(600, now + 0.025); osc1.frequency.setValueAtTime(5500, now + 0.04);
-    osc1.frequency.setValueAtTime(1500, now + 0.055); osc1.frequency.setValueAtTime(6000, now + 0.07);
     osc2.frequency.setValueAtTime(1100, now); osc2.frequency.setValueAtTime(3800, now + 0.02);
-    osc2.frequency.setValueAtTime(300, now + 0.045);
 
     function makeDistortionCurve(amount) {
       let k = amount, n_samples = 44100, curve = new Float32Array(n_samples), deg = Math.PI / 180;
@@ -293,31 +289,55 @@
     }
     distortion.curve = makeDistortionCurve(800);
 
-    gainNode.gain.setValueAtTime(0.7, now); gainNode.gain.setValueAtTime(0.15, now + 0.03);
-    gainNode.gain.setValueAtTime(0.6, now + 0.06); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+    gainNode.gain.setValueAtTime(0.5, now); gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
     osc1.connect(distortion); osc2.connect(distortion); distortion.connect(gainNode); gainNode.connect(audioCtx.destination);
-    osc1.start(now); osc2.start(now); osc1.stop(now + 0.16); osc2.stop(now + 0.16);
+    osc1.start(now); osc2.start(now); osc1.stop(now + 0.15); osc2.stop(now + 0.15);
   }
 
-  function startBroadcastCutoffTone() {
-    if (staticGainNode) staticGainNode.gain.value = 0; 
-    let osc = audioCtx.createOscillator();
-    let gain = audioCtx.createGain();
-    osc.type = 'sine'; osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.65, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4.5);
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start(); osc.stop(audioCtx.currentTime + 4.5);
+  // دالة توليد "ضحكة الاستور الشيطانية" بالصوت الإلكتروني المتقطع
+  function playAlastorDemonLaugh() {
+    if (!audioCtx) return;
+    if (staticGainNode) staticGainNode.gain.value = 0; // إيقاف التشويش الخلفي مؤقتاً لبروز الضحكة
+
+    let startTime = audioCtx.currentTime;
+    // سنقوم بعمل تذبذب متقطع وسريع جداً يشبه الضحكة الإذاعية المرعبة (Radio Laugh Pitch jumps)
+    let laughNotes = [400, 700, 350, 850, 450, 900, 300, 950, 500, 1100, 350, 800];
+    
+    laughNotes.forEach((freq, index) => {
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      let distortion = audioCtx.createWaveShaper();
+
+      // تأثير تشويش راديو قديم
+      let k = 500, n_samples = 44100, curve = new Float32Array(n_samples), deg = Math.PI / 180;
+      for (let i = 0; i < n_samples; ++i) {
+        let x = (i * 2) / n_samples - 1;
+        curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+      }
+      distortion.curve = curve;
+
+      osc.type = index % 2 === 0 ? 'sawtooth' : 'square';
+      let noteTime = startTime + (index * 0.12); // سرعة الضحكة
+      
+      osc.frequency.setValueAtTime(freq, noteTime);
+      gain.gain.setValueAtTime(0.4, noteTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, noteTime + 0.1);
+
+      osc.connect(distortion).connect(gain).connect(audioCtx.destination);
+      osc.start(noteTime);
+      osc.stop(noteTime + 0.1);
+    });
   }
 
   const mainUI = document.getElementById('main-ui');
   const terminal = document.getElementById('terminal');
   const progressBar = document.getElementById('progress-bar');
   const pctText = document.getElementById('pct-text');
-  const audioAlastorQuote = document.getElementById('audio-alastor-quote');
-  const audioAlastorLaugh = document.getElementById('audio-alastor-laugh');
+  
   const screenContainer = document.getElementById('screen-container');
   const splashScreen = document.getElementById('splash-screen');
+  const demonGlitchOverlay = document.getElementById('demon-glitch-overlay');
+  const pureBlackScreen = document.getElementById('pure-black-screen');
 
   let progress = 0;
 
@@ -388,6 +408,7 @@
     }
   }
 
+  // تسلسل النهاية المرعب مع الضحكة المصنوعة بالبرمجة والتشويش البصري
   function triggerEndSequence() {
     randomizeGlitchDirection(); 
     mainUI.classList.add('severe-glitch');
@@ -396,29 +417,17 @@
     setTimeout(() => {
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
-      startBroadcastCutoffTone();
 
+      // بعد إغلاق شاشة التلفاز القديمة، تبدأ الضحكة والتشويش الشيطاني
       setTimeout(() => {
-        audioAlastorQuote.volume = 1.0;
-        audioAlastorQuote.play().catch(e => console.log("الصوت يتطلب مسار الملف الصحيح"));
+        demonGlitchOverlay.style.display = 'block'; // تفعيل تشويش الشاشة الأحمر الفوضوي
+        playAlastorDemonLaugh(); // تشغيل الضحكة المرعبة المبرمجة
 
-        // تشغيل الضحكة والتأثيرات المرئية فور انتهاء الجملة
-        audioAlastorQuote.onended = () => {
-          document.body.classList.add('laughing-void');
-          audioAlastorLaugh.play().catch(e => console.log("ملف الضحكة غير موجود"));
-
-          let endTriggered = false;
-          const killScreen = () => {
-            if (endTriggered) return;
-            endTriggered = true;
-            document.body.classList.remove('laughing-void');
-            document.body.classList.add('pure-black'); // ظلام دامس
-          };
-
-          // إطفاء الشاشة فور انتهاء صوت الضحكة (أو بعد 4 ثوانٍ كإجراء احتياطي إذا لم يتم تحميل الصوت)
-          audioAlastorLaugh.onended = killScreen;
-          setTimeout(killScreen, 4000); 
-        };
+        // بعد انتهاء الضحكة (حوالي 2.5 ثانية)، تتحول الشاشة إلى ظلام دامس تماماً
+        setTimeout(() => {
+          demonGlitchOverlay.style.display = 'none';
+          pureBlackScreen.style.display = 'block';
+        }, 2500);
 
       }, 700);
     }, 450); 
