@@ -8,10 +8,10 @@
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
   :root {
-    --bg-color: #050000; /* أسود مع عمق دموي خفيف جداً */
-    --radio-red: #ff0011; /* أحمر قاني وساطع مثل ألاستور */
+    --bg-color: #050000;
+    --radio-red: #ff0011;
     --dark-red: #3a0005;
-    --alastor-green: #33ff00; /* أخضر نيون سام مطابق للسلاسل في الفيديو */
+    --alastor-green: #33ff00;
     --text-dim: #882222;
   }
 
@@ -26,6 +26,7 @@
     background: radial-gradient(circle, #150000 0%, #000000 100%);
     z-index: 9999; display: flex; justify-content: center; align-items: center;
     padding: 15px; box-sizing: border-box;
+    transition: opacity 0.4s ease, visibility 0.4s;
   }
 
   .splash-card {
@@ -40,6 +41,11 @@
   }
   .splash-card::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
   .splash-card::after { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+
+  .splash-header-info {
+    display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim);
+    border-bottom: 1px solid var(--dark-red); padding-bottom: 8px; margin-bottom: 15px;
+  }
 
   .splash-brand-title {
     text-align: center; font-size: 2rem; color: var(--radio-red); font-weight: bold;
@@ -77,10 +83,10 @@
   #screen-container {
     width: 100vw; height: 100vh; background-color: var(--bg-color);
     position: relative; overflow: hidden; transform-origin: center center;
-    opacity: 0; transition: opacity 0.5s ease;
+    display: none; opacity: 0; transition: opacity 0.5s ease;
   }
 
-  /* خطوط الراديو الأفقية المتوافقة مع الفيديو */
+  /* خطوط الراديو */
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: 
@@ -98,7 +104,7 @@
     100% { opacity: 0.9; transform: translateY(1px); }
   }
 
-  /* التمزيق الأفقي بالأحمر والأسود (بدون سيان أو ماجينتا) */
+  /* التمزيق الأفقي */
   .digital-glitch-blocks {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-image: 
@@ -163,7 +169,7 @@
   .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 8px var(--alastor-green); }
   .log-msg.red { color: var(--radio-red); text-shadow: 0 0 8px var(--radio-red); font-weight: bold; }
 
-  /* جليتش التمزيق العنيف المطابق للفيديو (أحمر وأسود حاد جداً) */
+  /* جليتش التمزيق العنيف */
   .severe-glitch { animation: severeChaos 0.05s infinite !important; }
   @keyframes severeChaos { 
     0% { transform: translate(0, 0); filter: none; } 
@@ -183,7 +189,6 @@
     100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #000 !important; }
   }
 
-  /* طبقة التشويش أثناء الضحكة: خطوط عرضية حمراء وسوداء مرعبة */
   #demon-glitch-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: repeating-linear-gradient(0deg, #000 0px, #000 4px, rgba(255,0,17,0.8) 4px, rgba(255,0,17,0.8) 8px);
@@ -222,7 +227,7 @@
       <div>> STATUS: <span>AWAITING AUDIO HANDSHAKE</span></div>
       <div>> SECURITY: <span>BYPASS REQUIRED</span></div>
     </div>
-    <button class="splash-action-btn" onclick="startExperience()">
+    <button class="splash-action-btn" id="start-btn">
       [ TAP TO CONNECT & ENGAGE ]
     </button>
   </div>
@@ -250,7 +255,7 @@
     <div class="hacker-brand">NO SIGNAL</div>
     
     <div class="progress-section">
-      <div class="progress-header"><span id="target-ip">TRANSMISSION OVERRIDDEN</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
+      <div class="progress-header"><span>TRANSMISSION OVERRIDDEN</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
       <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
     </div>
     
@@ -266,92 +271,98 @@
   let sequenceStarted = false;
 
   function initAudio() {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
+    try {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    } catch(e) {
+      console.log("Audio API Error: ", e);
     }
   }
 
   function startBackgroundStatic() {
-    let bufferSize = audioCtx.sampleRate * 2;
-    let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    let data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
-    let noise = audioCtx.createBufferSource();
-    noise.buffer = buffer;
-    noise.loop = true;
-    let filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 1500; filter.Q.value = 2.0;
-    staticGainNode = audioCtx.createGain();
-    staticGainNode.gain.value = 0.08;
-    noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
-    noise.start();
+    if (!audioCtx) return;
+    try {
+      let bufferSize = audioCtx.sampleRate * 2;
+      let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      let data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+      let noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      noise.loop = true;
+      let filter = audioCtx.createBiquadFilter();
+      filter.type = 'bandpass'; filter.frequency.value = 1500; filter.Q.value = 2.0;
+      staticGainNode = audioCtx.createGain();
+      staticGainNode.gain.value = 0.08;
+      noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
+      noise.start();
+    } catch(e) {}
   }
 
-  /* تحديث صوت التشويش ليكون شيطانياً وعميقاً متوافقاً مع رعب الفيديو */
   function playTerrifyingSpeakerGlitch() {
     if (!audioCtx) return;
-    let now = audioCtx.currentTime;
-    
-    let osc1 = audioCtx.createOscillator();
-    let osc2 = audioCtx.createOscillator();
-    let distortion = audioCtx.createWaveShaper();
-    let gainNode = audioCtx.createGain();
+    try {
+      let now = audioCtx.currentTime;
+      let osc1 = audioCtx.createOscillator();
+      let osc2 = audioCtx.createOscillator();
+      let distortion = audioCtx.createWaveShaper();
+      let gainNode = audioCtx.createGain();
 
-    osc1.type = 'sawtooth';
-    osc2.type = 'square';
+      osc1.type = 'sawtooth';
+      osc2.type = 'square';
 
-    // قاعدة شيطانية منخفضة جداً ومهتزة
-    osc1.frequency.setValueAtTime(80, now);
-    osc1.frequency.exponentialRampToValueAtTime(30, now + 0.15);
+      osc1.frequency.setValueAtTime(80, now);
+      osc1.frequency.exponentialRampToValueAtTime(30, now + 0.15);
 
-    // صرير راديو حاد وثاقب
-    osc2.frequency.setValueAtTime(3000, now);
-    osc2.frequency.linearRampToValueAtTime(8000, now + 0.1);
+      osc2.frequency.setValueAtTime(3000, now);
+      osc2.frequency.linearRampToValueAtTime(8000, now + 0.1);
 
-    // تشويه عنيف جداً لكسر الصوت
-    let k = 2000;
-    let curve = new Float32Array(44100);
-    let deg = Math.PI / 180;
-    for (let i = 0; i < 44100; ++i) {
-      let x = (i * 2) / 44100 - 1;
-      curve[i] = ((3 + k) * x * 50 * deg) / (Math.PI + k * Math.abs(x));
-    }
-    distortion.curve = curve;
+      let k = 2000;
+      let curve = new Float32Array(44100);
+      let deg = Math.PI / 180;
+      for (let i = 0; i < 44100; ++i) {
+        let x = (i * 2) / 44100 - 1;
+        curve[i] = ((3 + k) * x * 50 * deg) / (Math.PI + k * Math.abs(x));
+      }
+      distortion.curve = curve;
 
-    gainNode.gain.setValueAtTime(1.0, now);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+      gainNode.gain.setValueAtTime(1.0, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
 
-    osc1.connect(distortion);
-    osc2.connect(distortion);
-    distortion.connect(gainNode);
-    gainNode.connect(audioCtx.destination);
+      osc1.connect(distortion);
+      osc2.connect(distortion);
+      distortion.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
 
-    osc1.start(now);
-    osc2.start(now);
-    osc1.stop(now + 0.18);
-    osc2.stop(now + 0.18);
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + 0.18);
+      osc2.stop(now + 0.18);
+    } catch(e) {}
   }
 
   function playLongTeetTone() {
     if (!audioCtx) return;
-    if (staticGainNode) staticGainNode.gain.value = 0;
+    try {
+      if (staticGainNode) staticGainNode.gain.value = 0;
 
-    let now = audioCtx.currentTime;
-    let osc = audioCtx.createOscillator();
-    let gain = audioCtx.createGain();
+      let now = audioCtx.currentTime;
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1400, now);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1400, now);
 
-    gain.gain.setValueAtTime(0.8, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
+      gain.gain.setValueAtTime(0.8, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
 
-    osc.connect(gain).connect(audioCtx.destination);
-    osc.start(now);
-    osc.stop(now + 2.5);
+      osc.connect(gain).connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 2.5);
+    } catch(e) {}
   }
 
   function playAlastorDemonLaugh() {
@@ -372,10 +383,111 @@
   const splashScreen = document.getElementById('splash-screen');
   const demonGlitchOverlay = document.getElementById('demon-glitch-overlay');
   const pureBlackScreen = document.getElementById('pure-black-screen');
+  const startBtn = document.getElementById('start-btn');
 
   let progress = 0;
 
   function randomizeGlitchDirection() {
-    // حركة أفقية أعنف بكثير لتطابق الفيديو
     const rx = (Math.random() * 160 - 80) + 'px'; 
-    const ry = (Math.random
+    const ry = (Math.random() * 20 - 10) + 'px'; 
+    mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry);
+  }
+
+  function startExperience() {
+    if (sequenceStarted) return;
+    sequenceStarted = true;
+
+    // إخفاء شاشة الترحب وإظهار شاشة العرض الرئيسية فوراً
+    splashScreen.style.opacity = '0';
+    setTimeout(() => { 
+      splashScreen.style.display = 'none'; 
+      screenContainer.style.display = 'block';
+      setTimeout(() => { screenContainer.style.opacity = '1'; }, 50);
+    }, 400);
+
+    initAudio(); 
+    startBackgroundStatic();
+    playTerrifyingSpeakerGlitch(); 
+    randomizeGlitchDirection(); 
+    
+    mainUI.classList.add('severe-glitch');
+    setTimeout(() => mainUI.classList.remove('severe-glitch'), 250);
+    setTimeout(() => { addLog(); updateProgress(); }, 200);
+  }
+
+  startBtn.addEventListener('click', startExperience);
+
+  const logsList = [
+    { text: ">>> BYPASSING FIREWALL...", type: "green" },
+    { text: ">>> DISABLING SECURITY...", type: "green" },
+    { text: ">>> ACCESS GRANTED", type: "green" },
+    { text: "BROADCAST INTERRUPTED // NO SOURCE DETECTED", type: "red" },
+    { text: "DATA CORRUPTED", type: "red" },
+    { text: "ALL CHANNELS LOCKED", type: "red" }
+  ];
+
+  function getTimestamp() {
+    return `ERR_${Math.floor(Math.random()*999).toString().padStart(3,'0')}`;
+  }
+
+  function addLog() {
+    if (progress >= 100) return;
+    const row = document.createElement('div'); row.className = 'log-row';
+    const timeSpan = document.createElement('span'); timeSpan.className = 'log-time'; timeSpan.innerText = getTimestamp();
+    const msgSpan = document.createElement('span');
+    if (Math.random() > 0.4) {
+      const logItem = logsList[Math.floor(Math.random() * logsList.length)];
+      msgSpan.className = `log-msg ${logItem.type}`; msgSpan.innerText = logItem.text;
+    } else {
+      msgSpan.className = 'log-msg'; msgSpan.style.color = 'var(--radio-red)'; msgSpan.style.fontWeight = 'bold'; msgSpan.innerText = `[ FATAL_ERROR // SIGNAL_LOST ]`;
+    }
+    row.appendChild(timeSpan); row.appendChild(msgSpan);
+    terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
+
+    if (Math.random() > 0.3) {
+      randomizeGlitchDirection(); 
+      mainUI.classList.add('severe-glitch'); 
+      playTerrifyingSpeakerGlitch(); 
+      setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
+    }
+    setTimeout(addLog, Math.random() * 80 + 20);
+  }
+
+  function updateProgress() {
+    if (progress < 100) {
+      progress += Math.random() * 1.5; 
+      if (progress > 100) progress = 100;
+      progressBar.style.width = `${progress}%`; pctText.innerText = `${progress.toFixed(2)}%`;
+      setTimeout(updateProgress, Math.random() * 50 + 10);
+    } else {
+      triggerEndSequence();
+    }
+  }
+
+  function triggerEndSequence() {
+    randomizeGlitchDirection(); 
+    mainUI.classList.add('severe-glitch');
+    playTerrifyingSpeakerGlitch();
+    
+    setTimeout(() => {
+      mainUI.classList.remove('severe-glitch');
+      screenContainer.classList.add('crt-shut-off');
+
+      playLongTeetTone();
+
+      setTimeout(() => {
+        demonGlitchOverlay.style.display = 'block';
+        playAlastorDemonLaugh();
+
+        setTimeout(() => {
+          demonGlitchOverlay.style.display = 'none';
+          pureBlackScreen.style.display = 'block';
+        }, 3000);
+
+      }, 2200);
+
+    }, 450); 
+  }
+</script>
+</body>
+</html>
