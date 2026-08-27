@@ -162,25 +162,25 @@
     100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #020000 !important; }
   }
 
-  /* تأثيرات التشويش المرعب للضحكة */
+  /* تأثيرات التشويش المرعب على الشاشة أثناء الضحكة */
   #demon-glitch-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: repeating-linear-gradient(transparent 0, transparent 4px, rgba(255, 0, 51, 0.4) 4px, rgba(255, 0, 51, 0.4) 8px),
-                radial-gradient(circle at center, rgba(150,0,10,0.8) 0%, #000 100%);
+    background: repeating-linear-gradient(transparent 0, transparent 4px, rgba(255, 0, 51, 0.5) 4px, rgba(255, 0, 51, 0.5) 8px),
+                radial-gradient(circle at center, rgba(150,0,10,0.9) 0%, #000 100%);
     background-color: #0a0002; z-index: 99999;
-    animation: demonLaughGlitch 0.08s infinite; pointer-events: none;
+    animation: demonLaughGlitch 0.06s infinite; pointer-events: none;
     display: none;
     mix-blend-mode: screen;
   }
 
   @keyframes demonLaughGlitch {
-    0% { filter: invert(0) drop-shadow(0 0 15px #f03) hue-rotate(0deg); transform: scale(1.02) translate(5px, 3px); }
-    30% { filter: invert(100%) drop-shadow(0 0 30px #f03) hue-rotate(40deg); transform: scale(1.08) translate(-6px, 8px); }
-    60% { filter: invert(0) drop-shadow(0 0 10px #f03) hue-rotate(-20deg); transform: scale(1.01) translate(4px, -5px); }
-    100% { filter: invert(40%) drop-shadow(0 0 40px #f00) contrast(400%); transform: scale(1.05) translate(-3px, 2px); }
+    0% { filter: invert(0) drop-shadow(0 0 20px #f03) hue-rotate(0deg); transform: scale(1.03) translate(6px, 4px); }
+    30% { filter: invert(100%) drop-shadow(0 0 40px #f03) hue-rotate(50deg); transform: scale(1.1) translate(-8px, 10px); }
+    60% { filter: invert(0) drop-shadow(0 0 15px #f03) hue-rotate(-30deg); transform: scale(1.02) translate(5px, -6px); }
+    100% { filter: invert(50%) drop-shadow(0 0 50px #f00) contrast(500%); transform: scale(1.06) translate(-4px, 3px); }
   }
 
-  /* الشاشة السوداء بالكامل في النهاية */
+  /* الشاشة السوداء الدامسة في النهاية المطلقة */
   #pure-black-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background-color: #000; z-index: 999999; display: none; pointer-events: auto;
@@ -231,7 +231,7 @@
   </div>
 </div>
 
-<!-- عناصر النهاية -->
+<!-- طبقات التشويش والظلام -->
 <div id="demon-glitch-overlay"></div>
 <div id="pure-black-screen"></div>
 
@@ -265,7 +265,7 @@
     noise.start();
   }
 
-  // صوت أعطال السماعات الإلكترونية أثناء العمل
+  // أصوات أعطال السماعات أثناء التقدم
   function playDestroyedSpeakerGlitch() {
     if (!audioCtx) return;
     let now = audioCtx.currentTime;
@@ -294,22 +294,38 @@
     osc1.start(now); osc2.start(now); osc1.stop(now + 0.15); osc2.stop(now + 0.15);
   }
 
-  // دالة توليد "ضحكة الاستور الشيطانية" بالصوت الإلكتروني المتقطع
+  // 1. صوت الصفير الممتد العالي (Teeeeeeeeeeeeeet)
+  function playLongTeetTone() {
+    if (!audioCtx) return;
+    if (staticGainNode) staticGainNode.gain.value = 0; // كتم التشويش الخلفي لبروز الصفير
+
+    let now = audioCtx.currentTime;
+    let osc = audioCtx.createOscillator();
+    let gain = audioCtx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1200, now); // تردد عالي وواضح
+
+    gain.gain.setValueAtTime(0.7, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.5); // ممتد لمدة 2.5 ثانية
+
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(now);
+    osc.stop(now + 2.5);
+  }
+
+  // 2. ضحكة ألاستور الشيطانية المتقطعة والمرعبة
   function playAlastorDemonLaugh() {
     if (!audioCtx) return;
-    if (staticGainNode) staticGainNode.gain.value = 0; // إيقاف التشويش الخلفي مؤقتاً لبروز الضحكة
-
     let startTime = audioCtx.currentTime;
-    // سنقوم بعمل تذبذب متقطع وسريع جداً يشبه الضحكة الإذاعية المرعبة (Radio Laugh Pitch jumps)
-    let laughNotes = [400, 700, 350, 850, 450, 900, 300, 950, 500, 1100, 350, 800];
-    
+    let laughNotes = [450, 750, 380, 900, 500, 950, 320, 1000, 550, 1150, 400, 850, 600, 1250];
+
     laughNotes.forEach((freq, index) => {
       let osc = audioCtx.createOscillator();
       let gain = audioCtx.createGain();
       let distortion = audioCtx.createWaveShaper();
 
-      // تأثير تشويش راديو قديم
-      let k = 500, n_samples = 44100, curve = new Float32Array(n_samples), deg = Math.PI / 180;
+      let k = 600, n_samples = 44100, curve = new Float32Array(n_samples), deg = Math.PI / 180;
       for (let i = 0; i < n_samples; ++i) {
         let x = (i * 2) / n_samples - 1;
         curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
@@ -317,15 +333,15 @@
       distortion.curve = curve;
 
       osc.type = index % 2 === 0 ? 'sawtooth' : 'square';
-      let noteTime = startTime + (index * 0.12); // سرعة الضحكة
-      
+      let noteTime = startTime + (index * 0.1); // إيقاع الضحكة السريع والمرعب
+
       osc.frequency.setValueAtTime(freq, noteTime);
-      gain.gain.setValueAtTime(0.4, noteTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, noteTime + 0.1);
+      gain.gain.setValueAtTime(0.5, noteTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, noteTime + 0.09);
 
       osc.connect(distortion).connect(gain).connect(audioCtx.destination);
       osc.start(noteTime);
-      osc.stop(noteTime + 0.1);
+      osc.stop(noteTime + 0.09);
     });
   }
 
@@ -408,7 +424,7 @@
     }
   }
 
-  // تسلسل النهاية المرعب مع الضحكة المصنوعة بالبرمجة والتشويش البصري
+  // تسلسل النهاية: الصفير الممتد -> ثم تفعيل التشويش مع ضحكة ألاستور -> ثم ظلام تام
   function triggerEndSequence() {
     randomizeGlitchDirection(); 
     mainUI.classList.add('severe-glitch');
@@ -416,20 +432,24 @@
     
     setTimeout(() => {
       mainUI.classList.remove('severe-glitch');
-      screenContainer.classList.add('crt-shut-off');
+      screenContainer.classList.add('crt-shut-off'); // انكماش واختفاء الشاشة
 
-      // بعد إغلاق شاشة التلفاز القديمة، تبدأ الضحكة والتشويش الشيطاني
+      // 1. تشغيل صوت الصفير الممتد العالي (Teeeeeeeeeeeeeet)
+      playLongTeetTone();
+
+      // 2. بعد انتهاء الصفير تقريباً (بعد 2.2 ثانية)، تبدأ الضحكة والتشويش المرعب على الشاشة
       setTimeout(() => {
-        demonGlitchOverlay.style.display = 'block'; // تفعيل تشويش الشاشة الأحمر الفوضوي
-        playAlastorDemonLaugh(); // تشغيل الضحكة المرعبة المبرمجة
+        demonGlitchOverlay.style.display = 'block'; // ظهور التشويش الشيطاني الأحمر
+        playAlastorDemonLaugh(); // تشغيل الضحكة المبرمجة
 
-        // بعد انتهاء الضحكة (حوالي 2.5 ثانية)، تتحول الشاشة إلى ظلام دامس تماماً
+        // 3. بعد انتهاء الضحكة (بعد 2.5 ثانية)، تتحول الشاشة بالكامل إلى ظلام دامس
         setTimeout(() => {
           demonGlitchOverlay.style.display = 'none';
-          pureBlackScreen.style.display = 'block';
+          pureBlackScreen.style.display = 'block'; // ظلام تام
         }, 2500);
 
-      }, 700);
+      }, 2200);
+
     }, 450); 
   }
 </script>
