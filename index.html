@@ -25,13 +25,6 @@
     position: relative; overflow: hidden; transform-origin: center center;
   }
 
-  #start-screen {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000;
-    color: var(--alastor-green); display: flex; justify-content: center; align-items: center;
-    font-size: 1.5rem; z-index: 1000; cursor: pointer; text-shadow: 0 0 15px var(--alastor-green);
-    animation: alertPulse 1s infinite;
-  }
-
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.7) 50%);
@@ -45,7 +38,7 @@
 
   .main-ui {
     position: relative; width: 96%; max-width: 600px; height: 96vh;
-    margin: 2vh auto; padding: 20px; box-sizing: border-box; display: none; flex-direction: column; z-index: 10;
+    margin: 2vh auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; z-index: 10;
   }
 
   .main-ui::before, .main-ui::after, .ui-corner-tl, .ui-corner-br {
@@ -83,47 +76,36 @@
   .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
   .log-msg.red { color: var(--radio-red); }
 
-  .severe-glitch { animation: screenTearChaos 0.1s infinite; }
+  .severe-glitch { animation: screenTearChaos 0.08s infinite; }
   @keyframes screenTearChaos { 
-    0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg) contrast(150%); } 
-    20% { transform: translate(-12px, 6px) skew(15deg); filter: contrast(350%) invert(10%); } 
-    40% { transform: translate(10px, -8px) skew(-20deg); filter: blur(3px) saturate(300%); } 
-    60% { transform: translate(-5px, -2px) skew(8deg); filter: contrast(400%); } 
-    80% { transform: translate(6px, 10px) skew(-10deg); filter: hue-rotate(90deg); }
+    0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg) contrast(200%); } 
+    25% { transform: translate(-15px, 8px) skew(20deg); filter: contrast(400%) invert(15%); } 
+    50% { transform: translate(12px, -10px) skew(-25deg); filter: blur(2px) saturate(400%); } 
+    75% { transform: translate(-8px, -5px) skew(12deg); filter: contrast(500%); } 
     100% { transform: translate(0, 0) skew(0deg); filter: none; } 
   }
 
-  /* أنميشن إغلاق الشاشة الواقعي جداً (التلفاز القديم CRT) */
+  /* انطفاء الشاشة مع بقايا وميض ونقاط حمراء مرعبة (Horror Afterglow) */
   .crt-shut-off {
-    animation: turn-off 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    animation: turn-off 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
   @keyframes turn-off {
-    0% {
-      transform: scale(1, 1);
-      filter: brightness(1) contrast(1);
-    }
-    40% {
-      transform: scale(1.1, 0.01);
-      filter: brightness(15) contrast(300%);
-      background-color: #fff;
-    }
-    70% {
-      transform: scale(0.02, 0.005);
-      filter: brightness(20);
-      background-color: #fff;
-    }
-    100% {
-      transform: scale(0, 0);
-      filter: brightness(0);
-      opacity: 0;
-      background-color: #000;
+    0% { transform: scale(1, 1); filter: brightness(1) contrast(1); }
+    40% { transform: scale(1.1, 0.01); filter: brightness(20) contrast(400%); background-color: #ff0033; }
+    70% { transform: scale(0.01, 0.003); filter: brightness(30); background-color: #ff0033; box-shadow: 0 0 50px #ff0033; }
+    100% { 
+      transform: scale(0, 0); 
+      filter: brightness(0); 
+      opacity: 1; 
+      background-color: #050000; 
+      /* بقايا النقاط والوهج الأحمر المرعب في الظلام */
+      background-image: radial-gradient(circle, rgba(255,0,51,0.25) 10%, transparent 10%);
+      background-size: 6px 6px;
     }
   }
 </style>
 </head>
 <body>
-
-<div id="start-screen">[ اضغط للاتصال بتردد الراديو الخبيث ]</div>
 
 <audio id="audio-alastor-quote">
   <source src="alastor-if-i-had-to-hurt-anyone-here.mp3" type="audio/mpeg">
@@ -154,7 +136,12 @@
   let audioCtx, staticGainNode;
 
   function initAudio() {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
   }
 
   function startBackgroundStatic() {
@@ -166,41 +153,68 @@
     noise.buffer = buffer;
     noise.loop = true;
     let filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 1200; filter.Q.value = 1.5;
+    filter.type = 'bandpass'; filter.frequency.value = 1500; filter.Q.value = 1;
     staticGainNode = audioCtx.createGain();
     staticGainNode.gain.value = 0.03;
     noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
     noise.start();
   }
 
-  // مطابقة صوت الجليتش تماماً كالتي أرسلتها (نغمات مربعة حادة ومتسارعة)
-  function playExactMatchGlitch() {
+  // صوت Glitch عالي، صاخب ومزعج جداً مطابق للملف الصوتي تماماً
+  function playLoudDistortedGlitch() {
     if (!audioCtx) return;
 
-    let osc = audioCtx.createOscillator();
+    let now = audioCtx.currentTime;
+    
+    // استخدام مذبذبين بموجات مربعة ومنشرة لإحداث صخب قوي
+    let osc1 = audioCtx.createOscillator();
+    let osc2 = audioCtx.createOscillator();
+    let distortion = audioCtx.createWaveShaper();
     let gainNode = audioCtx.createGain();
 
-    osc.type = 'square'; // تعطى الطابع الإلكتروني الصاخب الحاد
+    osc1.type = 'square';
+    osc2.type = 'sawtooth';
 
-    let now = audioCtx.currentTime;
-    // تتابع ترددات سريع ليطابق النغمة التي أرسلتها بالمللي ثانية
-    osc.frequency.setValueAtTime(1500, now);
-    osc.frequency.setValueAtTime(2200, now + 0.02);
-    osc.frequency.setValueAtTime(900, now + 0.04);
-    osc.frequency.setValueAtTime(2800, now + 0.06);
-    osc.frequency.setValueAtTime(1200, now + 0.08);
-    osc.frequency.setValueAtTime(3000, now + 0.10);
+    // ترددات صاخبة جداً ومزعجة تتقاطع بسرعة هائلة
+    osc1.frequency.setValueAtTime(2000, now);
+    osc1.frequency.setValueAtTime(500, now + 0.03);
+    osc1.frequency.setValueAtTime(3500, now + 0.06);
+    osc1.frequency.setValueAtTime(1200, now + 0.09);
+    osc1.frequency.setValueAtTime(4000, now + 0.12);
 
-    gainNode.gain.setValueAtTime(0.2, now);
-    gainNode.gain.setValueAtTime(0.02, now + 0.03);
-    gainNode.gain.setValueAtTime(0.2, now + 0.06);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+    osc2.frequency.setValueAtTime(800, now);
+    osc2.frequency.setValueAtTime(2500, now + 0.04);
+    osc2.frequency.setValueAtTime(300, now + 0.08);
 
-    osc.connect(gainNode);
+    // إضافة تشويش عالي المستوى لجعل الصوت حاداً وصاخباً
+    function makeDistortionCurve(amount) {
+      let k = typeof amount === 'number' ? amount : 50,
+        n_samples = 44100,
+        curve = new Float32Array(n_samples),
+        deg = Math.PI / 180;
+      for (let i = 0; i < n_samples; ++i) {
+        let x = (i * 2) / n_samples - 1;
+        curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+      }
+      return curve;
+    }
+    distortion.curve = makeDistortionCurve(100);
+
+    // رفع مستوى الصوت ليكون صاخباً وقوياً
+    gainNode.gain.setValueAtTime(0.4, now);
+    gainNode.gain.setValueAtTime(0.05, now + 0.04);
+    gainNode.gain.setValueAtTime(0.35, now + 0.08);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+
+    osc1.connect(distortion);
+    osc2.connect(distortion);
+    distortion.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
-    osc.start(now);
-    osc.stop(now + 0.14);
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 0.18);
+    osc2.stop(now + 0.18);
   }
 
   function startSmoothBeep() {
@@ -214,7 +228,6 @@
     osc.start(); 
   }
 
-  const startScreen = document.getElementById('start-screen');
   const mainUI = document.getElementById('main-ui');
   const terminal = document.getElementById('terminal');
   const progressBar = document.getElementById('progress-bar');
@@ -225,21 +238,24 @@
   let progress = 0;
   let sequenceStarted = false;
 
-  startScreen.addEventListener('click', () => {
+  // بدء التشغيل تلقائياً فور فتح الصفحة
+  window.addEventListener('DOMContentLoaded', () => {
     if (sequenceStarted) return;
     sequenceStarted = true;
     
     initAudio();
     startBackgroundStatic();
 
-    startScreen.style.display = 'none';
-    mainUI.style.display = 'flex';
-    
     setTimeout(() => {
       addLog();
       updateProgress();
-    }, 500);
+    }, 400);
   });
+
+  // السماح بتشغيل الصوت إذا تفاعل المستخدم بأي ضغطة كاحتياط لسياسة المتصفحات
+  window.addEventListener('click', () => {
+    initAudio();
+  }, { once: true });
 
   const logsList = [
     { text: "TUNING INTO THE PENTAGRAM BROADCAST...", type: "red" },
@@ -272,7 +288,7 @@
     } else {
       msgSpan.className = 'log-msg';
       msgSpan.style.color = '#ff4444';
-      msgSpan.innerText = `[EXACT_GLITCH_BURST] // 666_ERROR`;
+      msgSpan.innerText = `[LOUD_GLITCH_BURST] // SYSTEM_PANIC_666`;
     }
 
     row.appendChild(timeSpan);
@@ -280,10 +296,10 @@
     terminal.appendChild(row);
     terminal.scrollTop = terminal.scrollHeight;
 
-    // تفعيل صوت الجليتش المطابق تماماً لصوتك مع الحركة البصرية
-    if (Math.random() > 0.6) {
+    // تفعيل الجليتش الصاخب والمرعب مع الحركة البصرية
+    if (Math.random() > 0.55) {
       mainUI.classList.add('severe-glitch');
-      playExactMatchGlitch(); 
+      playLoudDistortedGlitch(); 
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
     }
 
@@ -305,22 +321,22 @@
   }
 
   function triggerEndSequence() {
-    // 1. ذروة الجليتش تماماً مثل الصوت المطلوب
+    // 1. ذروة الصخب والجليتش الأخير
     mainUI.classList.add('severe-glitch');
-    playExactMatchGlitch();
+    playLoudDistortedGlitch();
     
     setTimeout(() => {
-      // 2. إغلاق الشاشة الواقعي (CRT Turn-off)
+      // 2. إغلاق الشاشة مع بقايا الوهج والنقاط الحمراء المرعبة
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
       
       // 3. تشغيل الصفير المستمر 
       startSmoothBeep();
 
-      // 4. تشغيل صوت ألاستور في الظلام دامس
+      // 4. تشغيل صوت ألاستور في الخلفية المرعبة
       setTimeout(() => {
         audioAlastorQuote.volume = 1.0;
-        audioAlastorQuote.play().catch(e => console.log("الصوت لم يعمل"));
+        audioAlastorQuote.play().catch(e => console.log("الصوت يتطلب تفاعل أو تحقق من مسار الملف"));
       }, 700);
       
     }, 450); 
