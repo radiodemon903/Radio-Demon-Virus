@@ -187,6 +187,9 @@
 </head>
 <body>
 
+<!-- عنصر ملف صوت ضحكة ألاستور الحقيقي -->
+<audio id="alastor-laugh-audio" src="https://www.myinstants.com/media/sounds/alastor-laugh.mp3" preload="auto"></audio>
+
 <div id="splash-screen">
   <div class="splash-card">
     <div class="splash-header-info">
@@ -309,53 +312,14 @@
     osc.stop(now + 2.5);
   }
 
-  // 2. ضحكة ألاستور (مضبوطة كبافر صوتي متكامل لتجنب قيود المتصفح وضمان عملها 100%)
+  // 2. تشغيل ضحكة ألاستور الحقيقية
   function playAlastorDemonLaugh() {
-    if (!audioCtx) return;
-    
-    let sampleRate = audioCtx.sampleRate;
-    let duration = 2.0; // مدة الضحكة
-    let buffer = audioCtx.createBuffer(1, sampleRate * duration, sampleRate);
-    let output = buffer.getChannelData(0);
-
-    // نغمات الضحكة المرعبة المتقطعة
-    let laughNotes = [450, 750, 380, 900, 500, 950, 320, 1000, 550, 1150, 400, 850, 600, 1250, 500, 1100];
-    let noteDuration = 0.1; // مدة كل نغمة
-
-    laughNotes.forEach((freq, index) => {
-      let startSample = Math.floor(index * noteDuration * sampleRate);
-      let numSamples = Math.floor(noteDuration * sampleRate);
-      
-      for (let i = 0; i < numSamples && (startSample + i) < output.length; i++) {
-        let t = i / sampleRate;
-        // دمج موجتين (Sawtooth + Square) لتوليد صوت شيطاني حاد
-        let wave1 = Math.sin(2 * Math.PI * freq * t) > 0 ? 1 : -1;
-        let wave2 = (2 * ((freq * t) % 1)) - 1;
-        let combined = (wave1 * 0.5 + wave2 * 0.5);
-        
-        // تأثير اضمحلال الصوت لكل نبضة ضحكة
-        let envelope = Math.exp(-t * 15);
-        output[startSample + i] += combined * envelope * 0.4;
-      }
-    });
-
-    let source = audioCtx.createBufferSource();
-    source.buffer = buffer;
-    
-    // إضافة فلتر تشويش عالي لتصبح الضحكة راديوية مرعبة
-    let distortion = audioCtx.createWaveShaper();
-    let k = 400, n_samples = 44100, curve = new Float32Array(n_samples), deg = Math.PI / 180;
-    for (let i = 0; i < n_samples; ++i) {
-      let x = (i * 2) / n_samples - 1;
-      curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+    const laughAudio = document.getElementById('alastor-laugh-audio');
+    if (laughAudio) {
+      laughAudio.currentTime = 0;
+      laughAudio.volume = 1.0;
+      laughAudio.play().catch(e => console.log("Audio play blocked:", e));
     }
-    distortion.curve = curve;
-
-    let gainNode = audioCtx.createGain();
-    gainNode.gain.value = 0.8;
-
-    source.connect(distortion).connect(gainNode).connect(audioCtx.destination);
-    source.start(audioCtx.currentTime);
   }
 
   const mainUI = document.getElementById('main-ui');
@@ -390,13 +354,13 @@
     setTimeout(() => { addLog(); updateProgress(); }, 200);
   }
 
+  // تم تنظيف قائمة اللوغات تماماً وإزالة العبارة المسببة للتداخل
   const logsList = [
     { text: "TUNING INTO THE PENTAGRAM BROADCAST...", type: "red" },
     { text: "ESTABLISHING STATIC INTERFERENCE [FREQ 666Hz] ZZZZZ...", type: "green" },
-    { text: "IF I WANTED TO HURT ANYONE HERE...", type: "red" },
     { text: "BROADCASTING OVER HELL'S AIRWAVES...", type: "green" },
     { text: "PSYCHOTIC SMILE INTENSITY: 100%", type: "red" },
-    { text: "I WOULD HAVE DONE SO ALREADY!", type: "green" }
+    { text: "SIGNAL OVERRIDE COMPLETE.", type: "green" }
   ];
 
   function getTimestamp() {
@@ -449,16 +413,16 @@
       // 1. تشغيل الصفير الممتد
       playLongTeetTone();
 
-      // 2. تفعيل التشويش والضحكة فوراً بعد الصفير (بعد 2.2 ثانية)
+      // 2. بعد انتهاء الصفير، تفعيل التشويش والضحكة فوراً بدون أي تداخل
       setTimeout(() => {
         demonGlitchOverlay.style.display = 'block';
-        playAlastorDemonLaugh(); // تعمل الآن بضمان تام 100%
+        playAlastorDemonLaugh(); // تعمل بوضوح تام الآن
 
-        // 3. الانتقال للظلام التام بعد انتهاء الضحكة (بعد 2.2 ثانية أخرى)
+        // 3. التحول للظلام الدامس بعد انتهاء الضحكة
         setTimeout(() => {
           demonGlitchOverlay.style.display = 'none';
           pureBlackScreen.style.display = 'block';
-        }, 2200);
+        }, 3000);
 
       }, 2200);
 
