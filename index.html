@@ -16,254 +16,169 @@
   }
 
   body, html {
-    margin: 0;
-    padding: 0;
-    background-color: var(--bg-color);
-    color: var(--radio-red);
+    margin: 0; padding: 0;
+    background-color: var(--bg-color); color: var(--radio-red);
     font-family: 'Share Tech Mono', monospace;
-    height: 100vh;
-    overflow: hidden;
-    user-select: none;
+    height: 100vh; overflow: hidden; user-select: none;
   }
 
-  /* شاشة البداية الإجبارية لتفعيل الصوت */
   #start-screen {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: #000;
-    color: var(--alastor-green);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-    z-index: 1000;
-    cursor: pointer;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background-color: #000; color: var(--alastor-green);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 1.5rem; z-index: 1000; cursor: pointer;
     text-shadow: 0 0 15px var(--alastor-green);
     animation: alertPulse 1s infinite;
   }
 
   .crt-overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.7) 50%);
-    background-size: 100% 3px;
-    z-index: 100;
-    pointer-events: none;
-    box-shadow: inset 0 0 140px rgba(0,0,0,0.95);
-    animation: flicker 0.08s infinite;
+    background-size: 100% 3px; z-index: 100; pointer-events: none;
+    box-shadow: inset 0 0 140px rgba(0,0,0,0.95); animation: flicker 0.08s infinite;
   }
 
   @keyframes flicker {
-    0% { opacity: 0.9; }
-    50% { opacity: 1; }
-    100% { opacity: 0.85; }
+    0% { opacity: 0.9; } 50% { opacity: 1; } 100% { opacity: 0.85; }
   }
 
   .main-ui {
-    position: relative;
-    width: 96%;
-    max-width: 600px;
-    height: 96vh;
-    margin: 2vh auto;
-    padding: 20px;
-    box-sizing: border-box;
-    display: none;
-    flex-direction: column;
-    z-index: 10;
+    position: relative; width: 96%; max-width: 600px; height: 96vh;
+    margin: 2vh auto; padding: 20px; box-sizing: border-box;
+    display: none; flex-direction: column; z-index: 10;
   }
 
-  .main-ui::before, .main-ui::after,
-  .ui-corner-tl, .ui-corner-br {
-    border-color: var(--alastor-green);
-    border-style: solid;
-    border-width: 2px;
-    position: absolute;
+  .main-ui::before, .main-ui::after, .ui-corner-tl, .ui-corner-br {
+    border-color: var(--alastor-green); border-style: solid; border-width: 2px; position: absolute;
   }
-
   .main-ui::before { content:''; top: 0; left: 0; width: 100%; height: 100%; border-right: none; border-bottom: none; pointer-events:none;}
   .main-ui::after { content:''; bottom: 0; right: 0; width: 100%; height: 100%; border-left: none; border-top: none; pointer-events:none;}
   .ui-corner-tl { top: 0; right: 0; width: 30px; height: 30px; border-left: none; border-bottom: none; }
   .ui-corner-br { bottom: 0; left: 0; width: 30px; height: 30px; border-right: none; border-top: none; }
 
   .hex-bg {
-    position: absolute;
-    top: 50px; left: 0; width: 100%; height: 80%;
-    font-size: 0.55rem;
-    color: rgba(0, 255, 64, 0.05);
-    word-break: break-all;
-    overflow: hidden;
-    z-index: -1;
-    line-height: 1;
+    position: absolute; top: 50px; left: 0; width: 100%; height: 80%;
+    font-size: 0.55rem; color: rgba(0, 255, 64, 0.05); word-break: break-all;
+    overflow: hidden; z-index: -1; line-height: 1;
   }
 
-  .header-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border-bottom: 1px solid var(--dark-red);
-    padding-bottom: 10px;
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    margin-bottom: 20px;
-  }
+  .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 20px; }
   .header-grid div:nth-child(2) { text-align: right; }
 
-  .alert-box {
-    border: 1px solid var(--alastor-green);
-    background: rgba(0, 255, 64, 0.08);
-    padding: 10px;
-    text-align: center;
-    margin-bottom: 15px;
-  }
-  .alert-title {
-    color: var(--alastor-green);
-    font-size: 1.4rem;
-    font-weight: bold;
-    letter-spacing: 3px;
-    text-shadow: 0 0 10px var(--alastor-green);
-    animation: alertPulse 0.5s infinite;
-  }
+  .alert-box { border: 1px solid var(--alastor-green); background: rgba(0, 255, 64, 0.08); padding: 10px; text-align: center; margin-bottom: 15px; }
+  .alert-title { color: var(--alastor-green); font-size: 1.4rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 10px var(--alastor-green); animation: alertPulse 0.5s infinite; }
+  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 15px var(--alastor-green); } 50% { opacity: 0.4; text-shadow: none; } }
 
-  @keyframes alertPulse {
-    0%, 100% { opacity: 1; text-shadow: 0 0 15px var(--alastor-green); }
-    50% { opacity: 0.4; text-shadow: none; }
-  }
-
-  .hacker-brand {
-    text-align: center;
-    font-size: 1.7rem;
-    color: var(--radio-red);
-    text-shadow: 0 0 15px var(--radio-red), 0 0 30px #000;
-    margin: 20px 0;
-    animation: brandGlitch 1.5s infinite;
-    font-weight: bold;
-    letter-spacing: 2px;
-  }
-
-  @keyframes brandGlitch {
-    0% { transform: skew(0deg); }
-    10% { transform: skew(-15deg); filter: blur(1px); }
-    12% { transform: skew(10deg); filter: none; }
-    100% { transform: skew(0deg); }
-  }
+  .hacker-brand { text-align: center; font-size: 1.7rem; color: var(--radio-red); text-shadow: 0 0 15px var(--radio-red), 0 0 30px #000; margin: 20px 0; animation: brandGlitch 1.5s infinite; font-weight: bold; letter-spacing: 2px; }
+  @keyframes brandGlitch { 0% { transform: skew(0deg); } 10% { transform: skew(-15deg); filter: blur(1px); } 12% { transform: skew(10deg); filter: none; } 100% { transform: skew(0deg); } }
 
   .progress-section { margin-bottom: 20px; }
   .progress-header { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; color: #ccc; }
   .progress-track { width: 100%; height: 12px; border: 1px solid var(--text-dim); background: #000; position: relative; }
   .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 15px var(--radio-red); transition: width 0.1s; }
 
-  .terminal-box {
-    flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(40, 0, 10, 0.3);
-    padding: 10px; overflow: hidden; font-size: 0.75rem; line-height: 1.5;
-  }
+  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(40, 0, 10, 0.3); padding: 10px; overflow: hidden; font-size: 0.75rem; line-height: 1.5; }
   .log-row { display: flex; margin-bottom: 3px; }
   .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
   .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
   .log-msg.red { color: var(--radio-red); }
 
-  .severe-glitch {
-    animation: screenTearChaos 0.12s infinite;
-  }
+  .severe-glitch { animation: screenTearChaos 0.12s infinite; }
+  @keyframes screenTearChaos { 0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg); } 25% { transform: translate(-8px, 4px) skew(5deg); filter: contrast(250%) saturate(200%); } 50% { transform: translate(8px, -4px) skew(-8deg); filter: blur(2px); } 75% { transform: translate(-4px, -6px) skew(3deg); filter: contrast(200%); } 100% { transform: translate(0, 0) skew(0deg); filter: none; } }
 
-  @keyframes screenTearChaos {
-    0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg); }
-    25% { transform: translate(-8px, 4px) skew(5deg); filter: contrast(250%) saturate(200%); }
-    50% { transform: translate(8px, -4px) skew(-8deg); filter: blur(2px); }
-    75% { transform: translate(-4px, -6px) skew(3deg); filter: contrast(200%); }
-    100% { transform: translate(0, 0) skew(0deg); filter: none; }
-  }
-
-  #final-screen {
-    display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: #000; z-index: 200; overflow: hidden;
-    animation: finalScreenFlicker 0.1s infinite;
-  }
-
-  @keyframes finalScreenFlicker {
-    0% { opacity: 1; background-color: #000; transform: translate(0, 0); }
-    20% { opacity: 0.8; background-color: #050001; transform: translate(-2px, 1px); }
-    40% { opacity: 0.95; background-color: #000; transform: translate(3px, -1px); filter: contrast(300%); }
-    60% { opacity: 0.4; background-color: #1a0003; transform: translate(-1px, -2px); }
-    80% { opacity: 0.9; background-color: #000; transform: translate(2px, 2px); }
-    100% { opacity: 1; background-color: #000; transform: translate(0, 0); }
-  }
-
-  #final-screen::before {
-    content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(rgba(255,0,51,0) 0%, rgba(255,0,51,0.2) 50%, rgba(0,255,64,0.1) 51%, rgba(0,0,0,0) 100%);
-    background-size: 100% 8px; pointer-events: none; animation: scanlineMove 0.3s linear infinite;
-  }
+  #final-screen { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #000; z-index: 200; overflow: hidden; animation: finalScreenFlicker 0.1s infinite; }
+  @keyframes finalScreenFlicker { 0% { opacity: 1; background-color: #000; transform: translate(0, 0); } 20% { opacity: 0.8; background-color: #050001; transform: translate(-2px, 1px); } 40% { opacity: 0.95; background-color: #000; transform: translate(3px, -1px); filter: contrast(300%); } 60% { opacity: 0.4; background-color: #1a0003; transform: translate(-1px, -2px); } 80% { opacity: 0.9; background-color: #000; transform: translate(2px, 2px); } 100% { opacity: 1; background-color: #000; transform: translate(0, 0); } }
+  #final-screen::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(255,0,51,0) 0%, rgba(255,0,51,0.2) 50%, rgba(0,255,64,0.1) 51%, rgba(0,0,0,0) 100%); background-size: 100% 8px; pointer-events: none; animation: scanlineMove 0.3s linear infinite; }
   @keyframes scanlineMove { 0% { background-position: 0 0; } 100% { background-position: 0 30px; } }
 </style>
 </head>
 <body>
 
-<!-- شاشة النقر الأولى (لإجبار المتصفح على تفعيل الصوت) -->
 <div id="start-screen">[ اضغط للاتصال بتردد الراديو ]</div>
 
 <div class="crt-overlay"></div>
 
-<!-- 1. صوت الزنين المستمر في الخلفية -->
-<audio id="audio-bg-static" loop>
-  <source src="https://www.myinstants.com/media/sounds/radio-static.mp3" type="audio/mpeg">
-</audio>
-
-<!-- 2. صوت الجليتش والتقطعات -->
-<audio id="audio-glitch">
-  <source src="https://www.myinstants.com/media/sounds/tv-static-05.mp3" type="audio/mpeg">
-</audio>
-
-<!-- 3. صوت الصفير Teeeeet -->
-<audio id="audio-beep" loop>
-  <source src="https://www.myinstants.com/media/sounds/censor-beep-1.mp3" type="audio/mpeg">
-</audio>
-
-<!-- 4. الجملة المرعبة لألاستور (الملف الذي رفعته أنت) -->
+<!-- ملف صوت ألاستور فقط (بالاسم الأصلي الذي أرسلته) -->
 <audio id="audio-alastor-quote">
-  <source src="alastor-audio.mp3" type="audio/mpeg">
+  <source src="alastor-if-i-had-to-hurt-anyone-here.mp3" type="audio/mpeg">
 </audio>
 
 <div class="main-ui" id="main-ui">
   <div class="ui-corner-tl"></div>
   <div class="ui-corner-br"></div>
   <div class="hex-bg" id="hex-bg"></div>
-
   <div class="header-grid">
     <div>STATION: 666.9 MHz - HAZBIN</div>
     <div>STATUS: RADIO_WAVE_ACTIVE</div>
   </div>
-
-  <div class="alert-box">
-    <div class="alert-title">HAZBIN FREQUENCY HIJACKED</div>
-  </div>
-
+  <div class="alert-box"><div class="alert-title">HAZBIN FREQUENCY HIJACKED</div></div>
   <div class="hacker-brand">ALASTOR THE RADIO DEMON</div>
-
   <div class="progress-section">
-    <div class="progress-header">
-      <span id="target-ip">SOUL_FREQ: 192.666.##.##</span>
-      <span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill" id="progress-bar"></div>
-    </div>
+    <div class="progress-header"><span id="target-ip">SOUL_FREQ: 192.666.##.##</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
+    <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
   </div>
-
   <div class="terminal-box" id="terminal"></div>
 </div>
 
 <div id="final-screen"></div>
 
 <script>
+  // -- نظام توليد الأصوات برمجياً (Web Audio API) لضمان عملها بسلاسة --
+  let audioCtx, staticGainNode;
+
+  function initAudio() {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  function startBackgroundStatic() {
+    let bufferSize = audioCtx.sampleRate * 2;
+    let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    let data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    let noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+    let filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass'; filter.frequency.value = 2500;
+    staticGainNode = audioCtx.createGain();
+    staticGainNode.gain.value = 0.08;
+    noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
+    noise.start();
+  }
+
+  function playGlitchSound() {
+    if (!audioCtx) return;
+    let bufferSize = audioCtx.sampleRate * 0.15;
+    let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    let data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    let noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    let gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+    noise.connect(gain).connect(audioCtx.destination);
+    noise.start();
+  }
+
+  function startSmoothBeep() {
+    if (staticGainNode) staticGainNode.gain.value = 0; // إيقاف التشويش الخلفي
+    let osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 800; // تردد الصفير (Teeeeeet)
+    let gain = audioCtx.createGain();
+    gain.gain.value = 0.15;
+    osc.connect(gain).connect(audioCtx.destination);
+    osc.start(); // هذا سيستمر بنعومة مطلقة بلا تقطيع
+  }
+  // -------------------------------------------------------------
+
   const startScreen = document.getElementById('start-screen');
   const mainUI = document.getElementById('main-ui');
   const terminal = document.getElementById('terminal');
   const progressBar = document.getElementById('progress-bar');
   const pctText = document.getElementById('pct-text');
-  
-  const audioBgStatic = document.getElementById('audio-bg-static');
-  const audioGlitch = document.getElementById('audio-glitch');
-  const audioBeep = document.getElementById('audio-beep');
   const audioAlastorQuote = document.getElementById('audio-alastor-quote');
 
   let progress = 0;
@@ -273,12 +188,12 @@
     if (sequenceStarted) return;
     sequenceStarted = true;
     
+    initAudio();
+    startBackgroundStatic(); // تشغيل التشويش المستمر
+
     startScreen.style.display = 'none';
     mainUI.style.display = 'flex';
     
-    audioBgStatic.volume = 0.4;
-    audioBgStatic.play();
-
     setTimeout(() => {
       addLog();
       updateProgress();
@@ -304,7 +219,6 @@
 
     const row = document.createElement('div');
     row.className = 'log-row';
-    
     const timeSpan = document.createElement('span');
     timeSpan.className = 'log-time';
     timeSpan.innerText = getTimestamp();
@@ -325,11 +239,10 @@
     terminal.appendChild(row);
     terminal.scrollTop = terminal.scrollHeight;
 
+    // تفعيل الجليتش البصري والصوتي
     if (Math.random() > 0.7) {
       mainUI.classList.add('severe-glitch');
-      audioGlitch.currentTime = 0; 
-      audioGlitch.volume = 0.5;
-      audioGlitch.play().catch(e=>{});
+      playGlitchSound(); // تشغيل الجليتش برمجياً
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 200);
     }
 
@@ -354,16 +267,13 @@
     mainUI.style.display = 'none';
     document.getElementById('final-screen').style.display = 'block';
     
-    audioBgStatic.pause();
-    
-    // تشغيل صفير التوقف (Teeeeeeet)
-    audioBeep.volume = 0.5;
-    audioBeep.play();
+    // تشغيل الصفير المستمر والناعم (Teeet)
+    startSmoothBeep();
 
-    // تشغيل الجملة المرعبة لألاستور (ملفك الصوتي) بعد 0.5 ثانية
+    // تشغيل ملف صوت ألاستور بعد نصف ثانية
     setTimeout(() => {
       audioAlastorQuote.volume = 1.0;
-      audioAlastorQuote.play().catch(e => console.log("تأكد من وضع ملف alastor-audio.mp3 في نفس المجلد"));
+      audioAlastorQuote.play().catch(e => console.log("تأكد من وجود الملف الصوتي"));
     }, 500);
   }
 </script>
