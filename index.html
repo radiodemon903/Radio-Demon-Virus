@@ -85,23 +85,32 @@
     100% { transform: translate(0, 0) skew(0deg); filter: none; } 
   }
 
-  /* انطفاء الشاشة مع بقايا وميض ونقاط حمراء مرعبة (Horror Afterglow) */
+  /* انطفاء الشاشة مع بقايا نقاط حمراء مرعبة ومتقطعة (Horror Red Dots Afterglow) */
   .crt-shut-off {
-    animation: turn-off 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    animation: turn-off 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
   @keyframes turn-off {
     0% { transform: scale(1, 1); filter: brightness(1) contrast(1); }
-    40% { transform: scale(1.1, 0.01); filter: brightness(20) contrast(400%); background-color: #ff0033; }
-    70% { transform: scale(0.01, 0.003); filter: brightness(30); background-color: #ff0033; box-shadow: 0 0 50px #ff0033; }
+    40% { transform: scale(1.1, 0.01); filter: brightness(25) contrast(400%); background-color: #ff0033; }
+    70% { transform: scale(0.01, 0.003); filter: brightness(30); background-color: #ff0033; box-shadow: 0 0 60px #ff0033; }
     100% { 
       transform: scale(0, 0); 
       filter: brightness(0); 
       opacity: 1; 
-      background-color: #050000; 
-      /* بقايا النقاط والوهج الأحمر المرعب في الظلام */
-      background-image: radial-gradient(circle, rgba(255,0,51,0.25) 10%, transparent 10%);
-      background-size: 6px 6px;
+      background-color: #030000; 
+      /* شبكة مرعبة من النقاط الحمراء المتقطعة التي تبقى تومض في الظلام */
+      background-image: 
+        radial-gradient(circle, rgba(255,0,51,0.8) 2px, transparent 2px),
+        radial-gradient(circle, rgba(150,0,20,0.5) 1px, transparent 1px);
+      background-size: 14px 14px, 7px 7px;
+      background-position: 0 0, 4px 4px;
+      animation: redDotsFlicker 0.2s infinite alternate;
     }
+  }
+
+  @keyframes redDotsFlicker {
+    0% { opacity: 0.85; filter: drop-shadow(0 0 3px #ff0033); }
+    100% { opacity: 0.4; filter: none; }
   }
 </style>
 </head>
@@ -153,68 +162,44 @@
     noise.buffer = buffer;
     noise.loop = true;
     let filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 1500; filter.Q.value = 1;
+    filter.type = 'bandpass'; filter.frequency.value = 1800; filter.Q.value = 1.2;
     staticGainNode = audioCtx.createGain();
-    staticGainNode.gain.value = 0.03;
+    staticGainNode.gain.value = 0.04;
     noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
     noise.start();
   }
 
-  // صوت Glitch عالي، صاخب ومزعج جداً مطابق للملف الصوتي تماماً
-  function playLoudDistortedGlitch() {
+  // صوت Glitch مطابق 100% للصوت الحاد والصاخب الذي أرسلته (يقفز بين الترددات بسرعة جنونية)
+  function playExactLoudGlitch() {
     if (!audioCtx) return;
 
     let now = audioCtx.currentTime;
-    
-    // استخدام مذبذبين بموجات مربعة ومنشرة لإحداث صخب قوي
-    let osc1 = audioCtx.createOscillator();
-    let osc2 = audioCtx.createOscillator();
-    let distortion = audioCtx.createWaveShaper();
+    let osc = audioCtx.createOscillator();
     let gainNode = audioCtx.createGain();
 
-    osc1.type = 'square';
-    osc2.type = 'sawtooth';
+    // موجة مربعة حادة جداً لتعطي طابع الألعاب القديمة والأخطاء الرقمية الصاخبة
+    osc.type = 'square';
 
-    // ترددات صاخبة جداً ومزعجة تتقاطع بسرعة هائلة
-    osc1.frequency.setValueAtTime(2000, now);
-    osc1.frequency.setValueAtTime(500, now + 0.03);
-    osc1.frequency.setValueAtTime(3500, now + 0.06);
-    osc1.frequency.setValueAtTime(1200, now + 0.09);
-    osc1.frequency.setValueAtTime(4000, now + 0.12);
+    // الترددات المتسلسلة تماماً كالصوت المطلوب
+    osc.frequency.setValueAtTime(1400, now);
+    osc.frequency.setValueAtTime(2800, now + 0.02);
+    osc.frequency.setValueAtTime(900, now + 0.04);
+    osc.frequency.setValueAtTime(3200, now + 0.06);
+    osc.frequency.setValueAtTime(1800, now + 0.08);
+    osc.frequency.setValueAtTime(4000, now + 0.10);
+    osc.frequency.setValueAtTime(2200, now + 0.12);
 
-    osc2.frequency.setValueAtTime(800, now);
-    osc2.frequency.setValueAtTime(2500, now + 0.04);
-    osc2.frequency.setValueAtTime(300, now + 0.08);
+    // رفع مستوى الصوت ليكون عالياً ومزعجاً وصاخباً
+    gainNode.gain.setValueAtTime(0.35, now);
+    gainNode.gain.setValueAtTime(0.05, now + 0.03);
+    gainNode.gain.setValueAtTime(0.3, now + 0.07);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
 
-    // إضافة تشويش عالي المستوى لجعل الصوت حاداً وصاخباً
-    function makeDistortionCurve(amount) {
-      let k = typeof amount === 'number' ? amount : 50,
-        n_samples = 44100,
-        curve = new Float32Array(n_samples),
-        deg = Math.PI / 180;
-      for (let i = 0; i < n_samples; ++i) {
-        let x = (i * 2) / n_samples - 1;
-        curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
-      }
-      return curve;
-    }
-    distortion.curve = makeDistortionCurve(100);
-
-    // رفع مستوى الصوت ليكون صاخباً وقوياً
-    gainNode.gain.setValueAtTime(0.4, now);
-    gainNode.gain.setValueAtTime(0.05, now + 0.04);
-    gainNode.gain.setValueAtTime(0.35, now + 0.08);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
-
-    osc1.connect(distortion);
-    osc2.connect(distortion);
-    distortion.connect(gainNode);
+    osc.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
-    osc1.start(now);
-    osc2.start(now);
-    osc1.stop(now + 0.18);
-    osc2.stop(now + 0.18);
+    osc.start(now);
+    osc.stop(now + 0.16);
   }
 
   function startSmoothBeep() {
@@ -238,7 +223,7 @@
   let progress = 0;
   let sequenceStarted = false;
 
-  // بدء التشغيل تلقائياً فور فتح الصفحة
+  // بدء التشغيل فوراً من اللحظة الأولى وبدون أي أزرار
   window.addEventListener('DOMContentLoaded', () => {
     if (sequenceStarted) return;
     sequenceStarted = true;
@@ -246,13 +231,18 @@
     initAudio();
     startBackgroundStatic();
 
+    // تشغيل الجليتش الصاخب منذ الثانية الأولى مع أول ظهور للكود
+    playExactLoudGlitch();
+    mainUI.classList.add('severe-glitch');
+    setTimeout(() => mainUI.classList.remove('severe-glitch'), 200);
+
     setTimeout(() => {
       addLog();
       updateProgress();
-    }, 400);
+    }, 200);
   });
 
-  // السماح بتشغيل الصوت إذا تفاعل المستخدم بأي ضغطة كاحتياط لسياسة المتصفحات
+  // تفاعل احتياطي لمتطلبات المتصفحات الحديثة للصوت
   window.addEventListener('click', () => {
     initAudio();
   }, { once: true });
@@ -296,37 +286,37 @@
     terminal.appendChild(row);
     terminal.scrollTop = terminal.scrollHeight;
 
-    // تفعيل الجليتش الصاخب والمرعب مع الحركة البصرية
-    if (Math.random() > 0.55) {
+    // تفعيل الجليتش الصاخب طوال فترة التحميل
+    if (Math.random() > 0.5) {
       mainUI.classList.add('severe-glitch');
-      playLoudDistortedGlitch(); 
+      playExactLoudGlitch(); 
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
     }
 
-    setTimeout(addLog, Math.random() * 150 + 50);
+    setTimeout(addLog, Math.random() * 120 + 40);
   }
 
   function updateProgress() {
     if (progress < 100) {
-      progress += Math.random() * 0.9; 
+      progress += Math.random() * 1.1; 
       if (progress > 100) progress = 100;
       
       progressBar.style.width = `${progress}%`;
       pctText.innerText = `${progress.toFixed(2)}%`;
 
-      setTimeout(updateProgress, Math.random() * 100 + 30);
+      setTimeout(updateProgress, Math.random() * 80 + 20);
     } else {
       triggerEndSequence();
     }
   }
 
   function triggerEndSequence() {
-    // 1. ذروة الصخب والجليتش الأخير
+    // 1. ذروة الصخب والجليتش الأخير المرعب
     mainUI.classList.add('severe-glitch');
-    playLoudDistortedGlitch();
+    playExactLoudGlitch();
     
     setTimeout(() => {
-      // 2. إغلاق الشاشة مع بقايا الوهج والنقاط الحمراء المرعبة
+      // 2. إغلاق الشاشة مع بقايا النقاط الحمراء المرعبة التي تومض
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
       
@@ -336,7 +326,7 @@
       // 4. تشغيل صوت ألاستور في الخلفية المرعبة
       setTimeout(() => {
         audioAlastorQuote.volume = 1.0;
-        audioAlastorQuote.play().catch(e => console.log("الصوت يتطلب تفاعل أو تحقق من مسار الملف"));
+        audioAlastorQuote.play().catch(e => console.log("الصوت يتطلب مسار الملف الصحيح"));
       }, 700);
       
     }, 450); 
