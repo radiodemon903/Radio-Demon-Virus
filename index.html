@@ -76,41 +76,41 @@
   .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
   .log-msg.red { color: var(--radio-red); }
 
-  .severe-glitch { animation: screenTearChaos 0.08s infinite; }
+  .severe-glitch { animation: screenTearChaos 0.06s infinite; }
   @keyframes screenTearChaos { 
-    0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg) contrast(200%); } 
-    25% { transform: translate(-15px, 8px) skew(20deg); filter: contrast(400%) invert(15%); } 
-    50% { transform: translate(12px, -10px) skew(-25deg); filter: blur(2px) saturate(400%); } 
-    75% { transform: translate(-8px, -5px) skew(12deg); filter: contrast(500%); } 
+    0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg) contrast(250%); } 
+    25% { transform: translate(-18px, 10px) skew(25deg); filter: contrast(500%) invert(20%); } 
+    50% { transform: translate(15px, -12px) skew(-30deg); filter: blur(3px) saturate(500%); } 
+    75% { transform: translate(-10px, -6px) skew(15deg); filter: contrast(600%); } 
     100% { transform: translate(0, 0) skew(0deg); filter: none; } 
   }
 
-  /* انطفاء الشاشة مع بقايا نقاط حمراء مرعبة ومتقطعة (Horror Red Dots Afterglow) */
+  /* النهاية المرعبة: شاشة مليئة بالنقاط والخطوط الحمراء المتقطعة التي تومض بعنف في الظلام */
   .crt-shut-off {
-    animation: turn-off 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    animation: turn-off 0.7s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
   @keyframes turn-off {
     0% { transform: scale(1, 1); filter: brightness(1) contrast(1); }
-    40% { transform: scale(1.1, 0.01); filter: brightness(25) contrast(400%); background-color: #ff0033; }
-    70% { transform: scale(0.01, 0.003); filter: brightness(30); background-color: #ff0033; box-shadow: 0 0 60px #ff0033; }
+    40% { transform: scale(1.1, 0.01); filter: brightness(30) contrast(500%); background-color: #ff0033; }
+    70% { transform: scale(0.01, 0.003); filter: brightness(40); background-color: #ff0033; box-shadow: 0 0 80px #ff0033; }
     100% { 
       transform: scale(0, 0); 
       filter: brightness(0); 
       opacity: 1; 
-      background-color: #030000; 
-      /* شبكة مرعبة من النقاط الحمراء المتقطعة التي تبقى تومض في الظلام */
+      background-color: #050000 !important;
+      /* شبكة كثيفة ومرعبة من النقاط والخطوط الحمراء البارزة التي تومض بلا هوادة */
       background-image: 
-        radial-gradient(circle, rgba(255,0,51,0.8) 2px, transparent 2px),
-        radial-gradient(circle, rgba(150,0,20,0.5) 1px, transparent 1px);
-      background-size: 14px 14px, 7px 7px;
-      background-position: 0 0, 4px 4px;
-      animation: redDotsFlicker 0.2s infinite alternate;
+        radial-gradient(circle, #ff0033 35%, transparent 35%),
+        linear-gradient(rgba(255, 0, 51, 0.4) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 51, 0.3) 1px, transparent 1px);
+      background-size: 10px 10px, 20px 20px, 20px 20px;
+      animation: horrorBlink 0.12s infinite alternate;
     }
   }
 
-  @keyframes redDotsFlicker {
-    0% { opacity: 0.85; filter: drop-shadow(0 0 3px #ff0033); }
-    100% { opacity: 0.4; filter: none; }
+  @keyframes horrorBlink {
+    0% { opacity: 0.95; filter: drop-shadow(0 0 8px #ff0033) contrast(300%); }
+    100% { opacity: 0.45; filter: drop-shadow(0 0 2px #500) contrast(150%); }
   }
 </style>
 </head>
@@ -162,55 +162,86 @@
     noise.buffer = buffer;
     noise.loop = true;
     let filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 1800; filter.Q.value = 1.2;
+    filter.type = 'bandpass'; filter.frequency.value = 2200; filter.Q.value = 2.5;
     staticGainNode = audioCtx.createGain();
-    staticGainNode.gain.value = 0.04;
+    staticGainNode.gain.value = 0.05;
     noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
     noise.start();
   }
 
-  // صوت Glitch مطابق 100% للصوت الحاد والصاخب الذي أرسلته (يقفز بين الترددات بسرعة جنونية)
-  function playExactLoudGlitch() {
+  // صوت Glitch مرعب، حاد، عالي جداً وغير مريح (يجعل السماعات تئن من شدة التشويش المربع والمشوه)
+  function playHarshHorrorGlitch() {
     if (!audioCtx) return;
 
     let now = audioCtx.currentTime;
-    let osc = audioCtx.createOscillator();
+    let osc1 = audioCtx.createOscillator();
+    let osc2 = audioCtx.createOscillator();
+    let distortion = audioCtx.createWaveShaper();
     let gainNode = audioCtx.createGain();
 
-    // موجة مربعة حادة جداً لتعطي طابع الألعاب القديمة والأخطاء الرقمية الصاخبة
-    osc.type = 'square';
+    // موجات مربعة ومنشورة تضغط مكبر الصوت وتجعله يئن بقسوة
+    osc1.type = 'square';
+    osc2.type = 'sawtooth';
 
-    // الترددات المتسلسلة تماماً كالصوت المطلوب
-    osc.frequency.setValueAtTime(1400, now);
-    osc.frequency.setValueAtTime(2800, now + 0.02);
-    osc.frequency.setValueAtTime(900, now + 0.04);
-    osc.frequency.setValueAtTime(3200, now + 0.06);
-    osc.frequency.setValueAtTime(1800, now + 0.08);
-    osc.frequency.setValueAtTime(4000, now + 0.10);
-    osc.frequency.setValueAtTime(2200, now + 0.12);
+    // قفزات ترددات جنونية وصاخبة للغاية ومزعجة للأذن
+    osc1.frequency.setValueAtTime(1800, now);
+    osc1.frequency.setValueAtTime(3500, now + 0.015);
+    osc1.frequency.setValueAtTime(800, now + 0.03);
+    osc1.frequency.setValueAtTime(4500, now + 0.045);
+    osc1.frequency.setValueAtTime(2200, now + 0.06);
+    osc1.frequency.setValueAtTime(5000, now + 0.075);
 
-    // رفع مستوى الصوت ليكون عالياً ومزعجاً وصاخباً
-    gainNode.gain.setValueAtTime(0.35, now);
-    gainNode.gain.setValueAtTime(0.05, now + 0.03);
-    gainNode.gain.setValueAtTime(0.3, now + 0.07);
-    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.16);
+    osc2.frequency.setValueAtTime(950, now);
+    osc2.frequency.setValueAtTime(3200, now + 0.025);
+    osc2.frequency.setValueAtTime(400, now + 0.05);
 
-    osc.connect(gainNode);
+    // تضخيم التشويش (Distortion) لرفع حدة الإزعاج وصخب السماعات
+    function makeDistortionCurve(amount) {
+      let k = amount,
+        n_samples = 44100,
+        curve = new Float32Array(n_samples),
+        deg = Math.PI / 180;
+      for (let i = 0; i < n_samples; ++i) {
+        let x = (i * 2) / n_samples - 1;
+        curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+      }
+      return curve;
+    }
+    distortion.curve = makeDistortionCurve(400); // تضخيم قاسي جداً ليئن منه الهاتف
+
+    // رفع مستوى الصوت ليكون عالياً ومزعجاً للغاية
+    gainNode.gain.setValueAtTime(0.55, now);
+    gainNode.gain.setValueAtTime(0.1, now + 0.03);
+    gainNode.gain.setValueAtTime(0.45, now + 0.06);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+
+    osc1.connect(distortion);
+    osc2.connect(distortion);
+    distortion.connect(gainNode);
     gainNode.connect(audioCtx.destination);
 
-    osc.start(now);
-    osc.stop(now + 0.16);
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 0.15);
+    osc2.stop(now + 0.15);
   }
 
-  function startSmoothBeep() {
+  // صوت صفير مرعب وحاد وممتد (Teeeeeeeeeet) يتداخل مع أنين السماعة
+  function startHorrorScreech() {
     if (staticGainNode) staticGainNode.gain.value = 0; 
     let osc = audioCtx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.value = 900; 
     let gain = audioCtx.createGain();
-    gain.gain.value = 0.12;
+    
+    osc.type = 'sawtooth'; // صفير حاد وغير مريح للأذن
+    osc.frequency.setValueAtTime(2400, audioCtx.currentTime);
+    osc.frequency.linearRampToValueAtTime(1800, audioCtx.currentTime + 3.0); // تذبذب مرعب في التردد
+
+    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.5);
+
     osc.connect(gain).connect(audioCtx.destination);
-    osc.start(); 
+    osc.start();
+    osc.stop(audioCtx.currentTime + 3.5);
   }
 
   const mainUI = document.getElementById('main-ui');
@@ -223,7 +254,7 @@
   let progress = 0;
   let sequenceStarted = false;
 
-  // بدء التشغيل فوراً من اللحظة الأولى وبدون أي أزرار
+  // بدء التشغيل الفوري والعد التنازلي مع أول ثانية
   window.addEventListener('DOMContentLoaded', () => {
     if (sequenceStarted) return;
     sequenceStarted = true;
@@ -231,8 +262,8 @@
     initAudio();
     startBackgroundStatic();
 
-    // تشغيل الجليتش الصاخب منذ الثانية الأولى مع أول ظهور للكود
-    playExactLoudGlitch();
+    // جليتش مرعب فوري مع بداية الصفحة
+    playHarshHorrorGlitch();
     mainUI.classList.add('severe-glitch');
     setTimeout(() => mainUI.classList.remove('severe-glitch'), 200);
 
@@ -242,7 +273,6 @@
     }, 200);
   });
 
-  // تفاعل احتياطي لمتطلبات المتصفحات الحديثة للصوت
   window.addEventListener('click', () => {
     initAudio();
   }, { once: true });
@@ -278,7 +308,7 @@
     } else {
       msgSpan.className = 'log-msg';
       msgSpan.style.color = '#ff4444';
-      msgSpan.innerText = `[LOUD_GLITCH_BURST] // SYSTEM_PANIC_666`;
+      msgSpan.innerText = `[HARSH_GLITCH_PANIC] // SYSTEM_ERROR_666`;
     }
 
     row.appendChild(timeSpan);
@@ -286,44 +316,44 @@
     terminal.appendChild(row);
     terminal.scrollTop = terminal.scrollHeight;
 
-    // تفعيل الجليتش الصاخب طوال فترة التحميل
-    if (Math.random() > 0.5) {
+    // تكرار الجليتش الحاد والصاخب بشكل عشوائي ومزعج طوال فترة التحميل
+    if (Math.random() > 0.45) {
       mainUI.classList.add('severe-glitch');
-      playExactLoudGlitch(); 
+      playHarshHorrorGlitch(); 
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
     }
 
-    setTimeout(addLog, Math.random() * 120 + 40);
+    setTimeout(addLog, Math.random() * 100 + 30);
   }
 
   function updateProgress() {
     if (progress < 100) {
-      progress += Math.random() * 1.1; 
+      progress += Math.random() * 1.3; 
       if (progress > 100) progress = 100;
       
       progressBar.style.width = `${progress}%`;
       pctText.innerText = `${progress.toFixed(2)}%`;
 
-      setTimeout(updateProgress, Math.random() * 80 + 20);
+      setTimeout(updateProgress, Math.random() * 70 + 20);
     } else {
       triggerEndSequence();
     }
   }
 
   function triggerEndSequence() {
-    // 1. ذروة الصخب والجليتش الأخير المرعب
+    // 1. ذروة الجليتش المرعب والصاخب
     mainUI.classList.add('severe-glitch');
-    playExactLoudGlitch();
+    playHarshHorrorGlitch();
     
     setTimeout(() => {
-      // 2. إغلاق الشاشة مع بقايا النقاط الحمراء المرعبة التي تومض
+      // 2. تفعيل الشاشة النهائية المرعبة مع شبكة النقاط والخطوط الحمراء المتقطعة
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
       
-      // 3. تشغيل الصفير المستمر 
-      startSmoothBeep();
+      // 3. تشغيل صوت الصفير المرعب الحاد (Teeeeeeeet)
+      startHorrorScreech();
 
-      // 4. تشغيل صوت ألاستور في الخلفية المرعبة
+      // 4. تشغيل صوت ألاستور في خلفية النقاط الحمراء المرعبة
       setTimeout(() => {
         audioAlastorQuote.volume = 1.0;
         audioAlastorQuote.play().catch(e => console.log("الصوت يتطلب مسار الملف الصحيح"));
