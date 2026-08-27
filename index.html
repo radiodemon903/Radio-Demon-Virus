@@ -12,6 +12,7 @@
     --radio-red: #ff0011;
     --dark-red: #3a0005;
     --alastor-green: #33ff00;
+    --text-dim: #882222;
   }
 
   body, html {
@@ -25,7 +26,7 @@
     background: radial-gradient(circle, #1a0000 0%, #000000 100%);
     z-index: 9999; display: flex; justify-content: center; align-items: center;
     padding: 15px; box-sizing: border-box;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease, visibility 0.2s;
   }
 
   .splash-card {
@@ -43,7 +44,11 @@
   .splash-brand-title {
     text-align: center; font-family: 'Creepster', cursive; font-size: 3rem; color: var(--radio-red); 
     letter-spacing: 5px; text-shadow: 0 0 20px var(--radio-red), 4px 4px 0px #000, -2px -2px 0px var(--alastor-green); 
-    margin-bottom: 5px;
+    margin-bottom: 5px; animation: textJitter 0.1s infinite;
+  }
+
+  @keyframes textJitter {
+    0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(1px, -1px); }
   }
 
   .splash-action-btn {
@@ -61,9 +66,10 @@
   #screen-container {
     width: 100vw; height: 100vh; background-color: var(--bg-color);
     position: relative; overflow: hidden; transform-origin: center center;
-    display: none; opacity: 0; transition: opacity 0.2s ease;
+    display: none; opacity: 0; transition: opacity 0.1s ease;
   }
 
+  /* خطوط راديو قوية */
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: 
@@ -72,6 +78,11 @@
     background-size: 100% 6px, 100% 100%;
     z-index: 100; pointer-events: none;
     box-shadow: inset 0 0 200px rgba(0,0,0,1); 
+    animation: digitalNoiseFlicker 0.05s infinite;
+  }
+
+  @keyframes digitalNoiseFlicker {
+    0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.8; }
   }
 
   .main-ui {
@@ -79,6 +90,7 @@
     margin: 2vh auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; z-index: 10;
   }
 
+  /* عبارة NO SIGNAL بأسلوب ألاستور المرعب (Voodoo/Radio Glitch) */
   .alastor-no-signal {
     position: relative;
     text-align: center;
@@ -90,6 +102,46 @@
     margin: 20px 0;
     line-height: 1;
     text-shadow: 0 0 30px var(--radio-red), 5px 5px 0px #000, -3px -3px 0px var(--alastor-green);
+    animation: mainSignalShake 0.1s infinite;
+  }
+
+  .alastor-no-signal::before, .alastor-no-signal::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--bg-color);
+    overflow: hidden;
+  }
+
+  .alastor-no-signal::before {
+    left: 4px;
+    text-shadow: -2px 0 var(--alastor-green);
+    animation: glitchTear 2s infinite linear alternate-reverse;
+    z-index: -1;
+  }
+
+  .alastor-no-signal::after {
+    left: -4px;
+    text-shadow: -2px 0 #fff;
+    animation: glitchTear 3s infinite linear alternate-reverse;
+    z-index: -2;
+  }
+
+  @keyframes mainSignalShake {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-3px, 2px) scale(1.02); }
+    50% { transform: translate(3px, -2px) scale(0.98); }
+    75% { transform: translate(-2px, -3px) scale(1.05); }
+  }
+
+  @keyframes glitchTear {
+    0% { clip-path: inset(10% 0 80% 0); transform: translate(-5px, 0); }
+    20% { clip-path: inset(80% 0 10% 0); transform: translate(5px, 0); }
+    40% { clip-path: inset(40% 0 40% 0); transform: translate(-5px, 0); }
+    60% { clip-path: inset(20% 0 60% 0); transform: translate(5px, 0); }
+    80% { clip-path: inset(60% 0 20% 0); transform: translate(-5px, 0); }
+    100% { clip-path: inset(30% 0 50% 0); transform: translate(5px, 0); }
   }
 
   .voodoo-symbols {
@@ -97,13 +149,14 @@
     letter-spacing: 15px; text-shadow: 0 0 10px var(--alastor-green);
   }
 
+  /* باقي الواجهة */
   .terminal-box { flex-grow: 1; border: 1px solid var(--radio-red); background: rgba(20, 0, 0, 0.7); padding: 10px; overflow: hidden; font-size: 0.8rem; line-height: 1.5; font-weight: bold; box-shadow: inset 0 0 20px rgba(255,0,17,0.2); }
   .log-row { display: flex; margin-bottom: 5px; }
   .log-time { color: var(--alastor-green); margin-right: 10px; width: 80px; text-shadow: 0 0 5px var(--alastor-green); }
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
   .log-msg.red { color: var(--radio-red); text-shadow: 0 0 10px var(--radio-red); font-size: 1rem; }
 
-  /* جليتشات عنيفة للشاشة بالكامل */
+  /* جليتشات عنيفة جداً تحاكي غضب ألاستور والفيديو */
   .severe-glitch { animation: alastorRage 0.08s infinite !important; }
   @keyframes alastorRage { 
     0% { transform: translate(0, 0) scale(1); filter: none; } 
@@ -121,6 +174,7 @@
     100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #000 !important; }
   }
 
+  /* التشويش الأحمر العنيف وقت الضحكة */
   #demon-glitch-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background: repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(255,0,17,0.9) 5px, rgba(0,0,0,0.9) 10px);
@@ -157,7 +211,7 @@
   <div class="crt-overlay"></div>
   
   <div class="main-ui" id="main-ui">
-    <div class="alastor-no-signal">NO SIGNAL</div>
+    <div class="alastor-no-signal" data-text="NO SIGNAL">NO SIGNAL</div>
     <div class="voodoo-symbols" style="text-align: center;">⸸ ⍟ ☠ ⸸</div>
 
     <div style="margin: 20px 0; border-top: 2px dashed var(--radio-red);"></div>
@@ -170,21 +224,14 @@
 <div id="pure-black-screen"></div>
 
 <script>
-  let audioCtx = null;
-  let staticGainNode = null;
+  let audioCtx, staticGainNode;
   let sequenceStarted = false;
 
   function initAudio() {
     try {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    } catch(e) {
-      console.log("Audio Context Skipped:", e);
-    }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    } catch(e) { console.log("Audio Error:", e); }
   }
 
   function startBackgroundStatic() {
@@ -198,7 +245,7 @@
       noise.buffer = buffer; noise.loop = true;
       
       let filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass'; filter.frequency.value = 800;
+      filter.type = 'bandpass'; filter.frequency.value = 800; // صوت راديو أعمق
       
       staticGainNode = audioCtx.createGain();
       staticGainNode.gain.value = 0.15;
@@ -208,14 +255,17 @@
     } catch(e) {}
   }
 
+  /* الصوت المطور: صراخ راديو متقطع وشيطاني (Demonic Stutter Screech) */
   function playDemonicRadioScreech() {
     if (!audioCtx) return;
     try {
       let now = audioCtx.currentTime;
-      let osc1 = audioCtx.createOscillator();
-      let osc2 = audioCtx.createOscillator();
-      let lfo = audioCtx.createOscillator();
+      
+      let osc1 = audioCtx.createOscillator(); // الصراخ الحاد
+      let osc2 = audioCtx.createOscillator(); // Sub-bass العميق جداً
+      let lfo = audioCtx.createOscillator();  // للتقطيع السريع (Stutter)
       let lfoGain = audioCtx.createGain();
+      
       let distortion = audioCtx.createWaveShaper();
       let mainGain = audioCtx.createGain();
 
@@ -223,15 +273,19 @@
       osc2.type = 'sine';
       lfo.type = 'square';
 
+      // ترددات مخيفة: صراخ ينزل فجأة
       osc1.frequency.setValueAtTime(4000, now);
       osc1.frequency.exponentialRampToValueAtTime(300, now + 0.2);
 
+      // Sub-bass يهز السماعة
       osc2.frequency.setValueAtTime(60, now);
       osc2.frequency.linearRampToValueAtTime(20, now + 0.2);
 
-      lfo.frequency.value = 25;
+      // سرعة التقطيع (Stutter effect)
+      lfo.frequency.value = 25; // 25 مرة في الثانية
 
-      let k = 4000;
+      // منحنى التشويه الشيطاني العنيف
+      let k = 4000; // تشويه أقصى
       let curve = new Float32Array(44100);
       let deg = Math.PI / 180;
       for (let i = 0; i < 44100; ++i) {
@@ -240,7 +294,9 @@
       }
       distortion.curve = curve;
 
+      // توصيل الـ LFO للتحكم في مستوى الصوت (التقطيع)
       lfo.connect(lfoGain.gain);
+      
       mainGain.gain.setValueAtTime(1.0, now);
       mainGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
 
@@ -282,9 +338,8 @@
   function playAlastorDemonLaugh() {
     const laughAudio = document.getElementById('alastor-laugh-audio');
     if (laughAudio) {
-      laughAudio.currentTime = 0; 
-      laughAudio.volume = 1.0;
-      laughAudio.play().catch(e => console.log("Audio play blocked:", e));
+      laughAudio.currentTime = 0; laughAudio.volume = 1.0;
+      laughAudio.play().catch(e => console.log(e));
     }
   }
 
@@ -299,7 +354,7 @@
   let logsCount = 0;
 
   function randomizeGlitchDirection() {
-    const rx = (Math.random() * 200 - 100) + 'px'; 
+    const rx = (Math.random() * 200 - 100) + 'px'; // تمزيق أعنف بكثير
     const ry = (Math.random() * 30 - 15) + 'px'; 
     mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry);
   }
@@ -308,21 +363,21 @@
     if (sequenceStarted) return;
     sequenceStarted = true;
 
-    // تفعيل الـ AudioContext فوراً داخل حدث الضغط لتجنب حظر المتصفح
-    initAudio(); 
-
-    // إخفاء شاشة الترحيب وإظهار الشاشة الرئيسية بسلاسة
     splashScreen.style.opacity = '0';
     setTimeout(() => { 
       splashScreen.style.display = 'none'; 
       screenContainer.style.display = 'block';
-      setTimeout(() => { 
-        screenContainer.style.opacity = '1'; 
-        startBackgroundStatic();
-        playDemonicRadioScreech();
-        addLog();
-      }, 50);
-    }, 300);
+      setTimeout(() => { screenContainer.style.opacity = '1'; }, 50);
+    }, 200);
+
+    initAudio(); 
+    startBackgroundStatic();
+    playDemonicRadioScreech(); // أول صرخة راديو شيطانية
+    randomizeGlitchDirection(); 
+    
+    mainUI.classList.add('severe-glitch');
+    setTimeout(() => mainUI.classList.remove('severe-glitch'), 300);
+    setTimeout(() => { addLog(); }, 300);
   }
 
   startBtn.addEventListener('click', startExperience);
@@ -340,7 +395,7 @@
   }
 
   function addLog() {
-    if (logsCount >= 25) { 
+    if (logsCount >= 25) { // بعد 25 سطر، ننهي البرنامج
       triggerEndSequence();
       return;
     }
@@ -360,13 +415,15 @@
     row.appendChild(timeSpan); row.appendChild(msgSpan);
     terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
 
+    // تشغيل الجليتش الشيطاني بشكل عشوائي 
     if (Math.random() > 0.4) {
       randomizeGlitchDirection(); 
       mainUI.classList.add('severe-glitch'); 
-      playDemonicRadioScreech(); 
+      playDemonicRadioScreech(); // الصوت المرعب المتطور
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
     }
     
+    // تسريع وتيرة الكتابة والجليتش كلما تقدمنا
     let nextTime = Math.random() * (120 - (logsCount * 3)) + 20; 
     setTimeout(addLog, Math.max(nextTime, 20));
   }
@@ -380,15 +437,15 @@
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
 
-      playLongTeetTone(); 
+      playLongTeetTone(); // الصفير
 
       setTimeout(() => {
-        demonGlitchOverlay.style.display = 'block'; 
-        playAlastorDemonLaugh(); 
+        demonGlitchOverlay.style.display = 'block'; // الشاشة الحمراء الممزقة
+        playAlastorDemonLaugh(); // ضحكة ألاستور
 
         setTimeout(() => {
           demonGlitchOverlay.style.display = 'none';
-          pureBlackScreen.style.display = 'block'; 
+          pureBlackScreen.style.display = 'block'; // ظلام النهاية
         }, 3000);
 
       }, 2200);
