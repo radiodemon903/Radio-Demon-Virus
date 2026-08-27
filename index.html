@@ -20,54 +20,70 @@
     font-family: 'Share Tech Mono', monospace; height: 100vh; overflow: hidden; user-select: none;
   }
 
-  /* شاشة ترحيب منظمة ومرعبة بأسلوب Alastor */
+  /* شاشة ترحيب منظمة بدقة وبتفاصيل غنية لـ ALASTOR */
   #splash-screen {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: radial-gradient(circle, #1a0005 0%, #050001 100%);
-    z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center;
-    cursor: pointer; text-align: center; padding: 20px; box-sizing: border-box;
-  }
-  
-  .splash-box {
-    border: 2px solid var(--radio-red); background: rgba(15, 0, 3, 0.9);
-    padding: 35px 25px; max-width: 450px; width: 100%; position: relative;
-    box-shadow: 0 0 40px rgba(255, 0, 51, 0.3), inset 0 0 20px rgba(255, 0, 51, 0.2);
-    animation: boxFlicker 2s infinite;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+    background: radial-gradient(circle, #1f0105 0%, #030000 100%);
+    z-index: 9999; display: flex; justify-content: center; align-items: center;
+    padding: 15px; box-sizing: border-box;
   }
 
-  .splash-box::before, .splash-box::after {
-    content: ''; position: absolute; width: 10px; height: 10px; border-color: var(--alastor-green); border-style: solid;
-  }
-  .splash-box::before { top: 5px; left: 5px; border-right: none; border-bottom: none; }
-  .splash-box::after { bottom: 5px; right: 5px; border-left: none; border-top: none; }
-
-  .splash-freq {
-    font-size: 0.8rem; color: var(--text-dim); letter-spacing: 3px; margin-bottom: 10px;
+  .splash-card {
+    border: 2px solid var(--radio-red); background: rgba(12, 0, 3, 0.95);
+    width: 100%; max-width: 480px; padding: 25px; box-sizing: border-box;
+    position: relative; box-shadow: 0 0 50px rgba(255, 0, 51, 0.35), inset 0 0 25px rgba(255, 0, 51, 0.15);
+    animation: cardFlicker 3s infinite;
   }
 
-  .splash-title {
-    font-size: 1.5rem; color: var(--radio-red); margin-bottom: 15px; font-weight: bold;
-    letter-spacing: 2px; text-shadow: 0 0 10px rgba(255, 0, 51, 0.7);
+  /* زوايا تكنولوجية للمربع */
+  .splash-card::before, .splash-card::after {
+    content: ''; position: absolute; width: 12px; height: 12px; border-color: var(--alastor-green); border-style: solid;
+  }
+  .splash-card::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+  .splash-card::after { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+
+  .splash-header-info {
+    display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim);
+    border-bottom: 1px dashed var(--dark-red); padding-bottom: 8px; margin-bottom: 15px;
+    letter-spacing: 1px;
   }
 
-  .splash-quote {
-    font-size: 0.85rem; color: #fff; font-style: italic; margin-bottom: 25px; line-height: 1.6;
-    border-left: 2px solid var(--alastor-green); padding-left: 10px; text-align: left;
+  .splash-brand-title {
+    text-align: center; font-size: 1.8rem; color: var(--radio-red); font-weight: bold;
+    letter-spacing: 4px; text-shadow: 0 0 15px var(--radio-red); margin-bottom: 5px;
   }
 
-  .splash-btn {
+  .splash-subtitle {
+    text-align: center; font-size: 0.8rem; color: var(--alastor-green); letter-spacing: 2px;
+    margin-bottom: 20px; text-shadow: 0 0 8px rgba(0, 255, 64, 0.4);
+  }
+
+  .splash-details-box {
+    border: 1px solid var(--dark-red); background: rgba(30, 0, 8, 0.4);
+    padding: 12px; margin-bottom: 20px; font-size: 0.75rem; color: #ccc; line-height: 1.6;
+  }
+
+  .splash-details-box span { color: var(--alastor-green); }
+
+  .splash-quote-box {
+    font-size: 0.8rem; color: #fff; font-style: italic; margin-bottom: 25px;
+    border-left: 2px solid var(--alastor-green); padding-left: 10px; line-height: 1.5;
+  }
+
+  .splash-action-btn {
     background: var(--dark-red); color: var(--alastor-green); border: 1px solid var(--alastor-green);
-    padding: 12px 20px; font-family: 'Share Tech Mono', monospace; font-size: 0.95rem; font-weight: bold;
-    letter-spacing: 2px; cursor: pointer; transition: all 0.2s ease;
-    box-shadow: 0 0 15px rgba(0, 255, 64, 0.2); width: 100%;
+    padding: 14px; font-family: 'Share Tech Mono', monospace; font-size: 0.95rem; font-weight: bold;
+    letter-spacing: 2px; cursor: pointer; width: 100%; transition: all 0.2s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 64, 0.2); text-align: center;
   }
 
-  .splash-btn:hover {
-    background: var(--alastor-green); color: #000; box-shadow: 0 0 25px var(--alastor-green);
+  .splash-action-btn:hover {
+    background: var(--alastor-green); color: #000; box-shadow: 0 0 30px var(--alastor-green);
   }
 
-  @keyframes boxFlicker {
-    0%, 100% { border-color: var(--radio-red); }
-    50% { border-color: #500; }
+  @keyframes cardFlicker {
+    0%, 100% { border-color: var(--radio-red); box-shadow: 0 0 40px rgba(255, 0, 51, 0.3); }
+    50% { border-color: #500; box-shadow: 0 0 15px rgba(100, 0, 10, 0.2); }
   }
 
   #screen-container {
@@ -137,7 +153,6 @@
     100% { transform: translate(0, 0) skew(0deg); filter: none; } 
   }
 
-  /* النهاية التدميرية: شاشة مليئة بالتشويش البصري والنقاط والخطوط الحمراء المرعبة المبتلة والمتلاشية */
   .crt-shut-off {
     animation: turn-off 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
@@ -182,13 +197,30 @@
 </head>
 <body>
 
-<!-- شاشة الترحيب المنظمة والاحترافية بأسلوب Alastor -->
+<!-- شاشة ترحيب منظمة للغاية وتحمل اسم ALASTOR بوضوح وبطابع إذاعي رعب -->
 <div id="splash-screen">
-  <div class="splash-box">
-    <div class="splash-freq">[ FREQUENCY: 666.9 MHz // PENTAGRAM ]</div>
-    <div class="splash-title">RADIO BROADCAST HIJACKED</div>
-    <div class="splash-quote">"Smile, my dear! You're never fully dressed without one... and perhaps a bit of static!"</div>
-    <button class="splash-btn" onclick="startExperience()">[ TUNE IN & INITIATE ]</button>
+  <div class="splash-card">
+    <div class="splash-header-info">
+      <span>SYSTEM: SECURE_WAVE</span>
+      <span>FREQ: 666.9 MHz</span>
+    </div>
+    
+    <div class="splash-brand-title">ALASTOR</div>
+    <div class="splash-subtitle">// THE RADIO DEMON //</div>
+
+    <div class="splash-details-box">
+      <div>> TARGET: <span>PENTAGRAM BROADCAST</span></div>
+      <div>> STATUS: <span>AWAITING AUDIO HANDSHAKE</span></div>
+      <div>> SECURITY: <span>BYPASS REQUIRED</span></div>
+    </div>
+
+    <div class="splash-quote-box">
+      "Smile, my dear! You're never fully dressed without a broadcast..."
+    </div>
+
+    <button class="splash-action-btn" onclick="startExperience()">
+      [ TAP TO CONNECT & ENGAGE ]
+    </button>
   </div>
 </div>
 
@@ -298,6 +330,7 @@
     osc2.stop(now + 0.16);
   }
 
+  // تم رفع مستوى صوت الصفير النهائي (Teeeeeeeeeeeeeet) بشكل ملحوظ ليكون قوياً ومؤثراً
   function startBroadcastCutoffTone() {
     if (staticGainNode) staticGainNode.gain.value = 0; 
     
@@ -307,7 +340,8 @@
     osc.type = 'sine';
     osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
 
-    gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+    // رفع القيمة هنا لزيادة مستوى الصوت (تمت زيادته ليصبح قوياً وواضحاً)
+    gain.gain.setValueAtTime(0.65, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 4.5);
 
     osc.connect(gain).connect(audioCtx.destination);
