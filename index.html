@@ -11,7 +11,7 @@
     --bg-color: #0d0102;
     --radio-red: #ff0033;
     --dark-red: #4a000d;
-    --alastor-green: #00ff40; 
+    --alastor-green: #00ff55; /* تم تعديله إلى أخضر نيوني ساطع وحاد */
     --text-dim: #8c4a4a;
   }
 
@@ -54,7 +54,7 @@
 
   .splash-subtitle {
     text-align: center; font-size: 0.8rem; color: var(--alastor-green); letter-spacing: 2px;
-    margin-bottom: 20px; text-shadow: 0 0 8px rgba(0, 255, 64, 0.4);
+    margin-bottom: 20px; text-shadow: 0 0 12px var(--alastor-green);
   }
 
   .splash-details-box {
@@ -62,7 +62,7 @@
     padding: 12px; margin-bottom: 20px; font-size: 0.75rem; color: #ccc; line-height: 1.6;
   }
 
-  .splash-details-box span { color: var(--alastor-green); }
+  .splash-details-box span { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
 
   .splash-quote-box {
     font-size: 0.8rem; color: #fff; font-style: italic; margin-bottom: 25px;
@@ -73,11 +73,11 @@
     background: var(--dark-red); color: var(--alastor-green); border: 1px solid var(--alastor-green);
     padding: 14px; font-family: 'Share Tech Mono', monospace; font-size: 0.95rem; font-weight: bold;
     letter-spacing: 2px; cursor: pointer; width: 100%; transition: all 0.2s ease;
-    box-shadow: 0 0 15px rgba(0, 255, 64, 0.2); text-align: center;
+    box-shadow: 0 0 20px rgba(0, 255, 85, 0.4); text-align: center;
   }
 
   .splash-action-btn:hover {
-    background: var(--alastor-green); color: #000; box-shadow: 0 0 30px var(--alastor-green);
+    background: var(--alastor-green); color: #000; box-shadow: 0 0 40px var(--alastor-green);
   }
 
   @keyframes cardFlicker {
@@ -109,6 +109,7 @@
 
   .main-ui::before, .main-ui::after, .ui-corner-tl, .ui-corner-br {
     border-color: var(--alastor-green); border-style: solid; border-width: 2px; position: absolute;
+    box-shadow: 0 0 8px var(--alastor-green);
   }
   .main-ui::before { content:''; top: 0; left: 0; width: 100%; height: 100%; border-right: none; border-bottom: none; pointer-events:none;}
   .main-ui::after { content:''; bottom: 0; right: 0; width: 100%; height: 100%; border-left: none; border-top: none; pointer-events:none;}
@@ -117,15 +118,15 @@
 
   .hex-bg {
     position: absolute; top: 50px; left: 0; width: 100%; height: 80%; font-size: 0.55rem;
-    color: rgba(0, 255, 64, 0.05); word-break: break-all; overflow: hidden; z-index: -1; line-height: 1;
+    color: rgba(0, 255, 85, 0.08); word-break: break-all; overflow: hidden; z-index: -1; line-height: 1;
   }
 
   .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 20px; }
   .header-grid div:nth-child(2) { text-align: right; }
 
-  .alert-box { border: 1px solid var(--alastor-green); background: rgba(0, 255, 64, 0.08); padding: 10px; text-align: center; margin-bottom: 15px; }
-  .alert-title { color: var(--alastor-green); font-size: 1.4rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 10px var(--alastor-green); animation: alertPulse 0.5s infinite; }
-  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 15px var(--alastor-green); } 50% { opacity: 0.4; text-shadow: none; } }
+  .alert-box { border: 1px solid var(--alastor-green); background: rgba(0, 255, 85, 0.1); padding: 10px; text-align: center; margin-bottom: 15px; box-shadow: 0 0 15px rgba(0,255,85,0.2); }
+  .alert-title { color: var(--alastor-green); font-size: 1.4rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 12px var(--alastor-green); animation: alertPulse 0.5s infinite; }
+  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 18px var(--alastor-green); } 50% { opacity: 0.5; text-shadow: none; } }
 
   .hacker-brand { text-align: center; font-size: 1.7rem; color: var(--radio-red); text-shadow: 0 0 15px var(--radio-red), 0 0 30px #000; margin: 20px 0; animation: brandGlitch 1.5s infinite; font-weight: bold; letter-spacing: 2px; }
   @keyframes brandGlitch { 0% { transform: skew(0deg); } 10% { transform: skew(-15deg); filter: blur(1px); } 12% { transform: skew(10deg); filter: none; } 100% { transform: skew(0deg); } }
@@ -139,7 +140,7 @@
   .log-row { display: flex; margin-bottom: 3px; }
   .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
-  .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
+  .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 8px var(--alastor-green); }
   .log-msg.red { color: var(--radio-red); }
 
   .severe-glitch { animation: dynamicTearChaos 0.05s infinite; }
@@ -292,7 +293,6 @@
     osc1.start(now); osc2.start(now); osc1.stop(now + 0.15); osc2.stop(now + 0.15);
   }
 
-  // 1. صوت الصفير الممتد العالي (Teeeeeeeeeeeeeet)
   function playLongTeetTone() {
     if (!audioCtx) return;
     if (staticGainNode) staticGainNode.gain.value = 0;
@@ -312,7 +312,6 @@
     osc.stop(now + 2.5);
   }
 
-  // 2. تفعيل ضحكة ألاستور الحقيقية عبر ملف الصوت الخارجي بضمان تام
   function playAlastorDemonLaugh() {
     const laughAudio = document.getElementById('alastor-laugh-audio');
     if (laughAudio) {
@@ -410,15 +409,12 @@
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
 
-      // 1. تشغيل الصفير الممتد
       playLongTeetTone();
 
-      // 2. تشغيل الضحكة الشيطانية والتشويش المرئي فور انتهاء الصفير (بعد 2.2 ثانية)
       setTimeout(() => {
         demonGlitchOverlay.style.display = 'block';
-        playAlastorDemonLaugh(); // ستعمل الآن بصوت ألاستور الحقيقي والمرعب 100%
+        playAlastorDemonLaugh();
 
-        // 3. التحول للظلام التام بعد 3 ثوانٍ
         setTimeout(() => {
           demonGlitchOverlay.style.display = 'none';
           pureBlackScreen.style.display = 'block';
