@@ -20,171 +20,192 @@
     font-family: 'Share Tech Mono', monospace; height: 100vh; overflow: hidden; user-select: none;
   }
 
-  /* شاشة الترحيب المرعبة */
+  /* شاشة الترحيب */
   #splash-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-    background: radial-gradient(circle, #1a0000 0%, #000000 100%);
+    background: radial-gradient(circle, #150000 0%, #000000 100%);
     z-index: 9999; display: flex; justify-content: center; align-items: center;
     padding: 15px; box-sizing: border-box;
-    transition: opacity 0.2s ease, visibility 0.2s;
+    transition: opacity 0.4s ease, visibility 0.4s;
   }
 
   .splash-card {
-    border: 2px solid var(--radio-red); background: rgba(5, 0, 0, 0.98);
-    width: 100%; max-width: 480px; padding: 30px; box-sizing: border-box;
-    position: relative; box-shadow: 0 0 60px rgba(255, 0, 17, 0.6), inset 0 0 30px rgba(255, 0, 17, 0.3);
-    animation: cardPulse 2s infinite;
+    border: 2px solid var(--radio-red); background: rgba(5, 0, 0, 0.95);
+    width: 100%; max-width: 480px; padding: 25px; box-sizing: border-box;
+    position: relative; box-shadow: 0 0 50px rgba(255, 0, 17, 0.4), inset 0 0 20px rgba(255, 0, 17, 0.2);
+    animation: cardFlicker 3s infinite;
   }
 
-  @keyframes cardPulse {
-    0%, 100% { box-shadow: 0 0 50px rgba(255, 0, 17, 0.6), inset 0 0 20px rgba(255, 0, 17, 0.2); }
-    50% { box-shadow: 0 0 80px rgba(255, 0, 17, 0.9), inset 0 0 40px rgba(255, 0, 17, 0.4); }
+  .splash-card::before, .splash-card::after {
+    content: ''; position: absolute; width: 12px; height: 12px; border-color: var(--alastor-green); border-style: solid;
+  }
+  .splash-card::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
+  .splash-card::after { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+
+  .splash-header-info {
+    display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim);
+    border-bottom: 1px solid var(--dark-red); padding-bottom: 8px; margin-bottom: 15px;
   }
 
   .splash-brand-title {
-    text-align: center; font-family: 'Creepster', cursive; font-size: 3rem; color: var(--radio-red); 
-    letter-spacing: 5px; text-shadow: 0 0 20px var(--radio-red), 4px 4px 0px #000, -2px -2px 0px var(--alastor-green); 
-    margin-bottom: 5px; animation: textJitter 0.1s infinite;
+    text-align: center; font-size: 2.5rem; font-family: 'Creepster', cursive; color: var(--radio-red);
+    letter-spacing: 5px; text-shadow: 0 0 15px var(--radio-red), 2px 2px 0px #000; margin-bottom: 5px;
   }
 
-  @keyframes textJitter {
-    0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(1px, -1px); }
+  .splash-subtitle {
+    text-align: center; font-size: 0.85rem; color: var(--alastor-green); letter-spacing: 2px;
+    margin-bottom: 20px; text-shadow: 0 0 10px var(--alastor-green);
   }
+
+  .splash-details-box {
+    border: 1px solid var(--dark-red); background: rgba(20, 0, 0, 0.6);
+    padding: 12px; margin-bottom: 20px; font-size: 0.75rem; color: #ccc; line-height: 1.6;
+  }
+
+  .splash-details-box span { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
 
   .splash-action-btn {
-    background: var(--dark-red); color: #fff; border: 1px solid var(--radio-red);
-    padding: 16px; font-family: 'Share Tech Mono', monospace; font-size: 1.1rem; font-weight: bold;
+    background: var(--dark-red); color: var(--alastor-green); border: 1px solid var(--alastor-green);
+    padding: 14px; font-family: 'Share Tech Mono', monospace; font-size: 1rem; font-weight: bold;
     letter-spacing: 2px; cursor: pointer; width: 100%; transition: all 0.2s ease;
-    box-shadow: 0 0 20px rgba(255, 0, 17, 0.5); text-align: center; text-shadow: 0 0 5px #fff;
-    margin-top: 20px;
+    box-shadow: 0 0 15px rgba(51, 255, 0, 0.3); text-align: center;
   }
 
   .splash-action-btn:hover {
-    background: var(--radio-red); color: #000; box-shadow: 0 0 50px var(--radio-red);
+    background: var(--alastor-green); color: #000; box-shadow: 0 0 30px var(--alastor-green);
+  }
+
+  @keyframes cardFlicker {
+    0%, 100% { border-color: var(--radio-red); box-shadow: 0 0 40px rgba(255, 0, 17, 0.4); }
+    50% { border-color: #400; box-shadow: 0 0 10px rgba(255, 0, 17, 0.1); }
   }
 
   #screen-container {
     width: 100vw; height: 100vh; background-color: var(--bg-color);
     position: relative; overflow: hidden; transform-origin: center center;
-    display: none; opacity: 0; transition: opacity 0.1s ease;
+    display: none; opacity: 0; transition: opacity 0.5s ease;
   }
 
-  /* خطوط راديو قوية */
+  /* خطوط الراديو والتشويش */
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: 
-      linear-gradient(rgba(10, 0, 0, 0) 50%, rgba(0, 0, 0, 0.95) 50%),
-      repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(255, 0, 17, 0.15) 3px, rgba(0, 0, 0, 0.2) 6px);
-    background-size: 100% 6px, 100% 100%;
+      linear-gradient(rgba(10, 0, 0, 0) 50%, rgba(0, 0, 0, 0.9) 50%),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 17, 0.08) 2px, rgba(0, 0, 0, 0.1) 4px);
+    background-size: 100% 4px, 100% 100%;
     z-index: 100; pointer-events: none;
-    box-shadow: inset 0 0 200px rgba(0,0,0,1); 
-    animation: digitalNoiseFlicker 0.05s infinite;
+    box-shadow: inset 0 0 150px rgba(0,0,0,0.95); 
+    animation: digitalNoiseFlicker 0.08s infinite;
   }
 
   @keyframes digitalNoiseFlicker {
-    0% { opacity: 0.7; } 50% { opacity: 1; } 100% { opacity: 0.8; }
+    0% { opacity: 0.8; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-1px); }
+    100% { opacity: 0.9; transform: translateY(1px); }
+  }
+
+  /* التمزيق الأفقي */
+  .digital-glitch-blocks {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+      linear-gradient(90deg, rgba(255,0,17,0.15) 0%, transparent 20%, rgba(0,0,0,0.5) 50%, transparent 80%);
+    opacity: 0.7; z-index: 90; pointer-events: none;
+    animation: blocksTear 0.12s steps(4) infinite;
+  }
+  @keyframes blocksTear {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(-10px, 0); filter: contrast(150%); }
+    50% { transform: translate(15px, 0); filter: invert(10%); }
+    75% { transform: translate(-5px, 0); }
+    100% { transform: translate(0, 0); }
   }
 
   .main-ui {
-    position: relative; width: 96%; max-width: 700px; height: 96vh;
+    position: relative; width: 96%; max-width: 650px; height: 96vh;
     margin: 2vh auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; z-index: 10;
   }
 
-  /* عبارة NO SIGNAL بأسلوب ألاستور المرعب (Voodoo/Radio Glitch) */
-  .alastor-no-signal {
-    position: relative;
-    text-align: center;
+  .main-ui::before, .main-ui::after, .ui-corner-tl, .ui-corner-br {
+    border-color: var(--alastor-green); border-style: solid; border-width: 2px; position: absolute;
+    box-shadow: 0 0 12px var(--alastor-green);
+  }
+  .main-ui::before { content:''; top: 0; left: 0; width: 100%; height: 100%; border-right: none; border-bottom: none; pointer-events:none;}
+  .main-ui::after { content:''; bottom: 0; right: 0; width: 100%; height: 100%; border-left: none; border-top: none; pointer-events:none;}
+  .ui-corner-tl { top: 0; right: 0; width: 30px; height: 30px; border-left: none; border-bottom: none; }
+  .ui-corner-br { bottom: 0; left: 0; width: 30px; height: 30px; border-right: none; border-top: none; }
+
+  .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 15px; }
+  .header-grid div:nth-child(2) { text-align: right; }
+
+  .mini-signal-box {
+    border: 1px solid var(--radio-red); background: rgba(50, 0, 5, 0.4);
+    padding: 8px; font-size: 0.7rem; color: #fff; margin-bottom: 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 0 15px rgba(255,0,17,0.3);
+  }
+  .mini-signal-box span { color: var(--radio-red); font-weight: bold; text-shadow: 0 0 5px var(--radio-red); }
+
+  .alert-box { border: 1px solid var(--alastor-green); background: rgba(51, 255, 0, 0.1); padding: 8px; text-align: center; margin-bottom: 12px; box-shadow: 0 0 20px rgba(51,255,0,0.2); }
+  .alert-title { color: var(--alastor-green); font-size: 1.3rem; font-weight: bold; letter-spacing: 4px; text-shadow: 0 0 12px var(--alastor-green); animation: alertPulse 0.4s infinite; }
+  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 20px var(--alastor-green); } 50% { opacity: 0.4; text-shadow: none; } }
+
+  /* عبارة NO SIGNAL ثابتة ولا تهتز عشوائياً، تتحرك فقط مع جليتش الشاشة العام */
+  .hacker-brand { 
+    text-align: center; 
+    font-size: 4rem; 
     font-family: 'Creepster', cursive;
-    font-size: 5rem;
-    color: var(--radio-red);
-    text-transform: uppercase;
-    letter-spacing: 8px;
-    margin: 20px 0;
-    line-height: 1;
-    text-shadow: 0 0 30px var(--radio-red), 5px 5px 0px #000, -3px -3px 0px var(--alastor-green);
-    animation: mainSignalShake 0.1s infinite;
+    color: var(--radio-red); 
+    text-shadow: 0 0 15px var(--radio-red), 3px 3px 0 #000, -2px -2px 0 var(--alastor-green); 
+    margin: 15px 0; 
+    font-weight: bold; 
+    letter-spacing: 5px; 
   }
 
-  .alastor-no-signal::before, .alastor-no-signal::after {
-    content: attr(data-text);
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: var(--bg-color);
-    overflow: hidden;
-  }
+  .progress-section { margin-bottom: 15px; }
+  .progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 5px; color: #ccc; }
+  .progress-track { width: 100%; height: 10px; border: 1px solid var(--radio-red); background: #000; position: relative; }
+  .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 20px var(--radio-red); transition: width 0.1s; }
 
-  .alastor-no-signal::before {
-    left: 4px;
-    text-shadow: -2px 0 var(--alastor-green);
-    animation: glitchTear 2s infinite linear alternate-reverse;
-    z-index: -1;
-  }
-
-  .alastor-no-signal::after {
-    left: -4px;
-    text-shadow: -2px 0 #fff;
-    animation: glitchTear 3s infinite linear alternate-reverse;
-    z-index: -2;
-  }
-
-  @keyframes mainSignalShake {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    25% { transform: translate(-3px, 2px) scale(1.02); }
-    50% { transform: translate(3px, -2px) scale(0.98); }
-    75% { transform: translate(-2px, -3px) scale(1.05); }
-  }
-
-  @keyframes glitchTear {
-    0% { clip-path: inset(10% 0 80% 0); transform: translate(-5px, 0); }
-    20% { clip-path: inset(80% 0 10% 0); transform: translate(5px, 0); }
-    40% { clip-path: inset(40% 0 40% 0); transform: translate(-5px, 0); }
-    60% { clip-path: inset(20% 0 60% 0); transform: translate(5px, 0); }
-    80% { clip-path: inset(60% 0 20% 0); transform: translate(-5px, 0); }
-    100% { clip-path: inset(30% 0 50% 0); transform: translate(5px, 0); }
-  }
-
-  .voodoo-symbols {
-    font-family: monospace; font-size: 1.5rem; color: var(--alastor-green);
-    letter-spacing: 15px; text-shadow: 0 0 10px var(--alastor-green);
-  }
-
-  /* باقي الواجهة */
-  .terminal-box { flex-grow: 1; border: 1px solid var(--radio-red); background: rgba(20, 0, 0, 0.7); padding: 10px; overflow: hidden; font-size: 0.8rem; line-height: 1.5; font-weight: bold; box-shadow: inset 0 0 20px rgba(255,0,17,0.2); }
-  .log-row { display: flex; margin-bottom: 5px; }
-  .log-time { color: var(--alastor-green); margin-right: 10px; width: 80px; text-shadow: 0 0 5px var(--alastor-green); }
+  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(10, 0, 0, 0.6); padding: 10px; overflow: hidden; font-size: 0.7rem; line-height: 1.4; }
+  .log-row { display: flex; margin-bottom: 3px; }
+  .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
-  .log-msg.red { color: var(--radio-red); text-shadow: 0 0 10px var(--radio-red); font-size: 1rem; }
+  .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 8px var(--alastor-green); }
+  .log-msg.red { color: var(--radio-red); text-shadow: 0 0 8px var(--radio-red); font-weight: bold; }
 
-  /* جليتشات عنيفة جداً تحاكي غضب ألاستور والفيديو */
-  .severe-glitch { animation: alastorRage 0.08s infinite !important; }
-  @keyframes alastorRage { 
-    0% { transform: translate(0, 0) scale(1); filter: none; } 
-    25% { transform: translate(var(--tx, -50px), var(--ty, 10px)) scaleY(1.1); filter: contrast(1000%) invert(20%) drop-shadow(15px 0 var(--alastor-green)); background-color: var(--radio-red); } 
-    50% { transform: translate(calc(var(--tx, 50px) * -1), calc(var(--ty, -10px) * -1)) scaleX(1.1); filter: blur(2px) contrast(800%) saturate(1000%); color: #000; } 
-    75% { transform: translate(calc(var(--tx, 20px) * 0.5), calc(var(--ty, 5px) * 0.5)); filter: contrast(1000%) grayscale(100%) invert(100%); } 
-    100% { transform: translate(0, 0) scale(1); filter: none; } 
+  /* جليتش التمزيق العنيف للشاشة بالكامل */
+  .severe-glitch { animation: severeChaos 0.05s infinite !important; }
+  @keyframes severeChaos { 
+    0% { transform: translate(0, 0); filter: none; } 
+    25% { transform: translate(-40px, 0) scaleY(1.05); filter: contrast(1000%) invert(10%) drop-shadow(10px 0 #000); background-color: var(--radio-red); } 
+    50% { transform: translate(30px, 0) scaleY(0.95); filter: blur(1px) contrast(800%) saturate(1000%); color: #fff; } 
+    75% { transform: translate(-10px, 0); filter: contrast(1000%) grayscale(100%); } 
+    100% { transform: translate(0, 0); filter: none; } 
   }
 
-  .crt-shut-off { animation: turn-off 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+  .crt-shut-off {
+    animation: turn-off 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+  }
   @keyframes turn-off {
     0% { transform: scale(1, 1); filter: brightness(1) contrast(1); }
-    20% { transform: scale(1.1, 0.01); filter: brightness(80) contrast(1000%); background-color: var(--radio-red); }
-    50% { transform: scale(0.01, 0.005); filter: brightness(100); background-color: #fff; box-shadow: 0 0 300px #fff; }
+    30% { transform: scale(1.1, 0.005); filter: brightness(60) contrast(800%); background-color: #fff; }
+    60% { transform: scale(0.005, 0.001); filter: brightness(100); background-color: #fff; box-shadow: 0 0 200px #fff; }
     100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #000 !important; }
   }
 
-  /* التشويش الأحمر العنيف وقت الضحكة */
   #demon-glitch-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(255,0,17,0.9) 5px, rgba(0,0,0,0.9) 10px);
-    z-index: 99999; animation: demonLaughGlitch 0.03s infinite; pointer-events: none;
-    display: none; mix-blend-mode: multiply;
+    background: repeating-linear-gradient(0deg, #000 0px, #000 4px, rgba(255,0,17,0.8) 4px, rgba(255,0,17,0.8) 8px);
+    z-index: 99999;
+    animation: demonLaughGlitch 0.05s infinite; pointer-events: none;
+    display: none;
+    mix-blend-mode: multiply;
   }
+
   @keyframes demonLaughGlitch {
-    0% { filter: invert(0) contrast(800%); transform: translate(20px, 0) scale(1.1); }
-    50% { filter: invert(100%) contrast(1000%); transform: translate(-30px, 0) scale(1.2); }
-    100% { filter: invert(0) contrast(800%); transform: translate(15px, 0) scale(1.05); }
+    0% { filter: invert(0) contrast(500%); transform: translate(15px, 0) scale(1.05); opacity: 0.8; }
+    50% { filter: invert(100%) contrast(1000%); transform: translate(-20px, 0) scale(1.1); opacity: 1; }
+    100% { filter: invert(0) contrast(800%); transform: translate(10px, 0) scale(1.02); opacity: 0.9; }
   }
 
   #pure-black-screen {
@@ -199,22 +220,48 @@
 
 <div id="splash-screen">
   <div class="splash-card">
+    <div class="splash-header-info">
+      <span>SYSTEM: SECURE_WAVE</span>
+      <span>FREQ: 666.9 MHz</span>
+    </div>
     <div class="splash-brand-title">ALASTOR</div>
-    <div style="text-align:center; color: var(--alastor-green); font-size: 2rem; margin-bottom: 20px;">⛧ 📻 ⛧</div>
+    <div class="splash-subtitle">// THE RADIO DEMON //</div>
+    <div class="splash-details-box">
+      <div>> TARGET: <span>PENTAGRAM BROADCAST</span></div>
+      <div>> STATUS: <span>AWAITING AUDIO HANDSHAKE</span></div>
+      <div>> SECURITY: <span>BYPASS REQUIRED</span></div>
+    </div>
     <button class="splash-action-btn" id="start-btn">
-      [ INITIATE BROADCAST OVERRIDE ]
+      [ TAP TO CONNECT & ENGAGE ]
     </button>
   </div>
 </div>
 
 <div id="screen-container">
   <div class="crt-overlay"></div>
+  <div class="digital-glitch-blocks"></div>
   
   <div class="main-ui" id="main-ui">
-    <div class="alastor-no-signal" data-text="NO SIGNAL">NO SIGNAL</div>
-    <div class="voodoo-symbols" style="text-align: center;">⸸ ⍟ ☠ ⸸</div>
+    <div class="ui-corner-tl"></div>
+    <div class="ui-corner-br"></div>
+    
+    <div class="header-grid">
+      <div>STATION: 666.9 MHz - HAZBIN</div>
+      <div>STATUS: RADIO_WAVE_ACTIVE</div>
+    </div>
 
-    <div style="margin: 20px 0; border-top: 2px dashed var(--radio-red);"></div>
+    <div class="mini-signal-box">
+      <div>⚠ OVERRIDE PROTOCOL // ACCESS GRANTED</div>
+      <span>[OWNED]</span>
+    </div>
+
+    <div class="alert-box"><div class="alert-title">HAZBIN FREQUENCY HIJACKED</div></div>
+    <div class="hacker-brand">NO SIGNAL</div>
+    
+    <div class="progress-section">
+      <div class="progress-header"><span>TRANSMISSION OVERRIDDEN</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
+    </div>
     
     <div class="terminal-box" id="terminal"></div>
   </div>
@@ -229,90 +276,85 @@
 
   function initAudio() {
     try {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-    } catch(e) { console.log("Audio Error:", e); }
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    } catch(e) {
+      console.log("Audio API Error: ", e);
+    }
   }
 
+  // تشويش راديو مستمر، خشن ومرعب
   function startBackgroundStatic() {
     if (!audioCtx) return;
     try {
       let bufferSize = audioCtx.sampleRate * 2;
       let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
       let data = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+      
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * (Math.random() > 0.95 ? 2.5 : 0.8);
+      }
+      
       let noise = audioCtx.createBufferSource();
-      noise.buffer = buffer; noise.loop = true;
+      noise.buffer = buffer;
+      noise.loop = true;
       
       let filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass'; filter.frequency.value = 800; // صوت راديو أعمق
+      filter.type = 'bandpass'; 
+      filter.frequency.value = 1000; 
+      filter.Q.value = 3.5; 
       
       staticGainNode = audioCtx.createGain();
-      staticGainNode.gain.value = 0.15;
+      staticGainNode.gain.value = 0.22;
       
       noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
       noise.start();
     } catch(e) {}
   }
 
-  /* الصوت المطور: صراخ راديو متقطع وشيطاني (Demonic Stutter Screech) */
-  function playDemonicRadioScreech() {
+  function playTerrifyingSpeakerGlitch() {
     if (!audioCtx) return;
     try {
       let now = audioCtx.currentTime;
-      
-      let osc1 = audioCtx.createOscillator(); // الصراخ الحاد
-      let osc2 = audioCtx.createOscillator(); // Sub-bass العميق جداً
-      let lfo = audioCtx.createOscillator();  // للتقطيع السريع (Stutter)
-      let lfoGain = audioCtx.createGain();
-      
+      let osc1 = audioCtx.createOscillator();
+      let osc2 = audioCtx.createOscillator();
       let distortion = audioCtx.createWaveShaper();
-      let mainGain = audioCtx.createGain();
+      let gainNode = audioCtx.createGain();
 
       osc1.type = 'sawtooth';
-      osc2.type = 'sine';
-      lfo.type = 'square';
+      osc2.type = 'square';
 
-      // ترددات مخيفة: صراخ ينزل فجأة
-      osc1.frequency.setValueAtTime(4000, now);
-      osc1.frequency.exponentialRampToValueAtTime(300, now + 0.2);
+      osc1.frequency.setValueAtTime(80, now);
+      osc1.frequency.exponentialRampToValueAtTime(30, now + 0.15);
 
-      // Sub-bass يهز السماعة
-      osc2.frequency.setValueAtTime(60, now);
-      osc2.frequency.linearRampToValueAtTime(20, now + 0.2);
+      osc2.frequency.setValueAtTime(3000, now);
+      osc2.frequency.linearRampToValueAtTime(8000, now + 0.1);
 
-      // سرعة التقطيع (Stutter effect)
-      lfo.frequency.value = 25; // 25 مرة في الثانية
-
-      // منحنى التشويه الشيطاني العنيف
-      let k = 4000; // تشويه أقصى
+      let k = 2000;
       let curve = new Float32Array(44100);
       let deg = Math.PI / 180;
       for (let i = 0; i < 44100; ++i) {
         let x = (i * 2) / 44100 - 1;
-        curve[i] = ((3 + k) * x * 80 * deg) / (Math.PI + k * Math.abs(x));
+        curve[i] = ((3 + k) * x * 50 * deg) / (Math.PI + k * Math.abs(x));
       }
       distortion.curve = curve;
 
-      // توصيل الـ LFO للتحكم في مستوى الصوت (التقطيع)
-      lfo.connect(lfoGain.gain);
-      
-      mainGain.gain.setValueAtTime(1.0, now);
-      mainGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+      gainNode.gain.setValueAtTime(1.0, now);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
 
       osc1.connect(distortion);
       osc2.connect(distortion);
-      distortion.connect(lfoGain);
-      lfoGain.connect(mainGain);
-      mainGain.connect(audioCtx.destination);
+      distortion.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
 
       osc1.start(now);
       osc2.start(now);
-      lfo.start(now);
-      
-      osc1.stop(now + 0.3);
-      osc2.stop(now + 0.3);
-      lfo.stop(now + 0.3);
+      osc1.stop(now + 0.18);
+      osc2.stop(now + 0.18);
     } catch(e) {}
   }
 
@@ -320,6 +362,7 @@
     if (!audioCtx) return;
     try {
       if (staticGainNode) staticGainNode.gain.value = 0;
+
       let now = audioCtx.currentTime;
       let osc = audioCtx.createOscillator();
       let gain = audioCtx.createGain();
@@ -331,31 +374,36 @@
       gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
 
       osc.connect(gain).connect(audioCtx.destination);
-      osc.start(now); osc.stop(now + 2.5);
+      osc.start(now);
+      osc.stop(now + 2.5);
     } catch(e) {}
   }
 
   function playAlastorDemonLaugh() {
     const laughAudio = document.getElementById('alastor-laugh-audio');
     if (laughAudio) {
-      laughAudio.currentTime = 0; laughAudio.volume = 1.0;
-      laughAudio.play().catch(e => console.log(e));
+      laughAudio.currentTime = 0;
+      laughAudio.volume = 1.0;
+      laughAudio.play().catch(e => console.log("Audio play blocked:", e));
     }
   }
 
   const mainUI = document.getElementById('main-ui');
   const terminal = document.getElementById('terminal');
+  const progressBar = document.getElementById('progress-bar');
+  const pctText = document.getElementById('pct-text');
+  
   const screenContainer = document.getElementById('screen-container');
   const splashScreen = document.getElementById('splash-screen');
   const demonGlitchOverlay = document.getElementById('demon-glitch-overlay');
   const pureBlackScreen = document.getElementById('pure-black-screen');
   const startBtn = document.getElementById('start-btn');
 
-  let logsCount = 0;
+  let progress = 0;
 
   function randomizeGlitchDirection() {
-    const rx = (Math.random() * 200 - 100) + 'px'; // تمزيق أعنف بكثير
-    const ry = (Math.random() * 30 - 15) + 'px'; 
+    const rx = (Math.random() * 160 - 80) + 'px'; 
+    const ry = (Math.random() * 20 - 10) + 'px'; 
     mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry);
   }
 
@@ -368,84 +416,85 @@
       splashScreen.style.display = 'none'; 
       screenContainer.style.display = 'block';
       setTimeout(() => { screenContainer.style.opacity = '1'; }, 50);
-    }, 200);
+    }, 400);
 
     initAudio(); 
     startBackgroundStatic();
-    playDemonicRadioScreech(); // أول صرخة راديو شيطانية
+    playTerrifyingSpeakerGlitch(); 
     randomizeGlitchDirection(); 
     
     mainUI.classList.add('severe-glitch');
-    setTimeout(() => mainUI.classList.remove('severe-glitch'), 300);
-    setTimeout(() => { addLog(); }, 300);
+    setTimeout(() => mainUI.classList.remove('severe-glitch'), 250);
+    setTimeout(() => { addLog(); updateProgress(); }, 200);
   }
 
   startBtn.addEventListener('click', startExperience);
 
-  const errorLogs = [
-    "!!! SYSTEM OVERRIDE IN PROGRESS !!!",
-    "SOUL_CONTRACT_DETECTED_ERROR",
-    "FREQUENCY_666_HIJACKED",
-    "⛧ BROADCAST CORRUPTED ⛧",
-    "HE_IS_HERE"
+  const logsList = [
+    { text: ">>> BYPASSING FIREWALL...", type: "green" },
+    { text: ">>> DISABLING SECURITY...", type: "green" },
+    { text: ">>> ACCESS GRANTED", type: "green" },
+    { text: "BROADCAST INTERRUPTED // NO SOURCE DETECTED", type: "red" },
+    { text: "DATA CORRUPTED", type: "red" },
+    { text: "ALL CHANNELS LOCKED", type: "red" }
   ];
 
   function getTimestamp() {
-    return `ERR_666_${Math.floor(Math.random()*99).toString().padStart(2,'0')}`;
+    return `ERR_${Math.floor(Math.random()*999).toString().padStart(3,'0')}`;
   }
 
   function addLog() {
-    if (logsCount >= 25) { // بعد 25 سطر، ننهي البرنامج
-      triggerEndSequence();
-      return;
-    }
-    
-    logsCount++;
+    if (progress >= 100) return;
     const row = document.createElement('div'); row.className = 'log-row';
     const timeSpan = document.createElement('span'); timeSpan.className = 'log-time'; timeSpan.innerText = getTimestamp();
     const msgSpan = document.createElement('span');
-    
-    if (Math.random() > 0.3) {
-      msgSpan.className = `log-msg`; msgSpan.innerText = `>>> DECRYPTING RADIO WAVES...`;
+    if (Math.random() > 0.4) {
+      const logItem = logsList[Math.floor(Math.random() * logsList.length)];
+      msgSpan.className = `log-msg ${logItem.type}`; msgSpan.innerText = logItem.text;
     } else {
-      msgSpan.className = 'log-msg red'; 
-      msgSpan.innerText = errorLogs[Math.floor(Math.random() * errorLogs.length)];
+      msgSpan.className = 'log-msg'; msgSpan.style.color = 'var(--radio-red)'; msgSpan.style.fontWeight = 'bold'; msgSpan.innerText = `[ FATAL_ERROR // SIGNAL_LOST ]`;
     }
-    
     row.appendChild(timeSpan); row.appendChild(msgSpan);
     terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
 
-    // تشغيل الجليتش الشيطاني بشكل عشوائي 
-    if (Math.random() > 0.4) {
+    if (Math.random() > 0.3) {
       randomizeGlitchDirection(); 
       mainUI.classList.add('severe-glitch'); 
-      playDemonicRadioScreech(); // الصوت المرعب المتطور
+      playTerrifyingSpeakerGlitch(); 
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
     }
-    
-    // تسريع وتيرة الكتابة والجليتش كلما تقدمنا
-    let nextTime = Math.random() * (120 - (logsCount * 3)) + 20; 
-    setTimeout(addLog, Math.max(nextTime, 20));
+    setTimeout(addLog, Math.random() * 80 + 20);
+  }
+
+  function updateProgress() {
+    if (progress < 100) {
+      progress += Math.random() * 1.5; 
+      if (progress > 100) progress = 100;
+      progressBar.style.width = `${progress}%`; pctText.innerText = `${progress.toFixed(2)}%`;
+      setTimeout(updateProgress, Math.random() * 50 + 10);
+    } else {
+      triggerEndSequence();
+    }
   }
 
   function triggerEndSequence() {
     randomizeGlitchDirection(); 
     mainUI.classList.add('severe-glitch');
-    playDemonicRadioScreech();
+    playTerrifyingSpeakerGlitch();
     
     setTimeout(() => {
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
 
-      playLongTeetTone(); // الصفير
+      playLongTeetTone();
 
       setTimeout(() => {
-        demonGlitchOverlay.style.display = 'block'; // الشاشة الحمراء الممزقة
-        playAlastorDemonLaugh(); // ضحكة ألاستور
+        demonGlitchOverlay.style.display = 'block';
+        playAlastorDemonLaugh();
 
         setTimeout(() => {
           demonGlitchOverlay.style.display = 'none';
-          pureBlackScreen.style.display = 'block'; // ظلام النهاية
+          pureBlackScreen.style.display = 'block';
         }, 3000);
 
       }, 2200);
