@@ -8,13 +8,11 @@
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
   :root {
-    --bg-color: #030001;
-    --radio-red: #ff0033;
-    --dark-red: #3d000a;
-    --alastor-green: #00ff55; 
-    --text-dim: #7a3a3a;
-    --glitch-cyan: #00f3ff;
-    --glitch-magenta: #ff00ea;
+    --bg-color: #050000; /* أسود مع عمق دموي خفيف جداً */
+    --radio-red: #ff0011; /* أحمر قاني وساطع مثل ألاستور */
+    --dark-red: #3a0005;
+    --alastor-green: #33ff00; /* أخضر نيون سام مطابق للسلاسل في الفيديو */
+    --text-dim: #882222;
   }
 
   body, html {
@@ -25,16 +23,16 @@
   /* شاشة الترحيب */
   #splash-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-    background: radial-gradient(circle, #1a0004 0%, #000000 100%);
+    background: radial-gradient(circle, #150000 0%, #000000 100%);
     z-index: 9999; display: flex; justify-content: center; align-items: center;
     padding: 15px; box-sizing: border-box;
   }
 
   .splash-card {
-    border: 2px solid var(--radio-red); background: rgba(10, 0, 2, 0.96);
+    border: 2px solid var(--radio-red); background: rgba(5, 0, 0, 0.95);
     width: 100%; max-width: 480px; padding: 25px; box-sizing: border-box;
-    position: relative; box-shadow: 0 0 60px rgba(255, 0, 51, 0.4), inset 0 0 30px rgba(255, 0, 51, 0.2);
-    animation: cardFlicker 2s infinite;
+    position: relative; box-shadow: 0 0 50px rgba(255, 0, 17, 0.4), inset 0 0 20px rgba(255, 0, 17, 0.2);
+    animation: cardFlicker 3s infinite;
   }
 
   .splash-card::before, .splash-card::after {
@@ -43,48 +41,37 @@
   .splash-card::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
   .splash-card::after { bottom: 6px; right: 6px; border-left: none; border-top: none; }
 
-  .splash-header-info {
-    display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim);
-    border-bottom: 1px dashed var(--dark-red); padding-bottom: 8px; margin-bottom: 15px;
-    letter-spacing: 1px;
-  }
-
   .splash-brand-title {
-    text-align: center; font-size: 1.8rem; color: var(--radio-red); font-weight: bold;
-    letter-spacing: 4px; text-shadow: 2px 0 var(--glitch-cyan), -2px 0 var(--glitch-magenta), 0 0 15px var(--radio-red); margin-bottom: 5px;
+    text-align: center; font-size: 2rem; color: var(--radio-red); font-weight: bold;
+    letter-spacing: 5px; text-shadow: 0 0 15px var(--radio-red), 2px 2px 0px #000; margin-bottom: 5px;
   }
 
   .splash-subtitle {
-    text-align: center; font-size: 0.8rem; color: var(--alastor-green); letter-spacing: 2px;
-    margin-bottom: 20px; text-shadow: 0 0 12px var(--alastor-green);
+    text-align: center; font-size: 0.85rem; color: var(--alastor-green); letter-spacing: 2px;
+    margin-bottom: 20px; text-shadow: 0 0 10px var(--alastor-green);
   }
 
   .splash-details-box {
-    border: 1px solid var(--dark-red); background: rgba(20, 0, 5, 0.5);
+    border: 1px solid var(--dark-red); background: rgba(20, 0, 0, 0.6);
     padding: 12px; margin-bottom: 20px; font-size: 0.75rem; color: #ccc; line-height: 1.6;
   }
 
   .splash-details-box span { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
 
-  .splash-quote-box {
-    font-size: 0.8rem; color: #fff; font-style: italic; margin-bottom: 25px;
-    border-left: 2px solid var(--alastor-green); padding-left: 10px; line-height: 1.5;
-  }
-
   .splash-action-btn {
     background: var(--dark-red); color: var(--alastor-green); border: 1px solid var(--alastor-green);
-    padding: 14px; font-family: 'Share Tech Mono', monospace; font-size: 0.95rem; font-weight: bold;
+    padding: 14px; font-family: 'Share Tech Mono', monospace; font-size: 1rem; font-weight: bold;
     letter-spacing: 2px; cursor: pointer; width: 100%; transition: all 0.2s ease;
-    box-shadow: 0 0 20px rgba(0, 255, 85, 0.4); text-align: center;
+    box-shadow: 0 0 15px rgba(51, 255, 0, 0.3); text-align: center;
   }
 
   .splash-action-btn:hover {
-    background: var(--alastor-green); color: #000; box-shadow: 0 0 40px var(--alastor-green);
+    background: var(--alastor-green); color: #000; box-shadow: 0 0 30px var(--alastor-green);
   }
 
   @keyframes cardFlicker {
-    0%, 100% { border-color: var(--radio-red); box-shadow: 0 0 40px rgba(255, 0, 51, 0.4); }
-    50% { border-color: #200; box-shadow: 0 0 10px rgba(100, 0, 10, 0.1); }
+    0%, 100% { border-color: var(--radio-red); box-shadow: 0 0 40px rgba(255, 0, 17, 0.4); }
+    50% { border-color: #400; box-shadow: 0 0 10px rgba(255, 0, 17, 0.1); }
   }
 
   #screen-container {
@@ -93,40 +80,37 @@
     opacity: 0; transition: opacity 0.5s ease;
   }
 
-  /* طبقات التشويش الشبيهة بالصورة (Scanlines & RGB Distortion Blocks) */
+  /* خطوط الراديو الأفقية المتوافقة مع الفيديو */
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background: 
-      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.85) 50%),
-      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 51, 0.05) 2px, rgba(0, 243, 255, 0.05) 4px);
+      linear-gradient(rgba(10, 0, 0, 0) 50%, rgba(0, 0, 0, 0.9) 50%),
+      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 17, 0.08) 2px, rgba(0, 0, 0, 0.1) 4px);
     background-size: 100% 4px, 100% 100%;
     z-index: 100; pointer-events: none;
-    box-shadow: inset 0 0 180px rgba(0,0,0,0.99); 
-    animation: digitalNoiseFlicker 0.06s infinite;
+    box-shadow: inset 0 0 150px rgba(0,0,0,0.95); 
+    animation: digitalNoiseFlicker 0.08s infinite;
   }
 
   @keyframes digitalNoiseFlicker {
-    0% { opacity: 0.8; transform: translateY(0) scaleX(1); }
-    33% { opacity: 0.95; transform: translateY(-2px) scaleX(1.002); }
-    66% { opacity: 0.85; transform: translateY(1px) scaleX(0.998); }
-    100% { opacity: 0.9; transform: translateY(0); }
+    0% { opacity: 0.8; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(-1px); }
+    100% { opacity: 0.9; transform: translateY(1px); }
   }
 
-  /* مربعات تشويش البيانات العشوائية (Data Glitch Blocks) مثل الصورة المرفقة */
+  /* التمزيق الأفقي بالأحمر والأسود (بدون سيان أو ماجينتا) */
   .digital-glitch-blocks {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
     background-image: 
-      linear-gradient(90deg, rgba(255,0,80,0.12) 0%, transparent 30%, rgba(0,243,255,0.1) 60%, transparent 100%),
-      radial-gradient(ellipse at 50% 30%, transparent 0%, rgba(255,0,51,0.15) 100%);
-    opacity: 0.6; z-index: 90; pointer-events: none;
-    animation: blocksTear 0.15s steps(3) infinite;
+      linear-gradient(90deg, rgba(255,0,17,0.15) 0%, transparent 20%, rgba(0,0,0,0.5) 50%, transparent 80%);
+    opacity: 0.7; z-index: 90; pointer-events: none;
+    animation: blocksTear 0.12s steps(4) infinite;
   }
   @keyframes blocksTear {
     0% { transform: translate(0, 0); }
-    20% { transform: translate(-5px, 3px); filter: invert(15%); }
-    40% { transform: translate(4px, -4px); filter: contrast(200%); }
-    60% { transform: translate(-3px, -2px); }
-    80% { transform: translate(5px, 4px); }
+    25% { transform: translate(-10px, 0); filter: contrast(150%); }
+    50% { transform: translate(15px, 0); filter: invert(10%); }
+    75% { transform: translate(-5px, 0); }
     100% { transform: translate(0, 0); }
   }
 
@@ -137,62 +121,56 @@
 
   .main-ui::before, .main-ui::after, .ui-corner-tl, .ui-corner-br {
     border-color: var(--alastor-green); border-style: solid; border-width: 2px; position: absolute;
-    box-shadow: 0 0 10px var(--alastor-green);
+    box-shadow: 0 0 12px var(--alastor-green);
   }
   .main-ui::before { content:''; top: 0; left: 0; width: 100%; height: 100%; border-right: none; border-bottom: none; pointer-events:none;}
   .main-ui::after { content:''; bottom: 0; right: 0; width: 100%; height: 100%; border-left: none; border-top: none; pointer-events:none;}
   .ui-corner-tl { top: 0; right: 0; width: 30px; height: 30px; border-left: none; border-bottom: none; }
   .ui-corner-br { bottom: 0; left: 0; width: 30px; height: 30px; border-right: none; border-top: none; }
 
-  .hex-bg {
-    position: absolute; top: 50px; left: 0; width: 100%; height: 80%; font-size: 0.55rem;
-    color: rgba(0, 255, 85, 0.08); word-break: break-all; overflow: hidden; z-index: -1; line-height: 1;
-  }
-
   .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 15px; }
   .header-grid div:nth-child(2) { text-align: right; }
 
   .mini-signal-box {
-    border: 1px solid var(--radio-red); background: rgba(255, 0, 51, 0.08);
-    padding: 8px; font-size: 0.65rem; color: var(--text-dim); margin-bottom: 12px;
+    border: 1px solid var(--radio-red); background: rgba(50, 0, 5, 0.4);
+    padding: 8px; font-size: 0.7rem; color: #fff; margin-bottom: 12px;
     display: flex; justify-content: space-between; align-items: center;
-    box-shadow: 0 0 10px rgba(255,0,51,0.2);
+    box-shadow: 0 0 15px rgba(255,0,17,0.3);
   }
-  .mini-signal-box span { color: var(--glitch-cyan); font-weight: bold; }
+  .mini-signal-box span { color: var(--radio-red); font-weight: bold; text-shadow: 0 0 5px var(--radio-red); }
 
-  .alert-box { border: 1px solid var(--alastor-green); background: rgba(0, 255, 85, 0.12); padding: 8px; text-align: center; margin-bottom: 12px; box-shadow: 0 0 20px rgba(0,255,85,0.3); }
-  .alert-title { color: var(--alastor-green); font-size: 1.2rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 12px var(--alastor-green); animation: alertPulse 0.4s infinite; }
-  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 18px var(--alastor-green); } 50% { opacity: 0.3; text-shadow: none; } }
+  .alert-box { border: 1px solid var(--alastor-green); background: rgba(51, 255, 0, 0.1); padding: 8px; text-align: center; margin-bottom: 12px; box-shadow: 0 0 20px rgba(51,255,0,0.2); }
+  .alert-title { color: var(--alastor-green); font-size: 1.3rem; font-weight: bold; letter-spacing: 4px; text-shadow: 0 0 12px var(--alastor-green); animation: alertPulse 0.4s infinite; }
+  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 20px var(--alastor-green); } 50% { opacity: 0.4; text-shadow: none; } }
 
-  .hacker-brand { text-align: center; font-size: 1.6rem; color: var(--radio-red); text-shadow: 3px 0 var(--glitch-cyan), -3px 0 var(--glitch-magenta), 0 0 20px var(--radio-red); margin: 10px 0; animation: brandGlitch 0.8s infinite; font-weight: bold; letter-spacing: 2px; }
+  .hacker-brand { text-align: center; font-size: 1.8rem; color: var(--radio-red); text-shadow: 0 0 15px var(--radio-red), 3px 3px 0 #000; margin: 15px 0; animation: brandGlitch 0.6s infinite; font-weight: bold; letter-spacing: 3px; }
   @keyframes brandGlitch { 
-    0% { transform: skew(0deg); text-shadow: 3px 0 var(--glitch-cyan), -3px 0 var(--glitch-magenta); } 
-    15% { transform: skew(-25deg) scaleX(1.05); filter: blur(2px) invert(20%); text-shadow: -5px 0 var(--glitch-cyan), 5px 0 var(--glitch-magenta); } 
-    18% { transform: skew(15deg); filter: none; } 
-    100% { transform: skew(0deg); text-shadow: 3px 0 var(--glitch-cyan), -3px 0 var(--glitch-magenta); } 
+    0% { transform: translate(0,0); } 
+    15% { transform: translate(-5px, 0) scaleX(1.1); filter: contrast(200%); color: #fff; text-shadow: 5px 0 var(--radio-red); } 
+    18% { transform: translate(5px, 0); filter: none; color: var(--radio-red); } 
+    100% { transform: translate(0,0); } 
   }
 
   .progress-section { margin-bottom: 15px; }
   .progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 5px; color: #ccc; }
-  .progress-track { width: 100%; height: 10px; border: 1px solid var(--text-dim); background: #000; position: relative; }
+  .progress-track { width: 100%; height: 10px; border: 1px solid var(--radio-red); background: #000; position: relative; }
   .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 20px var(--radio-red); transition: width 0.1s; }
 
-  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(30, 0, 8, 0.4); padding: 10px; overflow: hidden; font-size: 0.7rem; line-height: 1.4; }
+  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(10, 0, 0, 0.6); padding: 10px; overflow: hidden; font-size: 0.7rem; line-height: 1.4; }
   .log-row { display: flex; margin-bottom: 3px; }
   .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
   .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 8px var(--alastor-green); }
-  .log-msg.red { color: var(--radio-red); text-shadow: 2px 0 var(--glitch-cyan); }
+  .log-msg.red { color: var(--radio-red); text-shadow: 0 0 8px var(--radio-red); font-weight: bold; }
 
-  /* جليتشات عنيفة جداً ومفاجئة تحاكي تكسر الشاشة الكامل */
-  .severe-glitch { animation: severeChaos 0.03s infinite !important; }
+  /* جليتش التمزيق العنيف المطابق للفيديو (أحمر وأسود حاد جداً) */
+  .severe-glitch { animation: severeChaos 0.05s infinite !important; }
   @keyframes severeChaos { 
-    0% { transform: translate(0, 0) skew(0deg); filter: none; } 
-    20% { transform: translate(-35px, 20px) skew(45deg); filter: contrast(900%) invert(40%) drop-shadow(5px 0 var(--glitch-cyan)); } 
-    40% { transform: translate(30px, -25px) skew(-30deg); filter: blur(4px) saturate(900%) drop-shadow(-5px 0 var(--glitch-magenta)); } 
-    60% { transform: translate(-15px, -15px) skew(20deg); filter: contrast(1000%) hue-rotate(90deg); } 
-    80% { transform: translate(20px, 15px) skew(-20deg); filter: brightness(3) invert(20%); }
-    100% { transform: translate(0, 0) skew(0deg); filter: none; } 
+    0% { transform: translate(0, 0); filter: none; } 
+    25% { transform: translate(-40px, 0) scaleY(1.05); filter: contrast(1000%) invert(10%) drop-shadow(10px 0 #000); background-color: var(--radio-red); } 
+    50% { transform: translate(30px, 0) scaleY(0.95); filter: blur(1px) contrast(800%) saturate(1000%); color: #fff; } 
+    75% { transform: translate(-10px, 0); filter: contrast(1000%) grayscale(100%); } 
+    100% { transform: translate(0, 0); filter: none; } 
   }
 
   .crt-shut-off {
@@ -200,26 +178,25 @@
   }
   @keyframes turn-off {
     0% { transform: scale(1, 1); filter: brightness(1) contrast(1); }
-    30% { transform: scale(1.2, 0.005); filter: brightness(50) contrast(800%); background-color: #ff0033; }
-    60% { transform: scale(0.005, 0.001); filter: brightness(80); background-color: #ff0033; box-shadow: 0 0 150px #ff0033; }
-    100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #000000 !important; }
+    30% { transform: scale(1.1, 0.005); filter: brightness(60) contrast(800%); background-color: #fff; }
+    60% { transform: scale(0.005, 0.001); filter: brightness(100); background-color: #fff; box-shadow: 0 0 200px #fff; }
+    100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #000 !important; }
   }
 
+  /* طبقة التشويش أثناء الضحكة: خطوط عرضية حمراء وسوداء مرعبة */
   #demon-glitch-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: repeating-linear-gradient(transparent 0, transparent 2px, rgba(255, 0, 51, 0.7) 2px, rgba(0, 243, 255, 0.4) 5px),
-                radial-gradient(circle at center, rgba(180,0,15,0.95) 0%, #000 100%);
-    background-color: #050001; z-index: 99999;
-    animation: demonLaughGlitch 0.04s infinite; pointer-events: none;
+    background: repeating-linear-gradient(0deg, #000 0px, #000 4px, rgba(255,0,17,0.8) 4px, rgba(255,0,17,0.8) 8px);
+    z-index: 99999;
+    animation: demonLaughGlitch 0.05s infinite; pointer-events: none;
     display: none;
-    mix-blend-mode: screen;
+    mix-blend-mode: multiply;
   }
 
   @keyframes demonLaughGlitch {
-    0% { filter: invert(0) drop-shadow(8px 0 var(--glitch-cyan)) drop-shadow(-8px 0 var(--glitch-magenta)); transform: scale(1.05) translate(10px, 8px) skew(8deg); }
-    30% { filter: invert(100%) contrast(900%) hue-rotate(180deg); transform: scale(1.15) translate(-14px, 16px) skew(-15deg); }
-    60% { filter: invert(0) contrast(700%) drop-shadow(-8px 0 var(--glitch-cyan)); transform: scale(1.03) translate(8px, -10px); }
-    100% { filter: invert(60%) contrast(800%) drop-shadow(8px 0 var(--glitch-magenta)); transform: scale(1.1) translate(-10px, 6px) skew(5deg); }
+    0% { filter: invert(0) contrast(500%); transform: translate(15px, 0) scale(1.05); opacity: 0.8; }
+    50% { filter: invert(100%) contrast(1000%); transform: translate(-20px, 0) scale(1.1); opacity: 1; }
+    100% { filter: invert(0) contrast(800%); transform: translate(10px, 0) scale(1.02); opacity: 0.9; }
   }
 
   #pure-black-screen {
@@ -245,9 +222,6 @@
       <div>> STATUS: <span>AWAITING AUDIO HANDSHAKE</span></div>
       <div>> SECURITY: <span>BYPASS REQUIRED</span></div>
     </div>
-    <div class="splash-quote-box">
-      "Smile, my dear! You're never fully dressed without a broadcast..."
-    </div>
     <button class="splash-action-btn" onclick="startExperience()">
       [ TAP TO CONNECT & ENGAGE ]
     </button>
@@ -261,7 +235,6 @@
   <div class="main-ui" id="main-ui">
     <div class="ui-corner-tl"></div>
     <div class="ui-corner-br"></div>
-    <div class="hex-bg" id="hex-bg"></div>
     
     <div class="header-grid">
       <div>STATION: 666.9 MHz - HAZBIN</div>
@@ -269,15 +242,15 @@
     </div>
 
     <div class="mini-signal-box">
-      <div>⚠ NO SIGNAL // ROUTER COMPROMISED // FEED_01 LOCKED</div>
-      <span>[TRACE_ERASED]</span>
+      <div>⚠ OVERRIDE PROTOCOL // ACCESS GRANTED</div>
+      <span>[OWNED]</span>
     </div>
 
     <div class="alert-box"><div class="alert-title">HAZBIN FREQUENCY HIJACKED</div></div>
-    <div class="hacker-brand">ALASTOR THE RADIO DEMON</div>
+    <div class="hacker-brand">NO SIGNAL</div>
     
     <div class="progress-section">
-      <div class="progress-header"><span id="target-ip">SOUL_FREQ: 192.666.##.##</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
+      <div class="progress-header"><span id="target-ip">TRANSMISSION OVERRIDDEN</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
       <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
     </div>
     
@@ -310,19 +283,18 @@
     noise.buffer = buffer;
     noise.loop = true;
     let filter = audioCtx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 2500; filter.Q.value = 4.0;
+    filter.type = 'bandpass'; filter.frequency.value = 1500; filter.Q.value = 2.0;
     staticGainNode = audioCtx.createGain();
     staticGainNode.gain.value = 0.08;
     noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
     noise.start();
   }
 
-  /* توليد صوت زَمَر وتكسر سماعة مرعب جداً (Aggressive Speaker Blowout & Screech) */
+  /* تحديث صوت التشويش ليكون شيطانياً وعميقاً متوافقاً مع رعب الفيديو */
   function playTerrifyingSpeakerGlitch() {
     if (!audioCtx) return;
     let now = audioCtx.currentTime;
     
-    // مذبذبان لإنشاء صوت حاد وصاخب ومتداخل
     let osc1 = audioCtx.createOscillator();
     let osc2 = audioCtx.createOscillator();
     let distortion = audioCtx.createWaveShaper();
@@ -331,27 +303,26 @@
     osc1.type = 'sawtooth';
     osc2.type = 'square';
 
-    // ترددات صاخبة للغاية تحاكي صراخ الأجهزة المحروقة
-    osc1.frequency.setValueAtTime(300, now);
-    osc1.frequency.exponentialRampToValueAtTime(7500, now + 0.05);
-    osc1.frequency.setValueAtTime(1200, now + 0.08);
-    osc1.frequency.exponentialRampToValueAtTime(4500, now + 0.18);
+    // قاعدة شيطانية منخفضة جداً ومهتزة
+    osc1.frequency.setValueAtTime(80, now);
+    osc1.frequency.exponentialRampToValueAtTime(30, now + 0.15);
 
-    osc2.frequency.setValueAtTime(2500, now);
-    osc2.frequency.linearRampToValueAtTime(150, now + 0.15);
+    // صرير راديو حاد وثاقب
+    osc2.frequency.setValueAtTime(3000, now);
+    osc2.frequency.linearRampToValueAtTime(8000, now + 0.1);
 
-    // منحنى تشويه عنيف جداً (WaveShaper Distortion) لتدمير الصوت وجعله مرعباً
-    let k = 1500;
+    // تشويه عنيف جداً لكسر الصوت
+    let k = 2000;
     let curve = new Float32Array(44100);
     let deg = Math.PI / 180;
     for (let i = 0; i < 44100; ++i) {
       let x = (i * 2) / 44100 - 1;
-      curve[i] = ((3 + k) * x * 60 * deg) / (Math.PI + k * Math.abs(x));
+      curve[i] = ((3 + k) * x * 50 * deg) / (Math.PI + k * Math.abs(x));
     }
     distortion.curve = curve;
 
-    gainNode.gain.setValueAtTime(0.9, now);
-    gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+    gainNode.gain.setValueAtTime(1.0, now);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
 
     osc1.connect(distortion);
     osc2.connect(distortion);
@@ -360,8 +331,8 @@
 
     osc1.start(now);
     osc2.start(now);
-    osc1.stop(now + 0.22);
-    osc2.stop(now + 0.22);
+    osc1.stop(now + 0.18);
+    osc2.stop(now + 0.18);
   }
 
   function playLongTeetTone() {
@@ -405,97 +376,6 @@
   let progress = 0;
 
   function randomizeGlitchDirection() {
-    const rx = (Math.random() * 120 - 60) + 'px'; 
-    const ry = (Math.random() * 70 - 35) + 'px'; 
-    const rs = (Math.random() * 90 - 45) + 'deg'; 
-    mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry); mainUI.style.setProperty('--sk', rs);
-  }
-
-  function startExperience() {
-    if (sequenceStarted) return;
-    sequenceStarted = true;
-    splashScreen.style.opacity = '0';
-    setTimeout(() => { splashScreen.style.display = 'none'; }, 400);
-    screenContainer.style.opacity = '1';
-    initAudio(); startBackgroundStatic();
-    playTerrifyingSpeakerGlitch(); randomizeGlitchDirection(); 
-    mainUI.classList.add('severe-glitch');
-    setTimeout(() => mainUI.classList.remove('severe-glitch'), 250);
-    setTimeout(() => { addLog(); updateProgress(); }, 200);
-  }
-
-  const logsList = [
-    { text: "TUNING INTO THE PENTAGRAM BROADCAST...", type: "red" },
-    { text: "ESTABLISHING STATIC INTERFERENCE [FREQ 666Hz] ZZZZZ...", type: "green" },
-    { text: "IF I WANTED TO HURT ANYONE HERE...", type: "red" },
-    { text: "BROADCASTING OVER HELL'S AIRWAVES...", type: "green" },
-    { text: "PSYCHOTIC SMILE INTENSITY: 100%", type: "red" },
-    { text: "I WOULD HAVE DONE SO ALREADY!", type: "green" }
-  ];
-
-  function getTimestamp() {
-    const now = new Date();
-    return `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}.${Math.floor(Math.random()*999).toString().padStart(3,'0')}`;
-  }
-
-  function addLog() {
-    if (progress >= 100) return;
-    const row = document.createElement('div'); row.className = 'log-row';
-    const timeSpan = document.createElement('span'); timeSpan.className = 'log-time'; timeSpan.innerText = getTimestamp();
-    const msgSpan = document.createElement('span');
-    if (Math.random() > 0.4) {
-      const logItem = logsList[Math.floor(Math.random() * logsList.length)];
-      msgSpan.className = `log-msg ${logItem.type}`; msgSpan.innerText = `♪ ${logItem.text}`;
-    } else {
-      msgSpan.className = 'log-msg'; msgSpan.style.color = '#ff3355'; msgSpan.innerText = `[SIGNAL_LOST // ERROR_0x666_CORRUPTED]`;
-    }
-    row.appendChild(timeSpan); row.appendChild(msgSpan);
-    terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
-
-    if (Math.random() > 0.3) {
-      randomizeGlitchDirection(); 
-      mainUI.classList.add('severe-glitch'); 
-      playTerrifyingSpeakerGlitch(); 
-      setTimeout(() => mainUI.classList.remove('severe-glitch'), 180);
-    }
-    setTimeout(addLog, Math.random() * 80 + 20);
-  }
-
-  function updateProgress() {
-    if (progress < 100) {
-      progress += Math.random() * 1.5; 
-      if (progress > 100) progress = 100;
-      progressBar.style.width = `${progress}%`; pctText.innerText = `${progress.toFixed(2)}%`;
-      setTimeout(updateProgress, Math.random() * 50 + 10);
-    } else {
-      triggerEndSequence();
-    }
-  }
-
-  function triggerEndSequence() {
-    randomizeGlitchDirection(); 
-    mainUI.classList.add('severe-glitch');
-    playTerrifyingSpeakerGlitch();
-    
-    setTimeout(() => {
-      mainUI.classList.remove('severe-glitch');
-      screenContainer.classList.add('crt-shut-off');
-
-      playLongTeetTone();
-
-      setTimeout(() => {
-        demonGlitchOverlay.style.display = 'block';
-        playAlastorDemonLaugh();
-
-        setTimeout(() => {
-          demonGlitchOverlay.style.display = 'none';
-          pureBlackScreen.style.display = 'block';
-        }, 3000);
-
-      }, 2200);
-
-    }, 450); 
-  }
-</script>
-</body>
-</html>
+    // حركة أفقية أعنف بكثير لتطابق الفيديو
+    const rx = (Math.random() * 160 - 80) + 'px'; 
+    const ry = (Math.random
