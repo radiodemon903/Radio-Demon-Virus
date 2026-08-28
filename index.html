@@ -2,505 +2,1347 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RADIO_BROADCAST // ALASTOR</title>
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<title>ALASTOR // RADIO BROADCAST</title>
+
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Creepster&family=Share+Tech+Mono&display=swap');
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-  :root {
-    --bg-color: #050000;
-    --radio-red: #ff0011;
-    --dark-red: #3a0005;
-    --alastor-green: #33ff00;
-    --text-dim: #882222;
-  }
+html,
+body {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden;
+}
 
-  body, html {
-    margin: 0; padding: 0; background-color: #000; color: var(--radio-red);
-    font-family: 'Share Tech Mono', monospace; height: 100vh; overflow: hidden; user-select: none;
-  }
+body {
+    font-family: "Courier New", monospace;
+    color: #ff1616;
+}
 
-  /* شاشة الترحيب */
-  #splash-screen {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-    background: radial-gradient(circle, #150000 0%, #000000 100%);
-    z-index: 9999; display: flex; justify-content: center; align-items: center;
-    padding: 15px; box-sizing: border-box;
-    transition: opacity 0.4s ease, visibility 0.4s;
-  }
+/* =========================================
+   MAIN SCREEN
+========================================= */
 
-  .splash-card {
-    border: 2px solid var(--radio-red); background: rgba(5, 0, 0, 0.95);
-    width: 100%; max-width: 480px; padding: 25px; box-sizing: border-box;
-    position: relative; box-shadow: 0 0 50px rgba(255, 0, 17, 0.4), inset 0 0 20px rgba(255, 0, 17, 0.2);
-    animation: cardFlicker 3s infinite;
-  }
+#screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    overflow: hidden;
+}
 
-  .splash-card::before, .splash-card::after {
-    content: ''; position: absolute; width: 12px; height: 12px; border-color: var(--alastor-green); border-style: solid;
-  }
-  .splash-card::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
-  .splash-card::after { bottom: 6px; right: 6px; border-left: none; border-top: none; }
+#mainImage {
+    position: absolute;
+    inset: 0;
 
-  .splash-header-info {
-    display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim);
-    border-bottom: 1px solid var(--dark-red); padding-bottom: 8px; margin-bottom: 15px;
-  }
+    width: 100%;
+    height: 100%;
 
-  .splash-brand-title {
-    text-align: center; font-size: 2.5rem; font-family: 'Creepster', cursive; color: var(--radio-red);
-    letter-spacing: 5px; text-shadow: 0 0 15px var(--radio-red), 2px 2px 0px #000; margin-bottom: 5px;
-  }
+    object-fit: contain;
 
-  .splash-subtitle {
-    text-align: center; font-size: 0.85rem; color: var(--alastor-green); letter-spacing: 2px;
-    margin-bottom: 20px; text-shadow: 0 0 10px var(--alastor-green);
-  }
+    filter:
+        contrast(1.15)
+        brightness(.82);
 
-  .splash-details-box {
-    border: 1px solid var(--dark-red); background: rgba(20, 0, 0, 0.6);
-    padding: 12px; margin-bottom: 20px; font-size: 0.75rem; color: #ccc; line-height: 1.6;
-  }
+    transition:
+        transform .04s,
+        filter .04s,
+        opacity .05s;
+}
 
-  .splash-details-box span { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
+/* =========================================
+   CRT SCANLINES
+========================================= */
 
-  .splash-action-btn {
-    background: var(--dark-red); color: var(--alastor-green); border: 1px solid var(--alastor-green);
-    padding: 14px; font-family: 'Share Tech Mono', monospace; font-size: 1rem; font-weight: bold;
-    letter-spacing: 2px; cursor: pointer; width: 100%; transition: all 0.2s ease;
-    box-shadow: 0 0 15px rgba(51, 255, 0, 0.3); text-align: center;
-  }
+#scanlines {
+    position: absolute;
+    inset: 0;
 
-  .splash-action-btn:hover {
-    background: var(--alastor-green); color: #000; box-shadow: 0 0 30px var(--alastor-green);
-  }
+    pointer-events: none;
 
-  @keyframes cardFlicker {
-    0%, 100% { border-color: var(--radio-red); box-shadow: 0 0 40px rgba(255, 0, 17, 0.4); }
-    50% { border-color: #400; box-shadow: 0 0 10px rgba(255, 0, 17, 0.1); }
-  }
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            rgba(255,0,0,.055) 0px,
+            rgba(255,0,0,.055) 1px,
+            transparent 1px,
+            transparent 4px
+        );
 
-  #screen-container {
-    width: 100vw; height: 100vh; background-color: var(--bg-color);
-    position: relative; overflow: hidden; transform-origin: center center;
-    display: none; opacity: 0; transition: opacity 0.5s ease;
-  }
+    mix-blend-mode: screen;
 
-  /* خطوط الراديو والتشويش */
-  .crt-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: 
-      linear-gradient(rgba(10, 0, 0, 0) 50%, rgba(0, 0, 0, 0.9) 50%),
-      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 17, 0.08) 2px, rgba(0, 0, 0, 0.1) 4px);
-    background-size: 100% 4px, 100% 100%;
-    z-index: 100; pointer-events: none;
-    box-shadow: inset 0 0 150px rgba(0,0,0,0.95); 
-    animation: digitalNoiseFlicker 0.08s infinite;
-  }
+    z-index: 5;
+}
 
-  @keyframes digitalNoiseFlicker {
-    0% { opacity: 0.8; transform: translateY(0); }
-    50% { opacity: 1; transform: translateY(-1px); }
-    100% { opacity: 0.9; transform: translateY(1px); }
-  }
+/* =========================================
+   NOISE
+========================================= */
 
-  /* التمزيق الأفقي */
-  .digital-glitch-blocks {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-image: 
-      linear-gradient(90deg, rgba(255,0,17,0.15) 0%, transparent 20%, rgba(0,0,0,0.5) 50%, transparent 80%);
-    opacity: 0.7; z-index: 90; pointer-events: none;
-    animation: blocksTear 0.12s steps(4) infinite;
-  }
-  @keyframes blocksTear {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(-10px, 0); filter: contrast(150%); }
-    50% { transform: translate(15px, 0); filter: invert(10%); }
-    75% { transform: translate(-5px, 0); }
-    100% { transform: translate(0, 0); }
-  }
+#noise {
+    position: absolute;
+    inset: -20%;
 
-  .main-ui {
-    position: relative; width: 96%; max-width: 650px; height: 96vh;
-    margin: 2vh auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; z-index: 10;
-  }
+    pointer-events: none;
 
-  .main-ui::before, .main-ui::after, .ui-corner-tl, .ui-corner-br {
-    border-color: var(--alastor-green); border-style: solid; border-width: 2px; position: absolute;
-    box-shadow: 0 0 12px var(--alastor-green);
-  }
-  .main-ui::before { content:''; top: 0; left: 0; width: 100%; height: 100%; border-right: none; border-bottom: none; pointer-events:none;}
-  .main-ui::after { content:''; bottom: 0; right: 0; width: 100%; height: 100%; border-left: none; border-top: none; pointer-events:none;}
-  .ui-corner-tl { top: 0; right: 0; width: 30px; height: 30px; border-left: none; border-bottom: none; }
-  .ui-corner-br { bottom: 0; left: 0; width: 30px; height: 30px; border-right: none; border-top: none; }
+    opacity: .09;
 
-  .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 15px; }
-  .header-grid div:nth-child(2) { text-align: right; }
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 
-  .mini-signal-box {
-    border: 1px solid var(--radio-red); background: rgba(50, 0, 5, 0.4);
-    padding: 8px; font-size: 0.7rem; color: #fff; margin-bottom: 12px;
-    display: flex; justify-content: space-between; align-items: center;
-    box-shadow: 0 0 15px rgba(255,0,17,0.3);
-  }
-  .mini-signal-box span { color: var(--radio-red); font-weight: bold; text-shadow: 0 0 5px var(--radio-red); }
+    mix-blend-mode: screen;
 
-  .alert-box { border: 1px solid var(--alastor-green); background: rgba(51, 255, 0, 0.1); padding: 8px; text-align: center; margin-bottom: 12px; box-shadow: 0 0 20px rgba(51,255,0,0.2); }
-  .alert-title { color: var(--alastor-green); font-size: 1.3rem; font-weight: bold; letter-spacing: 4px; text-shadow: 0 0 12px var(--alastor-green); animation: alertPulse 0.4s infinite; }
-  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 20px var(--alastor-green); } 50% { opacity: 0.4; text-shadow: none; } }
+    animation:
+        noiseMove .12s steps(2) infinite;
 
-  /* عبارة NO SIGNAL ثابتة ولا تهتز عشوائياً، تتحرك فقط مع جليتش الشاشة العام */
-  .hacker-brand { 
-    text-align: center; 
-    font-size: 4rem; 
-    font-family: 'Creepster', cursive;
-    color: var(--radio-red); 
-    text-shadow: 0 0 15px var(--radio-red), 3px 3px 0 #000, -2px -2px 0 var(--alastor-green); 
-    margin: 15px 0; 
-    font-weight: bold; 
-    letter-spacing: 5px; 
-  }
+    z-index: 6;
+}
 
-  .progress-section { margin-bottom: 15px; }
-  .progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 5px; color: #ccc; }
-  .progress-track { width: 100%; height: 10px; border: 1px solid var(--radio-red); background: #000; position: relative; }
-  .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 20px var(--radio-red); transition: width 0.1s; }
+@keyframes noiseMove {
 
-  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(10, 0, 0, 0.6); padding: 10px; overflow: hidden; font-size: 0.7rem; line-height: 1.4; }
-  .log-row { display: flex; margin-bottom: 3px; }
-  .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
-  .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
-  .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 8px var(--alastor-green); }
-  .log-msg.red { color: var(--radio-red); text-shadow: 0 0 8px var(--radio-red); font-weight: bold; }
+    0% {
+        transform: translate(0,0);
+    }
 
-  /* جليتش التمزيق العنيف للشاشة بالكامل */
-  .severe-glitch { animation: severeChaos 0.05s infinite !important; }
-  @keyframes severeChaos { 
-    0% { transform: translate(0, 0); filter: none; } 
-    25% { transform: translate(-40px, 0) scaleY(1.05); filter: contrast(1000%) invert(10%) drop-shadow(10px 0 #000); background-color: var(--radio-red); } 
-    50% { transform: translate(30px, 0) scaleY(0.95); filter: blur(1px) contrast(800%) saturate(1000%); color: #fff; } 
-    75% { transform: translate(-10px, 0); filter: contrast(1000%) grayscale(100%); } 
-    100% { transform: translate(0, 0); filter: none; } 
-  }
+    25% {
+        transform: translate(-3%,2%);
+    }
 
-  .crt-shut-off {
-    animation: turn-off 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-  }
-  @keyframes turn-off {
-    0% { transform: scale(1, 1); filter: brightness(1) contrast(1); }
-    30% { transform: scale(1.1, 0.005); filter: brightness(60) contrast(800%); background-color: #fff; }
-    60% { transform: scale(0.005, 0.001); filter: brightness(100); background-color: #fff; box-shadow: 0 0 200px #fff; }
-    100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #000 !important; }
-  }
+    50% {
+        transform: translate(2%,-3%);
+    }
 
-  #demon-glitch-overlay {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: repeating-linear-gradient(0deg, #000 0px, #000 4px, rgba(255,0,17,0.8) 4px, rgba(255,0,17,0.8) 8px);
-    z-index: 99999;
-    animation: demonLaughGlitch 0.05s infinite; pointer-events: none;
-    display: none;
-    mix-blend-mode: multiply;
-  }
+    75% {
+        transform: translate(3%,3%);
+    }
 
-  @keyframes demonLaughGlitch {
-    0% { filter: invert(0) contrast(500%); transform: translate(15px, 0) scale(1.05); opacity: 0.8; }
-    50% { filter: invert(100%) contrast(1000%); transform: translate(-20px, 0) scale(1.1); opacity: 1; }
-    100% { filter: invert(0) contrast(800%); transform: translate(10px, 0) scale(1.02); opacity: 0.9; }
-  }
+    100% {
+        transform: translate(-2%,-2%);
+    }
+}
 
-  #pure-black-screen {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-color: #000; z-index: 999999; display: none; pointer-events: auto;
-  }
+/* =========================================
+   VIGNETTE
+========================================= */
+
+#vignette {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle,
+            transparent 38%,
+            rgba(0,0,0,.35) 68%,
+            rgba(0,0,0,.92) 100%
+        );
+
+    z-index: 7;
+}
+
+/* =========================================
+   GLITCH LAYER
+========================================= */
+
+#glitch {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent 0%,
+            transparent 9%,
+            rgba(255,0,0,.7) 9%,
+            rgba(255,0,0,.7) 11%,
+            transparent 11%,
+            transparent 43%,
+            rgba(255,255,255,.15) 43%,
+            rgba(255,255,255,.15) 46%,
+            transparent 46%,
+            transparent 73%,
+            rgba(255,0,0,.65) 73%,
+            rgba(255,0,0,.65) 76%,
+            transparent 76%
+        );
+
+    mix-blend-mode: screen;
+
+    z-index: 8;
+}
+
+/* =========================================
+   START SCREEN
+========================================= */
+
+#bootScreen {
+    position: absolute;
+    inset: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #000;
+
+    z-index: 20;
+
+    transition:
+        opacity .8s,
+        visibility .8s;
+}
+
+#bootBox {
+    width: min(700px, 88vw);
+
+    border: 1px solid #a90000;
+
+    padding: 30px;
+
+    background:
+        rgba(0,0,0,.95);
+
+    box-shadow:
+        0 0 20px rgba(255,0,0,.25),
+        inset 0 0 30px rgba(255,0,0,.06);
+}
+
+/* =========================================
+   TITLE
+========================================= */
+
+#logo {
+
+    font-size:
+        clamp(30px, 7vw, 70px);
+
+    font-weight: 900;
+
+    letter-spacing: .08em;
+
+    color: #ff1515;
+
+    text-shadow:
+        3px 0 #620000,
+        -3px 0 #ff0000;
+
+    animation:
+        logoFlicker 1.8s infinite;
+}
+
+@keyframes logoFlicker {
+
+    0%,
+    18%,
+    20%,
+    23%,
+    65%,
+    67%,
+    100% {
+        opacity: 1;
+    }
+
+    19%,
+    22%,
+    66% {
+        opacity: .25;
+    }
+}
+
+#subtitle {
+
+    margin-top: 12px;
+
+    color: #777;
+
+    font-size:
+        clamp(10px, 2vw, 15px);
+
+    letter-spacing: .08em;
+}
+
+/* =========================================
+   ENTER BUTTON
+========================================= */
+
+#enterButton {
+
+    margin-top: 25px;
+
+    padding:
+        14px 25px;
+
+    border:
+        1px solid #ff1515;
+
+    background:
+        #130000;
+
+    color:
+        #ff2525;
+
+    font-family:
+        "Courier New", monospace;
+
+    font-weight:
+        bold;
+
+    letter-spacing:
+        .12em;
+
+    cursor:
+        pointer;
+
+    transition:
+        .2s;
+}
+
+#enterButton:hover {
+
+    background:
+        #350000;
+
+    box-shadow:
+        0 0 20px #ff0000;
+
+    text-shadow:
+        0 0 10px #ff0000;
+}
+
+#enterButton:disabled {
+    opacity: .5;
+    cursor: default;
+}
+
+/* =========================================
+   LOADING
+========================================= */
+
+#loadingContainer {
+
+    margin-top:
+        22px;
+}
+
+#loadingBar {
+
+    height:
+        9px;
+
+    width:
+        100%;
+
+    border:
+        1px solid #700;
+
+    background:
+        #080000;
+}
+
+#progress {
+
+    width:
+        0%;
+
+    height:
+        100%;
+
+    background:
+        #ff1111;
+
+    box-shadow:
+        0 0 18px #ff0000;
+
+    transition:
+        width .05s linear;
+}
+
+#percentage {
+
+    margin-top:
+        9px;
+
+    color:
+        #ff3333;
+
+    font-size:
+        16px;
+}
+
+/* =========================================
+   TERMINAL
+========================================= */
+
+#terminal {
+
+    margin-top:
+        20px;
+
+    height:
+        130px;
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid #350000;
+
+    padding:
+        10px;
+
+    color:
+        #9b1c1c;
+
+    font-size:
+        11px;
+
+    line-height:
+        1.7;
+
+    background:
+        rgba(20,0,0,.25);
+}
+
+.terminalLine {
+    white-space:
+        nowrap;
+}
+
+/* =========================================
+   FINAL SCREEN
+========================================= */
+
+#finalScreen {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    background:
+        #000;
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    align-items:
+        center;
+
+    opacity:
+        0;
+
+    visibility:
+        hidden;
+
+    z-index:
+        50;
+}
+
+#finalText {
+
+    color:
+        #ff1010;
+
+    font-family:
+        Impact,
+        "Arial Black",
+        sans-serif;
+
+    font-size:
+        clamp(55px, 14vw, 190px);
+
+    font-weight:
+        900;
+
+    text-align:
+        center;
+
+    letter-spacing:
+        .04em;
+
+    text-shadow:
+        6px 0 #500,
+        -6px 0 #fff,
+        0 0 30px #f00;
+
+    opacity:
+        0;
+
+    transform:
+        scale(.6);
+}
+
+/* =========================================
+   FINAL ANIMATIONS
+========================================= */
+
+.finalActive {
+
+    visibility:
+        visible !important;
+
+    animation:
+        blackout 1.5s steps(9,end) forwards;
+}
+
+.finalActive #finalText {
+
+    animation:
+        finalGlitch 3s steps(12,end) infinite 1.2s;
+}
+
+@keyframes blackout {
+
+    0% {
+        opacity: 0;
+    }
+
+    20% {
+        opacity: .2;
+    }
+
+    35% {
+        opacity: .05;
+    }
+
+    50% {
+        opacity: .8;
+    }
+
+    65% {
+        opacity: .25;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes finalGlitch {
+
+    0%,
+    85%,
+    100% {
+
+        opacity:
+            1;
+
+        transform:
+            scale(1);
+
+        filter:
+            none;
+
+        clip-path:
+            inset(0);
+    }
+
+    87% {
+
+        transform:
+            translateX(-14px)
+            skewX(-8deg);
+
+        clip-path:
+            inset(8% 0 72% 0);
+    }
+
+    89% {
+
+        transform:
+            translateX(13px);
+
+        clip-path:
+            inset(54% 0 20% 0);
+    }
+
+    91% {
+
+        transform:
+            scale(1.05);
+
+        clip-path:
+            inset(30% 0 42% 0);
+    }
+
+    93% {
+
+        transform:
+            translateX(-7px);
+
+        clip-path:
+            inset(70% 0 8% 0);
+    }
+
+    95% {
+
+        transform:
+            translateX(4px)
+            scale(.98);
+
+        filter:
+            brightness(2);
+
+        clip-path:
+            none;
+    }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media(max-width:600px) {
+
+    #bootBox {
+        padding: 20px;
+    }
+
+    #terminal {
+        height: 100px;
+        font-size: 9px;
+    }
+
+}
 </style>
 </head>
+
 <body>
 
-<audio id="alastor-laugh-audio" src="https://www.myinstants.com/media/sounds/alastor-laugh.mp3" preload="auto"></audio>
+<div id="screen">
 
-<div id="splash-screen">
-  <div class="splash-card">
-    <div class="splash-header-info">
-      <span>SYSTEM: SECURE_WAVE</span>
-      <span>FREQ: 666.9 MHz</span>
+    <!-- YOUR IMAGE -->
+    <img
+        id="mainImage"
+        src="alastor-page.png"
+        alt="Alastor Radio Broadcast"
+    >
+
+    <!-- CRT EFFECTS -->
+    <div id="scanlines"></div>
+    <div id="noise"></div>
+    <div id="vignette"></div>
+    <div id="glitch"></div>
+
+
+    <!-- =================================
+         START / LOADING SCREEN
+    ================================== -->
+
+    <div id="bootScreen">
+
+        <div id="bootBox">
+
+            <div id="logo">
+                ALASTOR // ON AIR
+            </div>
+
+            <div id="subtitle">
+                RADIO DEMON BROADCAST //
+                SIGNAL LOCKED //
+                NO ESCAPE
+            </div>
+
+            <button id="enterButton">
+                ▶ ENTER THE BROADCAST
+            </button>
+
+            <div id="loadingContainer">
+
+                <div id="loadingBar">
+                    <div id="progress"></div>
+                </div>
+
+                <div id="percentage">
+                    0%
+                </div>
+
+            </div>
+
+
+            <div id="terminal">
+
+                <div class="terminalLine">
+                    &gt; INITIALIZING RADIO SIGNAL...
+                </div>
+
+                <div class="terminalLine">
+                    &gt; CONNECTING TO BROADCAST...
+                </div>
+
+                <div class="terminalLine">
+                    &gt; SEARCHING FREQUENCY 66.6 FM...
+                </div>
+
+                <div class="terminalLine">
+                    &gt; SIGNAL LOCKED...
+                </div>
+
+                <div class="terminalLine">
+                    &gt; ALASTOR.EXE READY...
+                </div>
+
+                <div class="terminalLine">
+                    &gt; WAITING FOR LISTENER...
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
-    <div class="splash-brand-title">ALASTOR</div>
-    <div class="splash-subtitle">// THE RADIO DEMON //</div>
-    <div class="splash-details-box">
-      <div>> TARGET: <span>PENTAGRAM BROADCAST</span></div>
-      <div>> STATUS: <span>AWAITING AUDIO HANDSHAKE</span></div>
-      <div>> SECURITY: <span>BYPASS REQUIRED</span></div>
+
+
+    <!-- =================================
+         FINAL SCREEN
+    ================================== -->
+
+    <div id="finalScreen">
+
+        <div id="finalText">
+            YOU FUCKED
+        </div>
+
     </div>
-    <button class="splash-action-btn" id="start-btn">
-      [ TAP TO CONNECT & ENGAGE ]
-    </button>
-  </div>
+
 </div>
 
-<div id="screen-container">
-  <div class="crt-overlay"></div>
-  <div class="digital-glitch-blocks"></div>
-  
-  <div class="main-ui" id="main-ui">
-    <div class="ui-corner-tl"></div>
-    <div class="ui-corner-br"></div>
-    
-    <div class="header-grid">
-      <div>STATION: 666.9 MHz - HAZBIN</div>
-      <div>STATUS: RADIO_WAVE_ACTIVE</div>
-    </div>
-
-    <div class="mini-signal-box">
-      <div>⚠ OVERRIDE PROTOCOL // ACCESS GRANTED</div>
-      <span>[OWNED]</span>
-    </div>
-
-    <div class="alert-box"><div class="alert-title">HAZBIN FREQUENCY HIJACKED</div></div>
-    <div class="hacker-brand">NO SIGNAL</div>
-    
-    <div class="progress-section">
-      <div class="progress-header"><span>TRANSMISSION OVERRIDDEN</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
-      <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
-    </div>
-    
-    <div class="terminal-box" id="terminal"></div>
-  </div>
-</div>
-
-<div id="demon-glitch-overlay"></div>
-<div id="pure-black-screen"></div>
 
 <script>
-  let audioCtx, staticGainNode;
-  let sequenceStarted = false;
 
-  function initAudio() {
-    try {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-    } catch(e) {
-      console.log("Audio API Error: ", e);
+/* =========================================
+   VARIABLES
+========================================= */
+
+const enterButton =
+    document.getElementById("enterButton");
+
+const bootScreen =
+    document.getElementById("bootScreen");
+
+const progress =
+    document.getElementById("progress");
+
+const percentage =
+    document.getElementById("percentage");
+
+const terminal =
+    document.getElementById("terminal");
+
+const glitch =
+    document.getElementById("glitch");
+
+const mainImage =
+    document.getElementById("mainImage");
+
+const finalScreen =
+    document.getElementById("finalScreen");
+
+let running = false;
+
+let audioContext = null;
+
+let masterGain = null;
+
+
+/* =========================================
+   RADIO AUDIO
+   Generated locally — no audio file needed
+========================================= */
+
+function startRadioAudio() {
+
+    audioContext =
+        new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
+    masterGain =
+        audioContext.createGain();
+
+    masterGain.gain.value =
+        0.045;
+
+    masterGain.connect(
+        audioContext.destination
+    );
+
+
+    /*
+       RADIO STATIC
+    */
+
+    const buffer =
+        audioContext.createBuffer(
+            1,
+            audioContext.sampleRate * 2,
+            audioContext.sampleRate
+        );
+
+    const data =
+        buffer.getChannelData(0);
+
+    for (
+        let i = 0;
+        i < data.length;
+        i++
+    ) {
+
+        data[i] =
+            (Math.random() * 2 - 1)
+            * .55;
     }
-  }
 
-  // تشويش راديو مستمر، خشن ومرعب
-  function startBackgroundStatic() {
-    if (!audioCtx) return;
-    try {
-      let bufferSize = audioCtx.sampleRate * 2;
-      let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-      let data = buffer.getChannelData(0);
-      
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * (Math.random() > 0.95 ? 2.5 : 0.8);
-      }
-      
-      let noise = audioCtx.createBufferSource();
-      noise.buffer = buffer;
-      noise.loop = true;
-      
-      let filter = audioCtx.createBiquadFilter();
-      filter.type = 'bandpass'; 
-      filter.frequency.value = 1000; 
-      filter.Q.value = 3.5; 
-      
-      staticGainNode = audioCtx.createGain();
-      staticGainNode.gain.value = 0.22;
-      
-      noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
-      noise.start();
-    } catch(e) {}
-  }
 
-  function playTerrifyingSpeakerGlitch() {
-    if (!audioCtx) return;
-    try {
-      let now = audioCtx.currentTime;
-      let osc1 = audioCtx.createOscillator();
-      let osc2 = audioCtx.createOscillator();
-      let distortion = audioCtx.createWaveShaper();
-      let gainNode = audioCtx.createGain();
+    const noise =
+        audioContext.createBufferSource();
 
-      osc1.type = 'sawtooth';
-      osc2.type = 'square';
+    noise.buffer =
+        buffer;
 
-      osc1.frequency.setValueAtTime(80, now);
-      osc1.frequency.exponentialRampToValueAtTime(30, now + 0.15);
+    noise.loop =
+        true;
 
-      osc2.frequency.setValueAtTime(3000, now);
-      osc2.frequency.linearRampToValueAtTime(8000, now + 0.1);
 
-      let k = 2000;
-      let curve = new Float32Array(44100);
-      let deg = Math.PI / 180;
-      for (let i = 0; i < 44100; ++i) {
-        let x = (i * 2) / 44100 - 1;
-        curve[i] = ((3 + k) * x * 50 * deg) / (Math.PI + k * Math.abs(x));
-      }
-      distortion.curve = curve;
+    const filter =
+        audioContext.createBiquadFilter();
 
-      gainNode.gain.setValueAtTime(1.0, now);
-      gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+    filter.type =
+        "bandpass";
 
-      osc1.connect(distortion);
-      osc2.connect(distortion);
-      distortion.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
+    filter.frequency.value =
+        1500;
 
-      osc1.start(now);
-      osc2.start(now);
-      osc1.stop(now + 0.18);
-      osc2.stop(now + 0.18);
-    } catch(e) {}
-  }
+    filter.Q.value =
+        .8;
 
-  function playLongTeetTone() {
-    if (!audioCtx) return;
-    try {
-      if (staticGainNode) staticGainNode.gain.value = 0;
 
-      let now = audioCtx.currentTime;
-      let osc = audioCtx.createOscillator();
-      let gain = audioCtx.createGain();
+    noise
+        .connect(filter)
+        .connect(masterGain);
 
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(1400, now);
+    noise.start();
 
-      gain.gain.setValueAtTime(0.8, now);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
 
-      osc.connect(gain).connect(audioCtx.destination);
-      osc.start(now);
-      osc.stop(now + 2.5);
-    } catch(e) {}
-  }
+    /*
+       LOW RADIO HUM
+    */
 
-  function playAlastorDemonLaugh() {
-    const laughAudio = document.getElementById('alastor-laugh-audio');
-    if (laughAudio) {
-      laughAudio.currentTime = 0;
-      laughAudio.volume = 1.0;
-      laughAudio.play().catch(e => console.log("Audio play blocked:", e));
-    }
-  }
+    const oscillator =
+        audioContext.createOscillator();
 
-  const mainUI = document.getElementById('main-ui');
-  const terminal = document.getElementById('terminal');
-  const progressBar = document.getElementById('progress-bar');
-  const pctText = document.getElementById('pct-text');
-  
-  const screenContainer = document.getElementById('screen-container');
-  const splashScreen = document.getElementById('splash-screen');
-  const demonGlitchOverlay = document.getElementById('demon-glitch-overlay');
-  const pureBlackScreen = document.getElementById('pure-black-screen');
-  const startBtn = document.getElementById('start-btn');
+    const oscillatorGain =
+        audioContext.createGain();
 
-  let progress = 0;
+    oscillator.type =
+        "sawtooth";
 
-  function randomizeGlitchDirection() {
-    const rx = (Math.random() * 160 - 80) + 'px'; 
-    const ry = (Math.random() * 20 - 10) + 'px'; 
-    mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry);
-  }
+    oscillator.frequency.value =
+        72;
 
-  function startExperience() {
-    if (sequenceStarted) return;
-    sequenceStarted = true;
+    oscillatorGain.gain.value =
+        .012;
 
-    splashScreen.style.opacity = '0';
-    setTimeout(() => { 
-      splashScreen.style.display = 'none'; 
-      screenContainer.style.display = 'block';
-      setTimeout(() => { screenContainer.style.opacity = '1'; }, 50);
-    }, 400);
+    oscillator
+        .connect(oscillatorGain)
+        .connect(masterGain);
 
-    initAudio(); 
-    startBackgroundStatic();
-    playTerrifyingSpeakerGlitch(); 
-    randomizeGlitchDirection(); 
-    
-    mainUI.classList.add('severe-glitch');
-    setTimeout(() => mainUI.classList.remove('severe-glitch'), 250);
-    setTimeout(() => { addLog(); updateProgress(); }, 200);
-  }
+    oscillator.start();
 
-  startBtn.addEventListener('click', startExperience);
 
-  const logsList = [
-    { text: ">>> BYPASSING FIREWALL...", type: "green" },
-    { text: ">>> DISABLING SECURITY...", type: "green" },
-    { text: ">>> ACCESS GRANTED", type: "green" },
-    { text: "BROADCAST INTERRUPTED // NO SOURCE DETECTED", type: "red" },
-    { text: "DATA CORRUPTED", type: "red" },
-    { text: "ALL CHANNELS LOCKED", type: "red" }
-  ];
+    /*
+       RANDOM RADIO INTERFERENCE
+    */
 
-  function getTimestamp() {
-    return `ERR_${Math.floor(Math.random()*999).toString().padStart(3,'0')}`;
-  }
+    setInterval(() => {
 
-  function addLog() {
-    if (progress >= 100) return;
-    const row = document.createElement('div'); row.className = 'log-row';
-    const timeSpan = document.createElement('span'); timeSpan.className = 'log-time'; timeSpan.innerText = getTimestamp();
-    const msgSpan = document.createElement('span');
-    if (Math.random() > 0.4) {
-      const logItem = logsList[Math.floor(Math.random() * logsList.length)];
-      msgSpan.className = `log-msg ${logItem.type}`; msgSpan.innerText = logItem.text;
-    } else {
-      msgSpan.className = 'log-msg'; msgSpan.style.color = 'var(--radio-red)'; msgSpan.style.fontWeight = 'bold'; msgSpan.innerText = `[ FATAL_ERROR // SIGNAL_LOST ]`;
-    }
-    row.appendChild(timeSpan); row.appendChild(msgSpan);
-    terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
+        if (!audioContext)
+            return;
 
-    if (Math.random() > 0.3) {
-      randomizeGlitchDirection(); 
-      mainUI.classList.add('severe-glitch'); 
-      playTerrifyingSpeakerGlitch(); 
-      setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
-    }
-    setTimeout(addLog, Math.random() * 80 + 20);
-  }
+        const beep =
+            audioContext.createOscillator();
 
-  function updateProgress() {
-    if (progress < 100) {
-      progress += Math.random() * 1.5; 
-      if (progress > 100) progress = 100;
-      progressBar.style.width = `${progress}%`; pctText.innerText = `${progress.toFixed(2)}%`;
-      setTimeout(updateProgress, Math.random() * 50 + 10);
-    } else {
-      triggerEndSequence();
-    }
-  }
+        const gain =
+            audioContext.createGain();
 
-  function triggerEndSequence() {
-    randomizeGlitchDirection(); 
-    mainUI.classList.add('severe-glitch');
-    playTerrifyingSpeakerGlitch();
-    
-    setTimeout(() => {
-      mainUI.classList.remove('severe-glitch');
-      screenContainer.classList.add('crt-shut-off');
+        beep.type =
+            "square";
 
-      playLongTeetTone();
+        beep.frequency.value =
+            400 +
+            Math.random() * 900;
 
-      setTimeout(() => {
-        demonGlitchOverlay.style.display = 'block';
-        playAlastorDemonLaugh();
+        gain.gain.setValueAtTime(
+            0,
+            audioContext.currentTime
+        );
+
+        gain.gain.linearRampToValueAtTime(
+            .04,
+            audioContext.currentTime + .015
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            audioContext.currentTime + .2
+        );
+
+        beep
+            .connect(gain)
+            .connect(masterGain);
+
+        beep.start();
+
+        beep.stop(
+            audioContext.currentTime + .21
+        );
+
+    }, 2300);
+}
+
+
+/* =========================================
+   GLITCH EFFECT
+========================================= */
+
+function glitchBurst() {
+
+    const amount =
+        1 + Math.floor(
+            Math.random() * 4
+        );
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
 
         setTimeout(() => {
-          demonGlitchOverlay.style.display = 'none';
-          pureBlackScreen.style.display = 'block';
-        }, 3000);
 
-      }, 2200);
+            glitch.style.opacity =
+                (
+                    .35 +
+                    Math.random() * .65
+                ).toFixed(2);
 
-    }, 450); 
-  }
+            glitch.style.transform =
+                `
+                translate(
+                    ${Math.random() * 18 - 9}px,
+                    ${Math.random() * 12 - 6}px
+                )
+                `;
+
+            mainImage.style.transform =
+                `
+                translateX(
+                    ${Math.random() * 10 - 5}px
+                )
+                scaleX(
+                    ${1 + (Math.random() - .5) * .02}
+                )
+                `;
+
+            mainImage.style.filter =
+                `
+                contrast(1.4)
+                brightness(${.65 + Math.random() * .5})
+                `;
+
+
+            setTimeout(() => {
+
+                glitch.style.opacity =
+                    "0";
+
+                glitch.style.transform =
+                    "";
+
+                mainImage.style.transform =
+                    "";
+
+                mainImage.style.filter =
+                    "contrast(1.15) brightness(.82)";
+
+            }, 40 + Math.random() * 100);
+
+        }, i * 45);
+    }
+}
+
+
+/* =========================================
+   FAKE TERMINAL
+========================================= */
+
+const terminalCommands = [
+
+    "> SCANNING FREQUENCY........ OK",
+
+    "> SIGNAL STRENGTH........... 100%",
+
+    "> ACCESSING BROADCAST...... OK",
+
+    "> RADIO DEMON DETECTED.....",
+
+    "> ALASTOR.EXE.............. RUNNING",
+
+    "> SOUL DATABASE............. LOCKED",
+
+    "> FEAR LEVEL................ MAX",
+
+    "> BROADCAST CHAOS........... ENABLED",
+
+    "> CONNECTION................ ESTABLISHED",
+
+    "> LISTENER DETECTED.........",
+
+    "> YOU ARE NOW LISTENING..."
+
+];
+
+
+function addTerminalLine() {
+
+    const line =
+        document.createElement("div");
+
+    line.className =
+        "terminalLine";
+
+    line.textContent =
+        terminalCommands[
+            Math.floor(
+                Math.random() *
+                terminalCommands.length
+            )
+        ];
+
+    terminal.appendChild(line);
+
+    while (
+        terminal.children.length > 9
+    ) {
+
+        terminal.removeChild(
+            terminal.firstChild
+        );
+    }
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+enterButton.addEventListener(
+    "click",
+    async () => {
+
+        if (running)
+            return;
+
+        running = true;
+
+        enterButton.disabled =
+            true;
+
+        enterButton.textContent =
+            "● BROADCAST CONNECTED";
+
+
+        /*
+           Start audio after user interaction
+        */
+
+        startRadioAudio();
+
+        if (
+            audioContext.state ===
+            "suspended"
+        ) {
+
+            await audioContext.resume();
+        }
+
+
+        /*
+           Loading
+        */
+
+        let value = 0;
+
+        const loading =
+            setInterval(() => {
+
+                value +=
+                    Math.random() * 2.1 +
+                    .35;
+
+                if (value >= 100) {
+
+                    value = 100;
+
+                    clearInterval(
+                        loading
+                    );
+
+                    progress.style.width =
+                        "100%";
+
+                    percentage.textContent =
+                        "100%";
+
+                    finishLoading();
+
+                    return;
+                }
+
+
+                progress.style.width =
+                    value + "%";
+
+                percentage.textContent =
+                    Math.floor(value) + "%";
+
+
+                /*
+                   Random glitches
+                */
+
+                if (
+                    Math.random() < .38
+                ) {
+
+                    glitchBurst();
+                }
+
+
+                /*
+                   Terminal activity
+                */
+
+                if (
+                    Math.random() < .18
+                ) {
+
+                    addTerminalLine();
+                }
+
+            }, 70);
+
+    }
+);
+
+
+/* =========================================
+   FINISH
+========================================= */
+
+function finishLoading() {
+
+    setTimeout(() => {
+
+        /*
+           Hide boot interface
+        */
+
+        bootScreen.style.opacity =
+            "0";
+
+        bootScreen.style.visibility =
+            "hidden";
+
+
+        /*
+           Broadcast starts
+        */
+
+        const broadcast =
+            setInterval(() => {
+
+                glitchBurst();
+
+            }, 600);
+
+
+        /*
+           After a few seconds:
+           SIGNAL FAILURE
+        */
+
+        setTimeout(() => {
+
+            clearInterval(
+                broadcast
+            );
+
+            shutdownSequence();
+
+        }, 4000);
+
+    }, 900);
+}
+
+
+/* =========================================
+   HORROR SHUTDOWN
+========================================= */
+
+function shutdownSequence() {
+
+    let flashes =
+        0;
+
+    const shutdown =
+        setInterval(() => {
+
+            flashes++;
+
+
+            /*
+               Random screen cuts
+            */
+
+            mainImage.style.opacity =
+                flashes % 2 === 0
+                    ? "0"
+                    : "1";
+
+
+            /*
+               Strong glitch
+            */
+
+            glitchBurst();
+
+
+            /*
+               Random image displacement
+            */
+
+            mainImage.style.transform =
+                `
+                translate(
+                    ${Math.random() * 30 - 15}px,
+                    ${Math.random() * 20 - 10}px
+                )
+                scale(
+                    ${1 + Math.random() * .04}
+                )
+                `;
+
+
+            /*
+               Final shutdown
+            */
+
+            if (flashes >= 10) {
+
+                clearInterval(
+                    shutdown
+                );
+
+                mainImage.style.opacity =
+                    "0";
+
+                mainImage.style.transform =
+                    "";
+
+                glitch.style.opacity =
+                    "0";
+
+
+                /*
+                   Show final message
+                */
+
+                finalScreen.classList.add(
+                    "finalActive"
+                );
+
+            }
+
+        }, 100);
+
+}
+
+
+/* =========================================
+   RANDOM AMBIENT GLITCH
+========================================= */
+
+setInterval(() => {
+
+    if (
+        running &&
+        Math.random() < .75
+    ) {
+
+        glitchBurst();
+    }
+
+}, 900);
+
+
+/* =========================================
+   RANDOM TAB TITLE
+========================================= */
+
+setInterval(() => {
+
+    if (!running)
+        return;
+
+    const titles = [
+
+        "ALASTOR // ON AIR",
+
+        "66.6 FM // SIGNAL",
+
+        "RADIO DEMON // LIVE",
+
+        "YOU ARE LISTENING",
+
+        "SIGNAL LOCKED",
+
+        "ALASTOR.EXE"
+
+    ];
+
+    document.title =
+        titles[
+            Math.floor(
+                Math.random() *
+                titles.length
+            )
+        ];
+
+}, 1200);
+
 </script>
+
 </body>
-</html>
+  </html>
