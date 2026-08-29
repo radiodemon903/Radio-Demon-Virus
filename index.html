@@ -8,11 +8,11 @@
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
 
   :root {
-    --bg-color: #050000;
-    --radio-red: #ff0011;
-    --dark-red: #3a0005;
-    --alastor-green: #33ff00;
-    --text-dim: #882222;
+    --bg-color: #0d0102;
+    --radio-red: #ff0033;
+    --dark-red: #4a000d;
+    --alastor-green: #00ff55;
+    --text-dim: #8c4a4a;
   }
 
   body, html {
@@ -20,17 +20,18 @@
     font-family: 'Share Tech Mono', monospace; height: 100vh; overflow: hidden; user-select: none;
   }
 
+  /* شاشة الترحيب */
   #splash-screen {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-    background: radial-gradient(circle, #150000 0%, #000000 100%);
+    background: radial-gradient(circle, #1f0105 0%, #030000 100%);
     z-index: 9999; display: flex; justify-content: center; align-items: center;
     padding: 15px; box-sizing: border-box;
   }
 
   .splash-card {
-    border: 2px solid var(--radio-red); background: rgba(5, 0, 0, 0.95);
+    border: 2px solid var(--radio-red); background: rgba(12, 0, 3, 0.95);
     width: 100%; max-width: 480px; padding: 25px; box-sizing: border-box;
-    position: relative; box-shadow: 0 0 50px rgba(255, 0, 17, 0.4), inset 0 0 20px rgba(255, 0, 17, 0.2);
+    position: relative; box-shadow: 0 0 50px rgba(255, 0, 51, 0.35), inset 0 0 25px rgba(255, 0, 51, 0.15);
     animation: cardFlicker 3s infinite;
   }
 
@@ -40,37 +41,48 @@
   .splash-card::before { top: 6px; left: 6px; border-right: none; border-bottom: none; }
   .splash-card::after { bottom: 6px; right: 6px; border-left: none; border-top: none; }
 
+  .splash-header-info {
+    display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim);
+    border-bottom: 1px dashed var(--dark-red); padding-bottom: 8px; margin-bottom: 15px;
+    letter-spacing: 1px;
+  }
+
   .splash-brand-title {
-    text-align: center; font-size: 2rem; color: var(--radio-red); font-weight: bold;
-    letter-spacing: 5px; text-shadow: 0 0 15px var(--radio-red), 2px 2px 0px #000; margin-bottom: 5px;
+    text-align: center; font-size: 1.8rem; color: var(--radio-red); font-weight: bold;
+    letter-spacing: 4px; text-shadow: 0 0 15px var(--radio-red); margin-bottom: 5px;
   }
 
   .splash-subtitle {
-    text-align: center; font-size: 0.85rem; color: var(--alastor-green); letter-spacing: 2px;
-    margin-bottom: 20px; text-shadow: 0 0 10px var(--alastor-green);
+    text-align: center; font-size: 0.8rem; color: var(--alastor-green); letter-spacing: 2px;
+    margin-bottom: 20px; text-shadow: 0 0 12px var(--alastor-green);
   }
 
   .splash-details-box {
-    border: 1px solid var(--dark-red); background: rgba(20, 0, 0, 0.6);
+    border: 1px solid var(--dark-red); background: rgba(30, 0, 8, 0.4);
     padding: 12px; margin-bottom: 20px; font-size: 0.75rem; color: #ccc; line-height: 1.6;
   }
 
   .splash-details-box span { color: var(--alastor-green); text-shadow: 0 0 5px var(--alastor-green); }
 
+  .splash-quote-box {
+    font-size: 0.8rem; color: #fff; font-style: italic; margin-bottom: 25px;
+    border-left: 2px solid var(--alastor-green); padding-left: 10px; line-height: 1.5;
+  }
+
   .splash-action-btn {
     background: var(--dark-red); color: var(--alastor-green); border: 1px solid var(--alastor-green);
-    padding: 14px; font-family: 'Share Tech Mono', monospace; font-size: 1rem; font-weight: bold;
+    padding: 14px; font-family: 'Share Tech Mono', monospace; font-size: 0.95rem; font-weight: bold;
     letter-spacing: 2px; cursor: pointer; width: 100%; transition: all 0.2s ease;
-    box-shadow: 0 0 15px rgba(51, 255, 0, 0.3); text-align: center;
+    box-shadow: 0 0 20px rgba(0, 255, 85, 0.4); text-align: center;
   }
 
   .splash-action-btn:hover {
-    background: var(--alastor-green); color: #000; box-shadow: 0 0 30px var(--alastor-green);
+    background: var(--alastor-green); color: #000; box-shadow: 0 0 40px var(--alastor-green);
   }
 
   @keyframes cardFlicker {
-    0%, 100% { border-color: var(--radio-red); box-shadow: 0 0 40px rgba(255, 0, 17, 0.4); }
-    50% { border-color: #400; box-shadow: 0 0 10px rgba(255, 0, 17, 0.1); }
+    0%, 100% { border-color: var(--radio-red); box-shadow: 0 0 40px rgba(255, 0, 51, 0.3); }
+    50% { border-color: #500; box-shadow: 0 0 15px rgba(100, 0, 10, 0.2); }
   }
 
   #screen-container {
@@ -81,117 +93,91 @@
 
   .crt-overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: 
-      linear-gradient(rgba(10, 0, 0, 0) 50%, rgba(0, 0, 0, 0.9) 50%),
-      repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 0, 17, 0.08) 2px, rgba(0, 0, 0, 0.1) 4px);
-    background-size: 100% 4px, 100% 100%;
-    z-index: 100; pointer-events: none;
-    box-shadow: inset 0 0 150px rgba(0,0,0,0.95); 
-    animation: digitalNoiseFlicker 0.08s infinite;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.7) 50%);
+    background-size: 100% 3px; z-index: 100; pointer-events: none;
+    box-shadow: inset 0 0 140px rgba(0,0,0,0.95); animation: flicker 0.08s infinite;
   }
 
-  @keyframes digitalNoiseFlicker {
-    0% { opacity: 0.8; transform: translateY(0); }
-    50% { opacity: 1; transform: translateY(-1px); }
-    100% { opacity: 0.9; transform: translateY(1px); }
-  }
-
-  .digital-glitch-blocks {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background-image: 
-      linear-gradient(90deg, rgba(255,0,17,0.15) 0%, transparent 20%, rgba(0,0,0,0.5) 50%, transparent 80%);
-    opacity: 0.7; z-index: 90; pointer-events: none;
-    animation: blocksTear 0.12s steps(4) infinite;
-  }
-  @keyframes blocksTear {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(-10px, 0); filter: contrast(150%); }
-    50% { transform: translate(15px, 0); filter: invert(10%); }
-    75% { transform: translate(-5px, 0); }
-    100% { transform: translate(0, 0); }
+  @keyframes flicker {
+    0% { opacity: 0.9; } 50% { opacity: 1; } 100% { opacity: 0.85; }
   }
 
   .main-ui {
-    position: relative; width: 96%; max-width: 650px; height: 96vh;
+    position: relative; width: 96%; max-width: 600px; height: 96vh;
     margin: 2vh auto; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; z-index: 10;
   }
 
   .main-ui::before, .main-ui::after, .ui-corner-tl, .ui-corner-br {
     border-color: var(--alastor-green); border-style: solid; border-width: 2px; position: absolute;
-    box-shadow: 0 0 12px var(--alastor-green);
+    box-shadow: 0 0 8px var(--alastor-green);
   }
   .main-ui::before { content:''; top: 0; left: 0; width: 100%; height: 100%; border-right: none; border-bottom: none; pointer-events:none;}
   .main-ui::after { content:''; bottom: 0; right: 0; width: 100%; height: 100%; border-left: none; border-top: none; pointer-events:none;}
   .ui-corner-tl { top: 0; right: 0; width: 30px; height: 30px; border-left: none; border-bottom: none; }
   .ui-corner-br { bottom: 0; left: 0; width: 30px; height: 30px; border-right: none; border-top: none; }
 
-  .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 15px; }
+  .hex-bg {
+    position: absolute; top: 50px; left: 0; width: 100%; height: 80%; font-size: 0.55rem;
+    color: rgba(0, 255, 85, 0.08); word-break: break-all; overflow: hidden; z-index: -1; line-height: 1;
+  }
+
+  .header-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--dark-red); padding-bottom: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 20px; }
   .header-grid div:nth-child(2) { text-align: right; }
 
-  .mini-signal-box {
-    border: 1px solid var(--radio-red); background: rgba(50, 0, 5, 0.4);
-    padding: 8px; font-size: 0.7rem; color: #fff; margin-bottom: 12px;
-    display: flex; justify-content: space-between; align-items: center;
-    box-shadow: 0 0 15px rgba(255,0,17,0.3);
-  }
-  .mini-signal-box span { color: var(--radio-red); font-weight: bold; text-shadow: 0 0 5px var(--radio-red); }
+  .alert-box { border: 1px solid var(--alastor-green); background: rgba(0, 255, 85, 0.1); padding: 10px; text-align: center; margin-bottom: 15px; box-shadow: 0 0 15px rgba(0,255,85,0.2); }
+  .alert-title { color: var(--alastor-green); font-size: 1.4rem; font-weight: bold; letter-spacing: 3px; text-shadow: 0 0 12px var(--alastor-green); animation: alertPulse 0.5s infinite; }
+  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 18px var(--alastor-green); } 50% { opacity: 0.5; text-shadow: none; } }
 
-  .alert-box { border: 1px solid var(--alastor-green); background: rgba(51, 255, 0, 0.1); padding: 8px; text-align: center; margin-bottom: 12px; box-shadow: 0 0 20px rgba(51,255,0,0.2); }
-  .alert-title { color: var(--alastor-green); font-size: 1.3rem; font-weight: bold; letter-spacing: 4px; text-shadow: 0 0 12px var(--alastor-green); animation: alertPulse 0.4s infinite; }
-  @keyframes alertPulse { 0%, 100% { opacity: 1; text-shadow: 0 0 20px var(--alastor-green); } 50% { opacity: 0.4; text-shadow: none; } }
+  .hacker-brand { text-align: center; font-size: 1.7rem; color: var(--radio-red); text-shadow: 0 0 15px var(--radio-red), 0 0 30px #000; margin: 20px 0; animation: brandGlitch 1.5s infinite; font-weight: bold; letter-spacing: 2px; }
+  @keyframes brandGlitch { 0% { transform: skew(0deg); } 10% { transform: skew(-15deg); filter: blur(1px); } 12% { transform: skew(10deg); filter: none; } 100% { transform: skew(0deg); } }
 
-  .hacker-brand { text-align: center; font-size: 1.8rem; color: var(--radio-red); text-shadow: 0 0 15px var(--radio-red), 3px 3px 0 #000; margin: 15px 0; animation: brandGlitch 0.6s infinite; font-weight: bold; letter-spacing: 3px; }
-  @keyframes brandGlitch { 
-    0% { transform: translate(0,0); } 
-    15% { transform: translate(-5px, 0) scaleX(1.1); filter: contrast(200%); color: #fff; text-shadow: 5px 0 var(--radio-red); } 
-    18% { transform: translate(5px, 0); filter: none; color: var(--radio-red); } 
-    100% { transform: translate(0,0); } 
-  }
+  .progress-section { margin-bottom: 20px; }
+  .progress-header { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; color: #ccc; }
+  .progress-track { width: 100%; height: 12px; border: 1px solid var(--text-dim); background: #000; position: relative; }
+  .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 15px var(--radio-red); transition: width 0.1s; }
 
-  .progress-section { margin-bottom: 15px; }
-  .progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 5px; color: #ccc; }
-  .progress-track { width: 100%; height: 10px; border: 1px solid var(--radio-red); background: #000; position: relative; }
-  .progress-fill { height: 100%; background: var(--radio-red); width: 0%; box-shadow: 0 0 20px var(--radio-red); transition: width 0.1s; }
-
-  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(10, 0, 0, 0.6); padding: 10px; overflow: hidden; font-size: 0.7rem; line-height: 1.4; }
+  .terminal-box { flex-grow: 1; border: 1px solid var(--dark-red); background: rgba(40, 0, 10, 0.3); padding: 10px; overflow: hidden; font-size: 0.75rem; line-height: 1.5; }
   .log-row { display: flex; margin-bottom: 3px; }
   .log-time { color: var(--text-dim); margin-right: 10px; width: 65px; }
   .log-msg { color: #fff; flex-grow: 1; word-break: break-all; }
   .log-msg.green { color: var(--alastor-green); text-shadow: 0 0 8px var(--alastor-green); }
-  .log-msg.red { color: var(--radio-red); text-shadow: 0 0 8px var(--radio-red); font-weight: bold; }
+  .log-msg.red { color: var(--radio-red); }
 
-  .severe-glitch { animation: severeChaos 0.05s infinite !important; }
-  @keyframes severeChaos { 
-    0% { transform: translate(0, 0); filter: none; } 
-    25% { transform: translate(-40px, 0) scaleY(1.05); filter: contrast(1000%) invert(10%) drop-shadow(10px 0 #000); background-color: var(--radio-red); } 
-    50% { transform: translate(30px, 0) scaleY(0.95); filter: blur(1px) contrast(800%) saturate(1000%); color: #fff; } 
-    75% { transform: translate(-10px, 0); filter: contrast(1000%) grayscale(100%); } 
-    100% { transform: translate(0, 0); filter: none; } 
+  .severe-glitch { animation: dynamicTearChaos 0.05s infinite; }
+  @keyframes dynamicTearChaos { 
+    0% { transform: translate(0, 0) skew(0deg); filter: hue-rotate(0deg) contrast(300%); } 
+    20% { transform: translate(var(--tx, -20px), var(--ty, 12px)) skew(var(--sk, 30deg)); filter: contrast(600%) invert(25%); } 
+    40% { transform: translate(calc(var(--tx, -20px) * -0.8), calc(var(--ty, 12px) * -1.2)) skew(calc(var(--sk, 30deg) * -1)); filter: blur(4px) saturate(600%); } 
+    60% { transform: translate(calc(var(--tx, -20px) * 0.5), calc(var(--ty, 12px) * 0.5)) skew(calc(var(--sk, 30deg) * 0.8)); filter: contrast(700%); } 
+    80% { transform: translate(calc(var(--tx, -20px) * -0.3), calc(var(--ty, 12px) * -0.5)) skew(calc(var(--sk, 30deg) * -0.5)); filter: hue-rotate(180deg); }
+    100% { transform: translate(0, 0) skew(0deg); filter: none; } 
   }
 
   .crt-shut-off {
-    animation: turn-off 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    animation: turn-off 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
   @keyframes turn-off {
     0% { transform: scale(1, 1); filter: brightness(1) contrast(1); }
-    30% { transform: scale(1.1, 0.005); filter: brightness(60) contrast(800%); background-color: #fff; }
-    60% { transform: scale(0.005, 0.001); filter: brightness(100); background-color: #fff; box-shadow: 0 0 200px #fff; }
-    100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #000 !important; }
+    30% { transform: scale(1.15, 0.01); filter: brightness(40) contrast(600%); background-color: #ff0033; }
+    60% { transform: scale(0.01, 0.002); filter: brightness(50); background-color: #ff0033; box-shadow: 0 0 100px #ff0033; }
+    100% { transform: scale(0, 0); filter: brightness(0); opacity: 1; background-color: #020000 !important; }
   }
 
   #demon-glitch-overlay {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: repeating-linear-gradient(0deg, #000 0px, #000 4px, rgba(255,0,17,0.8) 4px, rgba(255,0,17,0.8) 8px);
-    z-index: 99999;
-    animation: demonLaughGlitch 0.05s infinite; pointer-events: none;
+    background: repeating-linear-gradient(transparent 0, transparent 4px, rgba(255, 0, 51, 0.5) 4px, rgba(255, 0, 51, 0.5) 8px),
+                radial-gradient(circle at center, rgba(150,0,10,0.9) 0%, #000 100%);
+    background-color: #0a0002; z-index: 99999;
+    animation: demonLaughGlitch 0.06s infinite; pointer-events: none;
     display: none;
-    mix-blend-mode: multiply;
+    mix-blend-mode: screen;
   }
 
   @keyframes demonLaughGlitch {
-    0% { filter: invert(0) contrast(500%); transform: translate(15px, 0) scale(1.05); opacity: 0.8; }
-    50% { filter: invert(100%) contrast(1000%); transform: translate(-20px, 0) scale(1.1); opacity: 1; }
-    100% { filter: invert(0) contrast(800%); transform: translate(10px, 0) scale(1.02); opacity: 0.9; }
+    0% { filter: invert(0) drop-shadow(0 0 20px #f03) hue-rotate(0deg); transform: scale(1.03) translate(6px, 4px); }
+    30% { filter: invert(100%) drop-shadow(0 0 40px #f03) hue-rotate(50deg); transform: scale(1.1) translate(-8px, 10px); }
+    60% { filter: invert(0) drop-shadow(0 0 15px #f03) hue-rotate(-30deg); transform: scale(1.02) translate(5px, -6px); }
+    100% { filter: invert(50%) drop-shadow(0 0 50px #f00) contrast(500%); transform: scale(1.06) translate(-4px, 3px); }
   }
 
   #pure-black-screen {
@@ -201,8 +187,6 @@
 </style>
 </head>
 <body>
-
-<audio id="ambiance-audio" src="freaky-electronic-ambiance.mp3" loop></audio>
 
 <audio id="alastor-laugh-audio" src="https://www.myinstants.com/media/sounds/alastor-laugh.mp3" preload="auto"></audio>
 
@@ -219,6 +203,9 @@
       <div>> STATUS: <span>AWAITING AUDIO HANDSHAKE</span></div>
       <div>> SECURITY: <span>BYPASS REQUIRED</span></div>
     </div>
+    <div class="splash-quote-box">
+      "Smile, my dear! You're never fully dressed without a broadcast..."
+    </div>
     <button class="splash-action-btn" onclick="startExperience()">
       [ TAP TO CONNECT & ENGAGE ]
     </button>
@@ -227,30 +214,20 @@
 
 <div id="screen-container">
   <div class="crt-overlay"></div>
-  <div class="digital-glitch-blocks"></div>
-  
   <div class="main-ui" id="main-ui">
     <div class="ui-corner-tl"></div>
     <div class="ui-corner-br"></div>
-    
+    <div class="hex-bg" id="hex-bg"></div>
     <div class="header-grid">
       <div>STATION: 666.9 MHz - HAZBIN</div>
       <div>STATUS: RADIO_WAVE_ACTIVE</div>
     </div>
-
-    <div class="mini-signal-box">
-      <div>⚠ OVERRIDE PROTOCOL // ACCESS GRANTED</div>
-      <span>[OWNED]</span>
-    </div>
-
     <div class="alert-box"><div class="alert-title">HAZBIN FREQUENCY HIJACKED</div></div>
-    <div class="hacker-brand">NO SIGNAL</div>
-    
+    <div class="hacker-brand">ALASTOR THE RADIO DEMON</div>
     <div class="progress-section">
-      <div class="progress-header"><span id="target-ip">TRANSMISSION OVERRIDDEN</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
+      <div class="progress-header"><span id="target-ip">SOUL_FREQ: 192.666.##.##</span><span id="pct-text" style="color: var(--radio-red); font-weight: bold;">0.00%</span></div>
       <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
     </div>
-    
     <div class="terminal-box" id="terminal"></div>
   </div>
 </div>
@@ -259,7 +236,7 @@
 <div id="pure-black-screen"></div>
 
 <script>
-  let audioCtx;
+  let audioCtx, staticGainNode;
   let sequenceStarted = false;
 
   function initAudio() {
@@ -271,19 +248,96 @@
     }
   }
 
-  // صوت الـ Teeeeet النهائي المزعج
+  function startBackgroundStatic() {
+    let bufferSize = audioCtx.sampleRate * 2;
+    let buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    let data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    let noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+    
+    // فلتر للترددات العالية المزعجة
+    let filter = audioCtx.createBiquadFilter();
+    filter.type = 'highpass'; 
+    filter.frequency.value = 4000; 
+
+    staticGainNode = audioCtx.createGain();
+    staticGainNode.gain.value = 0.15; // رفع مستوى التشويش
+    
+    noise.connect(filter).connect(staticGainNode).connect(audioCtx.destination);
+    noise.start();
+
+    // إضافة طنين شاشات قديمة عالي التردد (مثل التلفاز المحترق)
+    let whine = audioCtx.createOscillator();
+    whine.type = 'sine';
+    whine.frequency.value = 12000; // طنين عالي جداً
+    let whineGain = audioCtx.createGain();
+    whineGain.gain.value = 0.03;
+    whine.connect(whineGain).connect(audioCtx.destination);
+    whine.start();
+  }
+
+  // تم تحويل هذا الصوت ليكون كصوت طابعة الفاكس أو المودم المعطل
+  function playDestroyedSpeakerGlitch() {
+    if (!audioCtx) return;
+    let now = audioCtx.currentTime;
+    let osc1 = audioCtx.createOscillator();
+    let lfo = audioCtx.createOscillator();
+    let lfoGain = audioCtx.createGain();
+    let distortion = audioCtx.createWaveShaper();
+    let gainNode = audioCtx.createGain();
+
+    osc1.type = 'square'; // موجة مربعة تعطي طابع إلكتروني صلب
+    lfo.type = 'square'; // لعمل تقطيع سريع للصوت (كصوت الماكينة)
+
+    // ترددات عالية وحادة جداً
+    osc1.frequency.setValueAtTime(3500, now);
+    osc1.frequency.exponentialRampToValueAtTime(7000, now + 0.15);
+
+    // LFO للتقطيع السريع
+    lfo.frequency.value = 60; // سرعة التقطيع
+    lfoGain.gain.value = 2500;
+    
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc1.frequency);
+
+    function makeDistortionCurve(amount) {
+      let k = amount, n_samples = 44100, curve = new Float32Array(n_samples), deg = Math.PI / 180;
+      for (let i = 0; i < n_samples; ++i) {
+        let x = (i * 2) / n_samples - 1;
+        curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+      }
+      return curve;
+    }
+    distortion.curve = makeDistortionCurve(1000); // تشويه هائل
+
+    gainNode.gain.setValueAtTime(0.7, now); 
+    gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+    
+    osc1.connect(distortion); 
+    distortion.connect(gainNode); 
+    gainNode.connect(audioCtx.destination);
+    
+    osc1.start(now); 
+    lfo.start(now);
+    osc1.stop(now + 0.2); 
+    lfo.stop(now + 0.2);
+  }
+
   function playLongTeetTone() {
     if (!audioCtx) return;
+    if (staticGainNode) staticGainNode.gain.value = 0;
 
     let now = audioCtx.currentTime;
     let osc = audioCtx.createOscillator();
     let gain = audioCtx.createGain();
 
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1400, now);
+    osc.type = 'square'; // تغيير لموجة مربعة لجعل الصافرة النهائية أكثر قسوة
+    osc.frequency.setValueAtTime(2500, now);
 
-    gain.gain.setValueAtTime(0.8, now);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.5);
+    gain.gain.setValueAtTime(0.5, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 2.5);
 
     osc.connect(gain).connect(audioCtx.destination);
     osc.start(now);
@@ -303,18 +357,19 @@
   const terminal = document.getElementById('terminal');
   const progressBar = document.getElementById('progress-bar');
   const pctText = document.getElementById('pct-text');
+  
   const screenContainer = document.getElementById('screen-container');
   const splashScreen = document.getElementById('splash-screen');
   const demonGlitchOverlay = document.getElementById('demon-glitch-overlay');
   const pureBlackScreen = document.getElementById('pure-black-screen');
-  const ambianceAudio = document.getElementById('ambiance-audio');
 
   let progress = 0;
 
   function randomizeGlitchDirection() {
-    const rx = (Math.random() * 160 - 80) + 'px'; 
-    const ry = (Math.random() * 20 - 10) + 'px'; 
-    mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry);
+    const rx = (Math.random() * 80 - 40) + 'px'; 
+    const ry = (Math.random() * 40 - 20) + 'px'; 
+    const rs = (Math.random() * 60 - 30) + 'deg'; 
+    mainUI.style.setProperty('--tx', rx); mainUI.style.setProperty('--ty', ry); mainUI.style.setProperty('--sk', rs);
   }
 
   function startExperience() {
@@ -323,33 +378,25 @@
     splashScreen.style.opacity = '0';
     setTimeout(() => { splashScreen.style.display = 'none'; }, 400);
     screenContainer.style.opacity = '1';
-    
-    initAudio(); 
-    
-    // تشغيل الملف الصوتي الذي رفعته ليكون الخلفية الأساسية للتشويش
-    if (ambianceAudio) {
-        ambianceAudio.volume = 0.8;
-        ambianceAudio.play().catch(e => console.log(e));
-    }
-
-    randomizeGlitchDirection(); 
+    initAudio(); startBackgroundStatic();
+    playDestroyedSpeakerGlitch(); randomizeGlitchDirection(); 
     mainUI.classList.add('severe-glitch');
-    setTimeout(() => mainUI.classList.remove('severe-glitch'), 250);
+    setTimeout(() => mainUI.classList.remove('severe-glitch'), 200);
     setTimeout(() => { addLog(); updateProgress(); }, 200);
   }
 
   const logsList = [
-    { text: ">>> BYPASSING FIREWALL...", type: "green" },
-    { text: ">>> DISABLING SECURITY...", type: "green" },
-    { text: ">>> ACCESS GRANTED", type: "green" },
-    { text: "BROADCAST INTERRUPTED // NO SOURCE DETECTED", type: "red" },
-    { text: "DATA CORRUPTED", type: "red" },
-    { text: "ALL CHANNELS LOCKED", type: "red" }
+    { text: "TUNING INTO THE PENTAGRAM BROADCAST...", type: "red" },
+    { text: "ESTABLISHING STATIC INTERFERENCE [FREQ 666Hz] ZZZZZ...", type: "green" },
+    { text: "IF I WANTED TO HURT ANYONE HERE...", type: "red" },
+    { text: "BROADCASTING OVER HELL'S AIRWAVES...", type: "green" },
+    { text: "PSYCHOTIC SMILE INTENSITY: 100%", type: "red" },
+    { text: "I WOULD HAVE DONE SO ALREADY!", type: "green" }
   ];
 
   function getTimestamp() {
     const now = new Date();
-    return `ERR_${Math.floor(Math.random()*999).toString().padStart(3,'0')}`;
+    return `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')}.${Math.floor(Math.random()*999).toString().padStart(3,'0')}`;
   }
 
   function addLog() {
@@ -359,19 +406,19 @@
     const msgSpan = document.createElement('span');
     if (Math.random() > 0.4) {
       const logItem = logsList[Math.floor(Math.random() * logsList.length)];
-      msgSpan.className = `log-msg ${logItem.type}`; msgSpan.innerText = logItem.text;
+      msgSpan.className = `log-msg ${logItem.type}`; msgSpan.innerText = `♪ ${logItem.text}`;
     } else {
-      msgSpan.className = 'log-msg'; msgSpan.style.color = 'var(--radio-red)'; msgSpan.style.fontWeight = 'bold'; msgSpan.innerText = `[ FATAL_ERROR // SIGNAL_LOST ]`;
+      msgSpan.className = 'log-msg'; msgSpan.style.color = '#ff4444'; msgSpan.innerText = `[SPEAKER_DESTROYED] // SYSTEM_CRASH_666`;
     }
     row.appendChild(timeSpan); row.appendChild(msgSpan);
     terminal.appendChild(row); terminal.scrollTop = terminal.scrollHeight;
 
-    if (Math.random() > 0.3) {
+    if (Math.random() > 0.4) {
       randomizeGlitchDirection(); 
-      mainUI.classList.add('severe-glitch'); 
+      mainUI.classList.add('severe-glitch'); playDestroyedSpeakerGlitch(); 
       setTimeout(() => mainUI.classList.remove('severe-glitch'), 150);
     }
-    setTimeout(addLog, Math.random() * 80 + 20);
+    setTimeout(addLog, Math.random() * 90 + 25);
   }
 
   function updateProgress() {
@@ -379,7 +426,7 @@
       progress += Math.random() * 1.5; 
       if (progress > 100) progress = 100;
       progressBar.style.width = `${progress}%`; pctText.innerText = `${progress.toFixed(2)}%`;
-      setTimeout(updateProgress, Math.random() * 50 + 10);
+      setTimeout(updateProgress, Math.random() * 60 + 15);
     } else {
       triggerEndSequence();
     }
@@ -388,15 +435,11 @@
   function triggerEndSequence() {
     randomizeGlitchDirection(); 
     mainUI.classList.add('severe-glitch');
+    playDestroyedSpeakerGlitch();
     
     setTimeout(() => {
       mainUI.classList.remove('severe-glitch');
       screenContainer.classList.add('crt-shut-off');
-
-      // إيقاف ملف الصوت الخاص بك عند انهيار النظام
-      if (ambianceAudio) {
-          ambianceAudio.pause();
-      }
 
       playLongTeetTone();
 
